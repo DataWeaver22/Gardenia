@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Distributor Master</title>
+<link rel="stylesheet" 
+href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" 
+integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+crossorigin="anonymous">
+
+<style>
+nav {
+  background-color: #91cfa1;
+  width:100%;
+  height: 50px;
+  padding: 0 16px;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  /* fade in checked menu */
+}
+nav .m-menu__checkbox {
+  display: none;
+}
+nav label.m-menu__toggle {
+  cursor: pointer;
+  margin-top:0.5rem;
+  margin-bottom:0rem!important;
+}
+nav .m-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 230px;
+  width: calc(100vw - 30px);
+  height: 100%;
+  -moz-transform: translate3d(-450px, 0, 0);
+  -o-transform: translate3d(-450px, 0, 0);
+  -ms-transform: translate3d(-450px, 0, 0);
+  -webkit-transform: translate3d(-450px, 0, 0);
+  transform: translate3d(-450px, 0, 0);
+  -moz-transition: transform 0.35s;
+  -o-transition: transform 0.35s;
+  -webkit-transition: transform 0.35s;
+  transition: transform 0.35s;
+  z-index: 1;
+  overflow: hidden;
+  background-color: #fff;
+}
+nav .m-menu__overlay {
+  background-color: rgba(103, 103, 103, 0.5);
+  position: absolute;
+  top: 0;
+  width: 100%;
+  bottom: 0;
+  z-index: 1;
+  display: none;
+}
+nav .m-menu__header {
+  padding: 0 16px;
+  height: 50px;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+  -ms-flex-pack: space-around;
+  -webkit-align-items: center;
+  align-items: center;
+  border-bottom: 1px solid #e8e8e8;
+}
+nav .m-menu__header span {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  margin-top: 0.6rem;
+}
+nav .m-menu .m-menu {
+  -moz-transform: translate3d(480px, 0, 0);
+  -o-transform: translate3d(480px, 0, 0);
+  -ms-transform: translate3d(480px, 0, 0);
+  -webkit-transform: translate3d(480px, 0, 0);
+  transform: translate3d(480px, 0, 0);
+}
+nav .m-menu ul {
+  height: 100%;
+  overflow-y: auto;
+}
+nav .m-menu ul li a, nav .m-menu ul li label {
+  display: block;
+  text-align: left;
+  line-height: 70px;
+  text-decoration: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+  
+  position: relative;
+}
+nav .m-menu ul li label.a-label__chevron::after {
+  content: "";
+  position: absolute;
+  display: inline-block;
+  height: 5px;
+  width: 5px;
+  border-color: #333;
+  border-style: solid;
+  border-width: 1px 1px 0 0;
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  top: 57%;
+  margin-top: -5px;
+  right: 16px;
+}
+nav .m-menu ul li .-invisible {
+  border-bottom: 0;
+}
+nav .m-menu .m-menu label.m-menu__toggle {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  border-bottom: 0;
+  padding: 0;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+nav .m-menu__checkbox:checked ~ .m-menu__overlay {
+  display: block;
+}
+nav .m-menu__checkbox:checked ~ .m-menu {
+  -moz-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+header{
+	
+}
+
+body {
+  background-color: #f1f1f1;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+thead th{
+	font-size:9px;
+	font-weight:600;
+	
+}
+
+tbody td{
+	font-size:10px;
+	font-weight:100;
+}
+
+.btn{
+	font-size: 9px;
+    width: 44px;
+    height: 25px;
+}
+
+.btn_sm{
+	font-size: 9px;
+    width: 85px;
+    height: 25px;
+}
+
+h1{
+	font-size:18px;
+	
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <nav>
+    <input type="checkbox" id="menu" name="menu" class="m-menu__checkbox">
+    <label class="m-menu__toggle" for="menu">
+      <svg width="20" height="35" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </label>
+    <label class="m-menu__overlay" for="menu"></label>
+  
+    <div class="m-menu">
+      <div class="m-menu__header">
+        <label class="m-menu__toggle" for="menu">
+          <svg width="20" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </label>
+        <span style="color:#fff">MENU</span>
+      </div>
+      <ul>
+        
+        <li style="list-style: none">
+          <label class="a-label__chevron" for="item-2">Masters</label>
+          <input type="checkbox" id="item-2" name="item-2" class="m-menu__checkbox">
+          <div class="m-menu">
+            <div class="m-menu__header">
+              <label class="m-menu__toggle" for="item-2">
+                <svg width="20" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                  <path d="M19 12H6M12 5l-7 7 7 7"/>
+                </svg>
+              </label>
+             
+              <span>Masters</span>
+            </div>
+            <ul>
+              
+              <!-- <li>
+                <label class="a-label__chevron" for="item-2-3">Item 2.3</label>
+                <input type="checkbox" id="item-2-3" name="item-2" class="m-menu__checkbox">
+                <div class="m-menu">
+                  <div class="m-menu__header">
+                    <label class="m-menu__toggle" for="item-2-3">
+                      <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
+                        <path d="M19 12H6M12 5l-7 7 7 7"/>
+                      </svg>
+                    </label>
+                    <span>Item 2.3 </span>
+                  </div>
+                  <ul>
+                    <li><label>Item 2.3.1</label></li>
+                    <li><label>Item 2.3.2</label></li>
+                    <li><label>Item 2.3.3</label></li>
+                    <li><label>Item 2.3.4</label></li>
+                    <li><label>Item 2.3.5</label></li>
+                  </ul>                
+              </li> -->
+              <li style="list-style: none"><label><a th:href="@{/user}">User Master</a></label></li>
+              <li style="list-style: none"><label><a th:href="@{/distributor}">Distributor Master</a></label></li>
+              <li style="list-style: none"><label><a th:href="@{/product}">Product Master</a></label></li>
+              <li style="list-style: none"><label><a th:href="@{/hqmaster}">HQ Master</a></label></li>
+          </div>
+        </li>
+        
+      </ul>  
+    </div>
+    <div class="mx-auto"> <header class="text-center">Gardenia</header></div>
+   
+  </nav>
+  
+</div>
+	<div class="container-fluid">
+		<div class = "mt-5">
+			<h1>Distributor List</h1>
+		</div>
+		
+		<div class = "row">
+			<div class = "col-lg-3">
+				<a th:href="@{/distributor/new}" class ="btn btn-success btn_sm mb-3"> Add Distributor</a>
+			</div>
+		</div>
+		
+		<table class="table table-striped table-bordered">
+			<thead class = "table-light">
+				<tr>
+					<th>Name </th>
+					<th>Code</th>
+					<th>Type Of Distributor</th>
+					<!-- <th>GSTIN</th>
+					<th>PAN</th>
+					<th>Contact Person</th>
+					<th>Mobile</th>
+					<th>Phone</th>
+					<th>Email </th>
+					<th>Address</th>
+					<th>Region Name</th>
+					<th>Region Id</th>
+					<th>State Name</th>
+					<th>State Id </th>
+					<th>City Name</th>
+					<th>City Id</th>
+					<th>Supplier Name</th>
+					<th>Supplier Id</th>
+					<th>Status</th> -->
+					<th>Documents</th>
+					<!-- <th>Serviced Status</th>
+					<th>Brand List</th> -->
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="distributortable: ${distributortable}">
+					<td th:text="${distributortable.distributor_name}"></td>
+					<td th:text="${distributortable.distributor_code}"></td>
+					<td th:text="${distributortable.distributor_type}"></td>
+					<!-- <td th:text="${distributortable.gstin}"></td>
+					<td th:text="${distributortable.pan}"></td>
+					<td th:text="${distributortable.contact}"></td>
+					<td th:text="${distributortable.mobile}"></td>
+					<td th:text="${distributortable.phone}"></td>
+					<td th:text="${distributortable.email}"></td>
+					<td th:text="${distributortable.address}"></td>
+					<td th:text="${distributortable.region_name}"></td>
+					<td th:text="${distributortable.region_id}"></td>
+					<td th:text="${distributortable.state_name}"></td>
+					<td th:text="${distributortable.state_id}"></td>
+					<td th:text="${distributortable.city_name}"></td>
+					<td th:text="${distributortable.supp_name}"></td>
+					<td th:text="${distributortable.supp_code}"></td>
+					<td th:text="${distributortable.status}"></td>
+					<td th:text="${distributortable.create_date}"></td>
+					<td th:text="${distributortable.inactive_date}"></td> -->
+					<td th:text="${distributortable.documents}"></td>
+					<!-- <td th:text="${distributortable.service_status}"></td>
+					<td th:text="${distributortable.brand_list}"></td> -->
+					<td>
+						<a th:href="@{/distributor/edit/{id}(id=${distributortable.id})}"
+						 class="btn btn-success">Edit</a>
+						 <!-- <a th:href="@{/distributor/{id}(id=${distributortable.id})}"
+						 class="btn btn-danger">Delete</a> -->
+					</td>	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
