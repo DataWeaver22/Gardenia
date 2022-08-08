@@ -35,9 +35,9 @@ crossorigin="anonymous">
 		var regionCode = theList[i]["region_code"];
 			for(var j=0;j<codeList.length;j++){
 				if(regionCode == codeList[j]["region_code"]){
-					var codeNumber = codeList[j]["codenumber"]+1;
+					var codeNumber = parseInt(codeList[j]["codenumber"]);
 					
-					$("#distId").val(theList[i]["region_code"]+codeNumber);
+					$("#distId").val(theList[i]["region_code"]+codeList[j]["codeNumber"]+1);
 				}
 			}
 			

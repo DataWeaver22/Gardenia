@@ -72,7 +72,7 @@ public class RegionController {
 		System.out.println(name);
 		region.setState_name(name);
 		regionCodeString = region.getRegion_code();
-		int codeNumberInteger = 000;
+		String codeNumberInteger = "000";
 		distributorCode.setCodeNumber(codeNumberInteger);
 		distributorCode.setRegion_code(regionCodeString);
 		System.out.println(distributorCode);

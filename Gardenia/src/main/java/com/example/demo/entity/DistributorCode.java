@@ -22,13 +22,13 @@ public class DistributorCode {
     private String region_code;
 	
 	@Column(name = "codenumber", nullable = false, length = 3)
-	private Integer codeNumber;
+	private String codeNumber;
 
-	public Integer getCodeNumber() {
+	public String getCodeNumber() {
 		return codeNumber;
 	}
 
-	public void setCodeNumber(Integer codeNumber) {
+	public void setCodeNumber(String codeNumber) {
 		this.codeNumber = codeNumber;
 	}
 
@@ -48,7 +48,7 @@ public class DistributorCode {
 		this.region_code = region_code;
 	}
 
-	public DistributorCode(Long id, String region_code, Integer codeNumber) {
+	public DistributorCode(Long id, String region_code, String codeNumber) {
 		super();
 		Id = id;
 		this.region_code = region_code;

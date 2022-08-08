@@ -525,8 +525,8 @@ border-top:5px solid #068203;
 						
 						<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 						<div class="form-group">
-							<label>Assigned TSO</label>
-							<select class="form-control" id="dropDownList" name="uom">
+							<label>Status</label>
+							<select class="form-control" id="dropDownList" name="uom" onclick="addField(this)">
     						
     						<option th:each="options : ${T(com.example.demo.Enum.Uom).values()}" th:value="${options}" th:text="${options}"></option>
 							</select>
