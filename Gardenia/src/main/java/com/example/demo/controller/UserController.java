@@ -1,7 +1,11 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.demo.Enum.Roles;
 import com.example.demo.Enum.Status;
+import com.example.demo.Export.RegionExportExcel;
+import com.example.demo.Export.UserExportExcel;
 import com.example.demo.entity.Area;
 import com.example.demo.entity.City;
 import com.example.demo.entity.HqMaster;
@@ -106,6 +112,7 @@ public class UserController {
 	
 	@PostMapping("/user")
 	public String saveUser(@ModelAttribute("user") User user, Model model) {
+		LocalDateTime createDateTime = LocalDateTime.now();
 		String sId = user.getState_id();
 		System.out.println(sId);
 		String name = hqUserRepository.findByStateName(Long.parseLong(sId));
@@ -130,10 +137,27 @@ public class UserController {
 		System.out.println(hname);
 		user.setHq_name(hname);
 		
-		
+		user.setCreate_date(createDateTime);
 		userService.saveUser(user);
 		return "redirect:/user";
 	}
+	
+	@GetMapping("/user/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+		/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
+        String currentDateTime = dateFormatter.format(new Date());*/
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=user.xlsx";
+        response.setHeader(headerKey, headerValue);
+         
+        List<User> listUsers = userService.getAllUser();
+         
+        UserExportExcel excelExporter = new UserExportExcel(listUsers);
+         
+        excelExporter.export(response);    
+    }  
 	
 	@GetMapping("/user/edit/{id}")
 	public String editUser(@PathVariable Long id,User user, Model model) {

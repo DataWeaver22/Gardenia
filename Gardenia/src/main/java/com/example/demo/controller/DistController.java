@@ -1,22 +1,48 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ProcessBuilder.Redirect;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.view.RedirectView;
 
-import com.example.demo.entity.Area;
+import com.example.demo.Export.DistributorExportExcel;
 import com.example.demo.entity.City;
 import com.example.demo.entity.Distributor;
 import com.example.demo.entity.DistributorCode;
-import com.example.demo.entity.HqMaster;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
 import com.example.demo.entity.User;
@@ -30,6 +56,9 @@ import com.example.demo.service.HqService;
 import com.example.demo.service.RegionService;
 import com.example.demo.service.StateService;
 import com.example.demo.service.UserService;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+
+import net.bytebuddy.asm.Advice.Local;
 
 @Controller
 public class DistController {
@@ -105,10 +134,10 @@ public class DistController {
 		return "create_distributor";
 	}
 	
-	
-	
 	@PostMapping("/distributor")
 	public String saveUser(@ModelAttribute("distributor") Distributor distributor, DistributorCode distributorCode, Model model) {
+		
+		LocalDateTime createDateTime = LocalDateTime.now();
 		String sId = distributor.getState_id();
 		System.out.println(sId);
 		String name = hqUserRepository.findByStateName(Long.parseLong(sId));
@@ -131,12 +160,30 @@ public class DistController {
 //		String codeNumberInteger = "000";
 //		distributorCode.setRegion_name(codeNumberInteger);
 		distributorCode.setRegion_code(regionCodeString);
+		distributor.setCreate_date(createDateTime);
 		System.out.println(distributorCode);
 		
 		distributorService.saveDistributor(distributor);
 		return "redirect:/distributor";
 	}
 	
+	@GetMapping("/distributor/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+		/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
+        String currentDateTime = dateFormatter.format(new Date());*/
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=distributor.xlsx";
+        response.setHeader(headerKey, headerValue);
+         
+        List<Distributor> listUsers = distributorService.getAllDistributor();
+         
+        DistributorExportExcel excelExporter = new DistributorExportExcel(listUsers);
+         
+        excelExporter.export(response);    
+    }  
+    
 	@GetMapping("/distributor/edit/{id}")
 	public String editDist(@PathVariable Long id,Distributor distributor, Model model) {
 		List<State> state_id = stateService.getAllState();

@@ -7,7 +7,7 @@
 href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" 
 integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
 crossorigin="anonymous">
-
+<script src=""https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js></script>
 <style>
 
 
@@ -181,11 +181,54 @@ tbody td{
     height: 25px;
 }
 
+.export{
+	font-size: 9px;
+    width: 85px;
+    height: 25px;
+}
+
 h1{
 	font-size:18px;
 	
 }
 </style>
+<script>
+function myFunction() {
+  var input, filter, table, tr, td, cell, i, j;
+  filter = document.getElementById("searchInput").value.toLowerCase();
+  table = document.getElementById("userTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 1; i < tr.length; i++) {
+    tr[i].style.display = "none";
+    const tdArray = tr[i].getElementsByTagName("td");
+    for (var j = 0; j < tdArray.length; j++) {
+      const cellValue = tdArray[j];
+      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+        break;
+      }
+    }
+  }
+}
+
+$(document).ready(function () {
+        $('select.ddlFilterTableRow').bind('change', function () {
+            $('select.ddlFilterTableRow').attr('disabled', 'disabled');
+           $('#tableRegisterKids').find('.Row').hide();
+            var critriaAttribute = '';
+
+            $('select.ddlFilterTableRow').each(function () {
+                if ($(this).val() != '0') {
+                    critriaAttribute += '[data-' + $(this).data('attribute') + '="' + $(this).val() + '"]';
+                }
+            });
+
+            $('#tableRegisterKids').find('.Row' + critriaAttribute).show();
+            $('#headerCount').html($('table#tableRegisterKids tr.Row:visible').length + ' Registered Kids');
+            $('select.ddlFilterTableRow').removeAttr('disabled');
+        });
+    });
+</script>
 </head>
 <body>
 <div class="wrapper">
@@ -259,21 +302,34 @@ h1{
 </div>
 	<div class="container-fluid">
 		<div class = "mt-5">
-			<h1>User List</h1>
-			<!-- <div class = "col-lg-3 text-right"> -->
-				<!-- <a th:href="@{/user/new}" class ="btn btn-primary m-auto text-right"> Add User</a> -->
-			<!-- </div> -->
-		</div>
-		
-		<div class = "row">
-			<div class = "col-lg-3">
-				<a th:href="@{/user/new}" class ="btn btn-success btn_sm mb-3"> Add User</a>
+			<div class="row">
+			<div class="col-md-4">
+				<h1>User List</h1>
+			</div>
+			<div class="col-md-4">
+				<form>
+					<input type="text" name="keyword" size="50"
+					th:value="${keyword}" id="searchInput" onkeyup="myFunction()" placeholder="Search..."/>
+				<!-- &nbsp; <input type="submit" value="Search" oninput="myFunction()" />
+				&nbsp; <input type="button" value="Clear" id="btnClear"
+					onclick="clearSearch()" /> -->
+				</form>
+				<!-- <select id="dropDown" class='form-control' onchange="dropDown()">
+						<option>Active</option>
+						<option>Inactive</option>
+					</select> -->
+			</div>
+			<div class="col-md-4">
+			<a th:href="@{/user/export/excel}" class ="btn btn-success btn_sm mb-3 float-right export"> Export To Excel</a>
+				<a th:href="@{/user/new}" class ="btn btn-success btn_sm mb-3 float-right mr-2 "> Add User</a>
 			</div>
 		</div>
+		</div>
 		
-		<table class="table table-striped table-bordered">
+		
+		<table class="table table-striped table-bordered" id="userTable">
 			<thead class = "table-light">
-				<tr>
+				<tr class = "table-light">
 					<th>Login </th>
 					<th>First Name</th>
 					<th>Last Name</th>

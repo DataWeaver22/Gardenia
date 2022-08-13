@@ -1,7 +1,11 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.Enum.Uom;
+import com.example.demo.Export.ProductExportExcel;
+import com.example.demo.Export.UserExportExcel;
 import com.example.demo.entity.Country;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
@@ -59,14 +65,33 @@ public class ProductController {
 	
 	@PostMapping("/product")
 	public String saveProduct(@ModelAttribute("aproduct") Product product, Model model) {
+		LocalDateTime createDateTime = LocalDateTime.now();
 		String status = product.getStatus();
 		System.out.println(status);
 		
 		String uom = product.getUom();
 		System.out.println(uom);
+		product.setCreate_date(createDateTime);
 		productService.saveProduct(product);
 		return "redirect:/product";
 	}
+	
+	@GetMapping("/product/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+		/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
+        String currentDateTime = dateFormatter.format(new Date());*/
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=product.xlsx";
+        response.setHeader(headerKey, headerValue);
+         
+        List<Product> listUsers = productService.getAllProduct();
+         
+        ProductExportExcel excelExporter = new ProductExportExcel(listUsers);
+         
+        excelExporter.export(response);    
+    }  
 	
 	@GetMapping("/product/edit/{id}")
 	public String editProduct(@PathVariable Long id,Product product, Model model) {

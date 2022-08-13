@@ -1,10 +1,14 @@
 package com.example.demo.entity;
 
+import java.beans.Transient;
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -72,13 +76,20 @@ public class Distributor {
 	private String status;
 	
 	@Column(name = "create_date", length = 20)
-	private String create_date;
+	private LocalDateTime create_date;
 	
 	@Column(name = "inactive_date", length = 20)
-	private String inactive_date;
+	private LocalDateTime inactive_date;
 	
-	@Column(name = "documents", length = 20)
-	private String documents;
+//	@Column(name = "documents", length = 20)
+//	private String documents;
+	
+	@Lob
+	byte[] documents;
+	
+	private String fileName;
+
+    private String fileType;
 	
 	@Column(name = "service_status", length = 20)
 	private String service_status;
@@ -246,27 +257,27 @@ public class Distributor {
 		this.status = status;
 	}
 
-	public String getCreate_date() {
+	public LocalDateTime getCreate_date() {
 		return create_date;
 	}
 
-	public void setCreate_date(String create_date) {
+	public void setCreate_date(LocalDateTime create_date) {
 		this.create_date = create_date;
 	}
 
-	public String getInactive_date() {
+	public LocalDateTime getInactive_date() {
 		return inactive_date;
 	}
 
-	public void setInactive_date(String inactive_date) {
+	public void setInactive_date(LocalDateTime inactive_date) {
 		this.inactive_date = inactive_date;
 	}
 
-	public String getDocuments() {
+	public byte[] getDocuments() {
 		return documents;
 	}
 
-	public void setDocuments(String documents) {
+	public void setDocuments(byte[] documents) {
 		this.documents = documents;
 	}
 
@@ -286,10 +297,26 @@ public class Distributor {
 		this.brand_list = brand_list;
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
 	public Distributor(Long id, String distributor_name, String distributor_code, String distributor_type, String gstin,
 			String pan, String contact, String mobile, String phone, String email, String address, String region_name,
 			String region_id, String state_name, String state_id, String city_name, String city_id, String supp_name,
-			String supp_code, String status, String create_date, String inactive_date, String documents,
+			String supp_code, String status, LocalDateTime create_date, LocalDateTime inactive_date,
 			String service_status, String brand_list) {
 		super();
 		this.id = id;
@@ -314,13 +341,30 @@ public class Distributor {
 		this.status = status;
 		this.create_date = create_date;
 		this.inactive_date = inactive_date;
-		this.documents = documents;
 		this.service_status = service_status;
 		this.brand_list = brand_list;
 	}
 	
 	public Distributor() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	 public Distributor(String fileName, String fileType, byte[] documents) {
+	        this.fileName = fileName;
+	        this.fileType = fileType;
+	        this.documents = documents;
+	    }
+
+	@Transient
+    public String getPhotosImagePath() {
+        if (documents == null || id == null) return null;
+         
+        return "/user-photos/" + id + "/" + documents;
+    }
+
+	public byte[] getData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 

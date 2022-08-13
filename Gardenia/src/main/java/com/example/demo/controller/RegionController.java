@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +17,7 @@ import com.example.demo.entity.State;
 import com.example.demo.repository.DistributorCodeRepository;
 import com.example.demo.repository.RegionRepository;
 import com.example.demo.repository.StateRepository;
+import com.example.demo.Export.RegionExportExcel;
 import com.example.demo.entity.DistributorCode;
 import com.example.demo.entity.Region;
 import com.example.demo.service.DistributorCodeService;
@@ -80,6 +84,23 @@ public class RegionController {
 		regionService.saveRegion(region);
 		return "redirect:/region";
 	}
+	
+	@GetMapping("/region/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+		/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
+        String currentDateTime = dateFormatter.format(new Date());*/
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=region.xlsx";
+        response.setHeader(headerKey, headerValue);
+         
+        List<Region> listUsers = regionService.getAllRegion();
+         
+        RegionExportExcel excelExporter = new RegionExportExcel(listUsers);
+         
+        excelExporter.export(response);    
+    }  
 	
 	@GetMapping("/region/edit/{id}")
 	public String editRegion(@PathVariable Long id, Model model) {

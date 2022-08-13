@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,10 +41,10 @@ public class User {
 	private String status;
 	
 	@Column(name = "create_date", length = 20)
-	private String create_date;
+	private LocalDateTime create_date;
 	
 	@Column(name = "resign_date", length = 20)
-	private String resign_date;
+	private LocalDateTime resign_date;
 	
 	@Column(name = "region_name", nullable = false, length = 20)
 	private String region_name;
@@ -151,19 +153,19 @@ public class User {
 		this.status = status;
 	}
 
-	public String getCreate_date() {
+	public LocalDateTime getCreate_date() {
 		return create_date;
 	}
 
-	public void setCreate_date(String create_date) {
+	public void setCreate_date(LocalDateTime create_date) {
 		this.create_date = create_date;
 	}
 
-	public String getResign_date() {
+	public LocalDateTime getResign_date() {
 		return resign_date;
 	}
 
-	public void setResign_date(String resign_date) {
+	public void setResign_date(LocalDateTime resign_date) {
 		this.resign_date = resign_date;
 	}
 
@@ -241,7 +243,7 @@ public class User {
 	
 
 	public User(Long id,String login,String firstName, String lastName, String emp_code,
-			String team, String roles, String status, String create_date, String resign_date, String region_name,
+			String team, String roles, String status, LocalDateTime create_date, LocalDateTime resign_date, String region_name,
 			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents) {
 		super();
 		this.id = id;

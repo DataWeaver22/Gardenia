@@ -18,4 +18,5 @@ public interface DistRepository extends JpaRepository<Distributor, Long>{
 	
 	@Query("select cty.city_name from City cty where cty.id = ?1")
 	String findByCityName(@Param("ctyId") Long ctyName);
+	
 }

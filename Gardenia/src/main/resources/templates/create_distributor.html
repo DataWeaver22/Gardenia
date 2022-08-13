@@ -3,22 +3,67 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Distributor Master</title>
-<link rel="stylesheet" 
-href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" 
-integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
-crossorigin="anonymous">
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/css/fileinput.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<link
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/css/fileinput.min.css">
 <link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/piexif.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/sortable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/purify.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
-<script type="text/javascript" th:src="@{/js/src/fileup.js}" ></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/piexif.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/sortable.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/purify.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
+<script type="text/javascript" th:src="@{/js/src/fileup.js}"></script>
+<script src="js/zoom.js"></script>
 <style>
+#thumbnail{
+	width:180px;
+	height:180px;
+}
+.table>tbody>tr>td {
+  vertical-align: middle;
+}
+.input-group {
+  width: 100%;
+}
+
+.editable {
+  border: 1px solid lightgrey;
+  padding: 5px;
+  margin: 0;
+  text-shadow: none;
+  box-shadow: none;
+}
+.addBtn {
+  cursor: pointer;
+  border:none!important;
+}
+
+.addBtn2 {
+  border:none!important;
+}
+
+.remove {
+  background: #f1f1f1;
+  
+ }
+  .remove td {
+    font-style: italic;
+  }
 
 </style>
 <script th:inline="javascript">
@@ -48,293 +93,310 @@ crossorigin="anonymous">
 	
 /*]]>*/
 	}
+$(document).ready(function(){	
+	$('#fileImage').change(function(){
+		showImageThumbnail(this);
+	});
+	
+	function showImageThumbnail(fileInput){
+		file = fileInput.files[0];
+		reader = new FileReader();
+		
+		reader.onload = function(e) {
+			$('#thumbnail').attr('src',e.target.result);
+		};
+		
+		reader.readAsDataURL(file);
+	}
+	});
+	
+	function formatRows(main, prefer, common) {
+  return '<tr><td class="col-xs-3"><input type="text" value="' +main+ '" class="form-control editable" /></td>' +
+         '<td class="col-xs-3"><input type="text" value="' +prefer+ '" class="form-control editable" /></td>' +
+         '<td class="col-xs-1 text-center"><a href="#" onClick="deleteRow(this)">' +
+         '<i class="fa fa-trash-o" aria-hidden="true" style="font-size:23px"></a></td></tr>';
+};
+
+function deleteRow(trash) {
+  $(trash).closest('tr').remove();
+};
+
+function addRow() {
+  var main = $('.addMain').val();
+  var preferred = $('.addPrefer').val();
+  $(formatRows(main,preferred)).insertAfter('#addRow');
+  $(input).val('');  
+}
+
+$('.addBtn').click(function()  {
+  addRow();
+});
+		
 </script>
 </head>
 <body>
-<nav class="navbar navbar-expand-md bg-dark navbar-dark">
-  <!-- Brand -->
-  <a class="navbar-brand" href="#">Distributor</a>
+	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+		<!-- Brand -->
+		<a class="navbar-brand" href="#">Distributor</a>
 
-  <!-- Toggler/collapsibe Button -->
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+		<!-- Toggler/collapsibe Button -->
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#collapsibleNavbar">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-  <!-- Navbar links -->
-  <div class="collapse navbar-collapse" id="collapsibleNavbar">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/distributor/new}">Distributor Master</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-<br>
-<br>
+		<!-- Navbar links -->
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<ul class="navbar-nav">
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/distributor/new}">Distributor Master</a></li>
+			</ul>
+		</div>
+	</nav>
+	<br>
+	<br>
 
-<div class = "container">
-		<div class = "row">
-			<div class = "col-lg-12 col-md-12 col-sm-12 container justify-content-center card">
-				<h1 class = "text-center">Create New Distributor</h1>
+	<div class="container">
+		<div class="row">
+			<div
+				class="col-lg-12 col-md-12 col-sm-12 container justify-content-center card">
+				<h1 class="text-center">Create New Distributor</h1>
 				<div class="card-body">
-					<form th:action="@{/distributor}" th:object="${distributor}" method="POST">
-					<div class="row">
-						<div class="col-lg-6 col-md-6 col-sm-6 form-group">
-							<label>Distributor Name</label>
-							<input
-							type="text"
-							name="distributor_name"
-							th:field="*{distributor_name}"
-							class="form-control"
-							placeholder="Enter Distributor Name"
-							/>
-							
-							<label>Distributor Code</label>
-							<input
-							id="distId"
-							type="text"
-							name="distributor_code"
-							th:field="*{distributor_code}"
-							class="form-control"
-							placeholder="Enter Distributor Code"
-							/>
-							
-							<label>Type Of Distributor</label>
-							<input
-							type="text"
-							name="distributor_type"
-							th:field="*{distributor_type}"
-							class="form-control"
-							placeholder="Enter Distributor Type"
-							/>
-							
-						</div>
-						
-						<div class = " form col-md-6 col-lg-6 col-sm-6">
-							
-  <div class="file-loading">
-        <input id="input-ficons-5" name="input-ficons-5[]" multiple type="file">
-      </div>
+					<form th:action="@{/distributor}" th:object="${distributor}"
+						method="POST" enctype="multipart/form-data">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6 form-group">
+								<label>Distributor Name</label> <input type="text"
+									name="distributor_name" th:field="*{distributor_name}"
+									class="form-control" placeholder="Enter Distributor Name" />
 
-      <p>&nbsp;</p>
-      <button type="submit" class="btn btn-default">Submit</button>
+								<label>Distributor Code</label> <input id="distId" type="text"
+									name="distributor_code" th:field="*{distributor_code}"
+									class="form-control" placeholder="Enter Distributor Code" />
+
+								<label>Type Of Distributor</label> <input type="text"
+									name="distributor_type" th:field="*{distributor_type}"
+									class="form-control" placeholder="Enter Distributor Type" />
+
+							</div>
+
+								<div>
+
+									<label>Photos: </label> <input type="file" name="image"
+										accept="image/png, image/jpeg" id="fileImage" />
+										<p>
+									<img id="thumbnail" alt="Image Preview"/>
+									
+								</p>
+								
+								
+								</div>
+								<br/>
+							
+								...
+							
+
+
+
 
 						</div>
-						
 
-						
-						
-						</div>
-						
-						<div class = "row">
-						<div class="col-md-6">
-							<div class="form-group">
-							<label>GSTIN</label>
-							<input
-							type="text"
-							name="gstin"
-							th:field="*{gstin}"
-							class="form-control"
-							placeholder="Enter GSTIN"
-							/>
-						</div>
-						</div>
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>PAN</label>
-							<input
-							type="text"
-							name="pan"
-							th:field="*{pan}"
-							class="form-control"
-							placeholder="Enter PAN"
-							/>
-						</div>
-						</div>
-						</div>
-						
-						<div class = "row">
-						<div class="col-md-6">
-							<div class="form-group">
-							<label>Contact Person</label>
-							<input
-							type="text"
-							name="contact"
-							th:field="*{contact}"
-							class="form-control"
-							placeholder="Enter Contact Person"
-							/>
-						</div>
-						</div>
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>Mobile Number</label>
-							<input
-							type="text"
-							name="mobile"
-							th:field="*{mobile}"
-							class="form-control"
-							placeholder="Enter Mobile Number"
-							/>
-						</div>
-						</div>
-						</div>
-						
-						<div class = "row">
-						<div class="col-md-6">
-							<div class="form-group">
-							<label>Phone</label>
-							<input
-							type="text"
-							name="phone"
-							th:field="*{phone}"
-							class="form-control"
-							placeholder="Enter Phone Number"
-							/>
-						</div>
-						</div>
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>Email</label>
-							<input
-							type="email"
-							name="email"
-							th:field="*{email}"
-							class="form-control"
-							placeholder="Enter Email Id"
-							/>
-						</div>
-						</div>
-						</div>
-						
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-								<label>Address</label>
-								<input
-								type="text"
-								name="address"
-								th:field="*{address}"
-								class="form-control"
-								placeholder="Enter Address"
-							/>
-						</div>
-						</div>
-						
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>Region </label>
-							<select class="form-control" id="regionDropdown" name="region_id" oninput="myFunc()">
-    						
-    						<option th:each="region_name : ${region_name}" th:value="${region_name.id}" th:text="${region_name.region_name}"></option>
-							</select>
-						</div>
+									<label>GSTIN</label> <input type="text" name="gstin"
+										th:field="*{gstin}" class="form-control"
+										placeholder="Enter GSTIN" />
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>PAN</label> <input type="text" name="pan"
+										th:field="*{pan}" class="form-control" placeholder="Enter PAN" />
+								</div>
 							</div>
 						</div>
-						
-						
-						<div class="row">
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>State</label>
-							<select class="form-control" id="dropDownList" name="state_id">
-    						
-    						<option th:each="state_name : ${state_name}" th:value="${state_name.id}" th:text="${state_name.state_name}"></option>
-							</select>
-						</div>
-						</div>
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>City</label>
-							<select class="form-control" id="dropDownList" name="city_id">
-    						
-    						<option th:each="city_name : ${city_name}" th:value="${city_name.id}" th:text="${city_name.city_name}"></option>
-							</select>
-						</div>
-						</div>
-						</div>
-						
-						<div class = "row">
-						<div class="col-md-6">
-							<div class="form-group">
-							<label>Supplier Name</label>
-							<input
-							type="text"
-							name="supp_name"
-							th:field="*{supp_name}"
-							class="form-control"
-							placeholder="Enter Supplier Name"
-							/>
-						</div>
-						</div>
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>Supplier Code</label>
-							<input
-							type="text"
-							name="supp_code"
-							th:field="*{supp_code}"
-							class="form-control"
-							placeholder="Enter Supplier Code"
-							/>
-						</div>
-						</div>
-						</div>
-						
-						<div class= "row">
-						
-						<div class="col-md-6">
-							<div class="form-group">
-							<label>Status</label>
-							<select class="form-control" id="dropDownList" name="status">
-    						<option th:each="status : ${T(com.example.demo.Enum.Status).values()}" th:value="${status}" th:text="${status}"></option>
-							</select>
-						</div>
-						</div>
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>Serviced Status </label>
-							<select class="form-control" id="dropDownList" name="options">
-    						<option th:each="options : ${T(com.example.demo.Enum.Service).values()}" th:value="${options}" th:text="${options}"></option>
-							</select>
-						</div>
-						</div>
-						</div>
-						
+
 						<div class="row">
 							<div class="col-md-6">
-							<div class="form-group">
-							<label>Brand List</label>
-							<input
-							type="text"
-							name="brand_list"
-							th:field="*{brand_list}"
-							class="form-control"
-							placeholder="Enter Brand List"
-							/>
+								<div class="form-group">
+									<label>Contact Person</label> <input type="text" name="contact"
+										th:field="*{contact}" class="form-control"
+										placeholder="Enter Contact Person" />
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Mobile Number</label> <input type="text" name="mobile"
+										th:field="*{mobile}" class="form-control"
+										placeholder="Enter Mobile Number" />
+								</div>
+							</div>
 						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Phone</label> <input type="text" name="phone"
+										th:field="*{phone}" class="form-control"
+										placeholder="Enter Phone Number" />
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Email</label> <input type="email" name="email"
+										th:field="*{email}" class="form-control"
+										placeholder="Enter Email Id" />
+								</div>
+							</div>
 						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Address</label> <input type="text" name="address"
+										th:field="*{address}" class="form-control"
+										placeholder="Enter Address" />
+								</div>
+							</div>
+
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Region </label> <select class="form-control"
+										id="regionDropdown" name="region_id" oninput="myFunc()">
+
+										<option th:each="region_name : ${region_name}"
+											th:value="${region_name.id}"
+											th:text="${region_name.region_name}"></option>
+									</select>
+								</div>
+							</div>
 						</div>
-						
-						
-						
+
+
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>State</label> <select class="form-control"
+										id="dropDownList" name="state_id">
+
+										<option th:each="state_name : ${state_name}"
+											th:value="${state_name.id}"
+											th:text="${state_name.state_name}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>City</label> <select class="form-control"
+										id="dropDownList" name="city_id">
+
+										<option th:each="city_name : ${city_name}"
+											th:value="${city_name.id}" th:text="${city_name.city_name}"></option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Supplier Name</label> <input type="text"
+										name="supp_name" th:field="*{supp_name}" class="form-control"
+										placeholder="Enter Supplier Name" />
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Supplier Code</label> <input type="text"
+										name="supp_code" th:field="*{supp_code}" class="form-control"
+										placeholder="Enter Supplier Code" />
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Status</label> <select class="form-control"
+										id="dropDownList" name="status">
+										<option
+											th:each="status : ${T(com.example.demo.Enum.Status).values()}"
+											th:value="${status}" th:text="${status}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Serviced Status </label> <select class="form-control"
+										id="dropDownList" name="options">
+										<option
+											th:each="options : ${T(com.example.demo.Enum.Service).values()}"
+											th:value="${options}" th:text="${options}"></option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Brand List</label> <input type="text" name="brand_list"
+										th:field="*{brand_list}" class="form-control"
+										placeholder="Enter Brand List" />
+								</div>
+							</div>
+						</div>
+
+
+
 						<div class="box-footer">
-							<button type="submit" class="btn btn-primary">
-								Submit
-							</button>
+							<button type="submit" class="btn btn-primary">Submit</button>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	<div class="col-md-12 card mt-3 mb-5">
+<table class="table table-striped table-bordered mt-3">
+  <thead>
+    <tr>
+      <th>Assigned TSO</th>
+      <th>HQ</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="addRow">
+      <td class="col-xs-6">
+        <input class="form-control addMain" type="text" placeholder="Enter MRP" />
+      </td>
+      
+      <td class="col-xs-6">
+        <input class="form-control addPrefer" type="text" placeholder="Enter Status" />
+      </td>
+      <td class="col-xs-2 mt-1 text-center addBtn2" onclick="addRow()">
+        <span class="addBtn">
+            <i class="fa fa-plus-circle" style="font-size:23px"></i>
+          </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="col-md-1 float-right mb-3">
+    <button class="btn btn-success">Save</button>
+  </div>
+</div>
 
 </body>
 </html>

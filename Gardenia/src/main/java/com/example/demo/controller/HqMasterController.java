@@ -1,9 +1,15 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +18,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.Enum.Roles;
+import com.example.demo.Export.DistributorExportExcel;
+import com.example.demo.Export.HqExportExcel;
+import com.example.demo.entity.Distributor;
 import com.example.demo.entity.HqMaster;
+import com.example.demo.repository.HqRepository;
 import com.example.demo.service.HqService;
 
 @Controller
@@ -61,7 +72,23 @@ public class HqMasterController {
 	        return "hqmaster";
 	    }
 	
-	
+	 @GetMapping("/hqmaster/export/excel")
+	    public void exportToExcel(HttpServletResponse response) throws IOException {
+	        response.setContentType("application/octet-stream");
+			/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
+	        String currentDateTime = dateFormatter.format(new Date());*/
+	         
+	        String headerKey = "Content-Disposition";
+	        String headerValue = "attachment; filename=hqmaster.xlsx";
+	        response.setHeader(headerKey, headerValue);
+	         
+	        List<HqMaster> listUsers = hqService.getAllHq();
+	         
+	        HqExportExcel excelExporter = new HqExportExcel(listUsers);
+	         
+	        excelExporter.export(response);    
+	    }  
+
 	@GetMapping("/hqmaster/edit/{id}")
 	public String editHqMaster(@PathVariable Long id, Model model) {
 		model.addAttribute("hqmaster", hqService.getHqMaster(id));

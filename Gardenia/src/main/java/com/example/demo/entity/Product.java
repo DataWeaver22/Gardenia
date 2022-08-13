@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -51,10 +53,10 @@ public class Product {
 	private String description;
 	
 	@Column(name = "create_date", length = 20)
-	private String create_date;
+	private LocalDateTime create_date;
 	
 	@Column(name = "inactive_date", length = 20)
-	private String inactive_date;
+	private LocalDateTime inactive_date;
 	
 	@Column(name = "sales_diary", nullable = false, length = 20)
 	private String sales_diary;
@@ -163,19 +165,19 @@ public class Product {
 		this.description = description;
 	}
 
-	public String getCreate_date() {
+	public LocalDateTime getCreate_date() {
 		return create_date;
 	}
 
-	public void setCreate_date(String create_date) {
+	public void setCreate_date(LocalDateTime create_date) {
 		this.create_date = create_date;
 	}
 
-	public String getInactive_date() {
+	public LocalDateTime getInactive_date() {
 		return inactive_date;
 	}
 
-	public void setInactive_date(String inactive_date) {
+	public void setInactive_date(LocalDateTime inactive_date) {
 		this.inactive_date = inactive_date;
 	}
 
@@ -188,8 +190,8 @@ public class Product {
 	}
 
 	public Product(Long id, String pname, String code, String brand, String category, String family, String variant,
-			String group_name, String uom, String ptd, String status, String description, String create_date,
-			String inactive_date, String sales_diary) {
+			String group_name, String uom, String ptd, String status, String description, LocalDateTime create_date,
+			LocalDateTime inactive_date, String sales_diary) {
 		super();
 		this.id = id;
 		this.pname = pname;

@@ -44,7 +44,7 @@ public class HqServiceImpl implements HqService{
 			hqRepository.deleteById(id);
 		}
 		
-		@Override
+		
 		public List<HqMaster> listAll(String keyword) {
 	        if (keyword != null) {
 	            return hqRepository.search(keyword);

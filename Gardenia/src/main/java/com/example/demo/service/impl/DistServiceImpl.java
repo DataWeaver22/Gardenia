@@ -1,12 +1,13 @@
 package com.example.demo.service.impl;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.Distributor;
-import com.example.demo.entity.User;
 import com.example.demo.repository.DistRepository;
 import com.example.demo.service.DistributorService;
 
@@ -45,4 +46,35 @@ public class DistServiceImpl implements DistributorService{
 		// TODO Auto-generated method stub
 		distRepository.deleteById(id);
 	}
+	
+	public Distributor storeFile(MultipartFile file) {
+	
+	String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+    try {
+        // Check if the file's name contains invalid characters
+        if (fileName.contains("..")) {
+            throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+        }
+
+        Distributor dbFile = new Distributor(fileName, file.getContentType(), file.getBytes());
+
+        return distRepository.save(dbFile);
+    } catch (IOException ex) {
+        throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
+    }
+}
+
+public Distributor getFile(Long fileId) {
+    return distRepository.findById(fileId)
+        .orElseThrow(() -> new FileNotFoundException("File not found with id " + fileId));
+}
+
+@Override
+public Distributor getFile(String fileName) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+	
 }
