@@ -47,24 +47,7 @@ public class DistServiceImpl implements DistributorService{
 		distRepository.deleteById(id);
 	}
 	
-	public Distributor storeFile(MultipartFile file) {
 	
-	String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
-    try {
-        // Check if the file's name contains invalid characters
-        if (fileName.contains("..")) {
-            throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
-        }
-
-        Distributor dbFile = new Distributor(fileName, file.getContentType(), file.getBytes());
-
-        return distRepository.save(dbFile);
-    } catch (IOException ex) {
-        throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
-    }
-}
-
 public Distributor getFile(Long fileId) {
     return distRepository.findById(fileId)
         .orElseThrow(() -> new FileNotFoundException("File not found with id " + fileId));
@@ -72,6 +55,12 @@ public Distributor getFile(Long fileId) {
 
 @Override
 public Distributor getFile(String fileName) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Distributor storeFile(MultipartFile file) {
 	// TODO Auto-generated method stub
 	return null;
 }

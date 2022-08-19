@@ -207,6 +207,8 @@ function myFunction() {
     }
   }
 }
+
+
 </script>
 </head>
 <body>
@@ -344,6 +346,8 @@ function myFunction() {
 					<td>
 						<a th:href="@{/product/edit/{id}(id=${aproduct.id})}"
 						 class="btn btn-success">Edit</a>
+						 <a th:href="@{/product/{id}(id=${aproduct.id})}"
+						 class="btn btn-danger">Delete</a>
 					</td>	
 				</tr>
 			</tbody>

@@ -1,12 +1,15 @@
 package com.example.demo.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -15,41 +18,43 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	
 		
-	@Column(name = "pname", nullable = false, length = 20)
+	@Column(name = "pname",length = 20)
 	private String pname;
 	
-	@Column(name = "code", nullable = false, length = 20)
+	@Column(name = "code",  length = 20)
 	private String code;
 	
-	@Column(name = "brand", nullable = false, length = 20)
+	@Column(name = "brand", length = 20)
 	private String brand;
 	
-	@Column(name = "category", nullable = false, length = 20)
+	@Column(name = "category", length = 20)
 	private String category;
 	
-	@Column(name = "family", nullable = false, length = 20)
+	@Column(name = "family", length = 20)
 	private String family;
 	
-	@Column(name = "variant", nullable = false, length = 20)
+	@Column(name = "variant", length = 20)
 	private String variant;
 	
-	@Column(name = "group_name", nullable = false, length = 20)
+	@Column(name = "group_name", length = 20)
 	private String group_name;
 	
-	@Column(name = "uom", nullable = false, length = 20)
+	@Column(name = "uom", length = 20)
 	private String uom;
 	
-	@Column(name = "ptd", nullable = false, length = 20)
+	@Column(name = "ptd", length = 20)
 	private String ptd;
 	
-	@Column(name = "ptr", nullable = false, length = 20)
+	@Column(name = "ptr", length = 20)
 	private String ptr;
 	
-	@Column(name = "status", nullable = false, length = 20)
+	@Column(name = "status",  length = 20)
 	private String status;
 	
-	@Column(name = "description", nullable = false, length = 20)
+	@Column(name = "description", length = 20)
 	private String description;
 	
 	@Column(name = "create_date", length = 20)
@@ -58,8 +63,11 @@ public class Product {
 	@Column(name = "inactive_date", length = 20)
 	private LocalDateTime inactive_date;
 	
-	@Column(name = "sales_diary", nullable = false, length = 20)
+	@Column(name = "sales_diary", length = 20)
 	private String sales_diary;
+	
+	@OneToMany(mappedBy = "aproduct")
+    private Collection<ProductNew> productNew;
 
 	public Long getId() {
 		return id;

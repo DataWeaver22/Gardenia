@@ -14,17 +14,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.Enum.Status;
 import com.example.demo.Enum.Uom;
 import com.example.demo.Export.ProductExportExcel;
-import com.example.demo.Export.UserExportExcel;
-import com.example.demo.entity.Country;
 import com.example.demo.entity.Product;
-import com.example.demo.entity.User;
+import com.example.demo.entity.ProductNew;
+import com.example.demo.repository.ProductNewRepository;
+import com.example.demo.service.ProductNewService;
 import com.example.demo.service.ProductService;
 
+/*
 import ch.qos.logback.core.status.Status;
-
+*/
 @Controller
 public class ProductController {
 	
@@ -32,6 +35,11 @@ public class ProductController {
 	
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	ProductNewService productNewService;
+	
+	ProductNewRepository productNewRepository;
 
 	public ProductController(ProductService productService) {
 		super();
@@ -48,29 +56,25 @@ public class ProductController {
 	public String CreateNewForm(Model model){
 		
 		Product product = new Product();
-		 Status status;
-//		List<String> status = new ArrayList<String>();
-//		status.add("Active");
-//		status.add("Inactive");
-	    //model.addAttribute("status", status);
-		
-//		List<String> options = new ArrayList<String>();
-//	    options.add("Units");
-//	    options.add("Carton");
-//	    model.addAttribute("options", options);
+		ProductNew productNew = new ProductNew();
 		model.addAttribute("aproduct",product);
-		//model.addAttribute("status",status.value);
+		model.addAttribute("productNew", productNew);
 		return "create_product";
 	}
 	
+	
+	
 	@PostMapping("/product")
-	public String saveProduct(@ModelAttribute("aproduct") Product product, Model model) {
+	public String saveProduct(@ModelAttribute("aproduct") Product product,@ModelAttribute("productNew")ProductNew productNew,
+								 Model model) {
 		LocalDateTime createDateTime = LocalDateTime.now();
 		String status = product.getStatus();
-		System.out.println(status);
 		
 		String uom = product.getUom();
-		System.out.println(uom);
+		
+		String status1 = productNew.getMrp_status();
+	
+		productNewService.saveProductNew(productNew);
 		product.setCreate_date(createDateTime);
 		productService.saveProduct(product);
 		return "redirect:/product";

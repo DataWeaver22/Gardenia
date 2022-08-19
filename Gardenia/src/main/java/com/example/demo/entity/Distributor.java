@@ -81,11 +81,10 @@ public class Distributor {
 	@Column(name = "inactive_date", length = 20)
 	private LocalDateTime inactive_date;
 	
-//	@Column(name = "documents", length = 20)
-//	private String documents;
+	@Column(name = "documents", length = 64)
+	private String documents;
 	
-	@Lob
-	byte[] documents;
+	
 	
 	private String fileName;
 
@@ -273,11 +272,11 @@ public class Distributor {
 		this.inactive_date = inactive_date;
 	}
 
-	public byte[] getDocuments() {
+	public String getDocuments() {
 		return documents;
 	}
 
-	public void setDocuments(byte[] documents) {
+	public void setDocuments(String documents) {
 		this.documents = documents;
 	}
 
@@ -349,12 +348,11 @@ public class Distributor {
 		// TODO Auto-generated constructor stub
 	}
 	
-	 public Distributor(String fileName, String fileType, byte[] documents) {
-	        this.fileName = fileName;
-	        this.fileType = fileType;
-	        this.documents = documents;
-	    }
-
+	/*
+	 * public Distributor(String fileName, String fileType, String documents) {
+	 * this.fileName = fileName; this.fileType = fileType; this.documents =
+	 * documents; }
+	 */
 	@Transient
     public String getPhotosImagePath() {
         if (documents == null || id == null) return null;
@@ -362,10 +360,6 @@ public class Distributor {
         return "/user-photos/" + id + "/" + documents;
     }
 
-	public byte[] getData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
 
 	

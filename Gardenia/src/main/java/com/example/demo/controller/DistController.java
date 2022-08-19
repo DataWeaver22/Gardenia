@@ -41,8 +41,10 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.demo.Export.DistributorExportExcel;
 import com.example.demo.entity.City;
+import com.example.demo.entity.DistNew;
 import com.example.demo.entity.Distributor;
 import com.example.demo.entity.DistributorCode;
+import com.example.demo.entity.ProductNew;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
 import com.example.demo.entity.User;
@@ -135,7 +137,9 @@ public class DistController {
 	}
 	
 	@PostMapping("/distributor")
-	public String saveUser(@ModelAttribute("distributor") Distributor distributor, DistributorCode distributorCode, Model model) {
+	public String saveUser(@ModelAttribute("distributor") Distributor distributor,@ModelAttribute("disttso")DistNew distNew,
+			@RequestParam("tso") String tso[], DistributorCode distributorCode, Model model,
+			@RequestParam("image") MultipartFile multipartFile) throws IOException {
 		
 		LocalDateTime createDateTime = LocalDateTime.now();
 		String sId = distributor.getState_id();
@@ -162,6 +166,18 @@ public class DistController {
 		distributorCode.setRegion_code(regionCodeString);
 		distributor.setCreate_date(createDateTime);
 		System.out.println(distributorCode);
+		
+		
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        distributor.setDocuments(fileName);
+         
+        Distributor savedUser = distRepository.save(distributor);
+ 
+        String uploadDir = "user-photos/" + savedUser.getId();
+ 
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+         
+      
 		
 		distributorService.saveDistributor(distributor);
 		return "redirect:/distributor";
