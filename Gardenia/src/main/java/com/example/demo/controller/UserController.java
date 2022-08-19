@@ -10,12 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Enum.Roles;
 import com.example.demo.Enum.Status;
@@ -23,6 +26,7 @@ import com.example.demo.Export.RegionExportExcel;
 import com.example.demo.Export.UserExportExcel;
 import com.example.demo.entity.Area;
 import com.example.demo.entity.City;
+import com.example.demo.entity.Distributor;
 import com.example.demo.entity.HqMaster;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
@@ -111,7 +115,7 @@ public class UserController {
 	
 	
 	@PostMapping("/user")
-	public String saveUser(@ModelAttribute("user") User user, Model model) {
+	public String saveUser(@ModelAttribute("user") User user, Model model,@RequestParam("image") MultipartFile multipartFile) throws IOException {
 		LocalDateTime createDateTime = LocalDateTime.now();
 		String sId = user.getState_id();
 		System.out.println(sId);
@@ -136,6 +140,15 @@ public class UserController {
 		String hname = hqUserRepository.findByHqName(Long.parseLong(hId));
 		System.out.println(hname);
 		user.setHq_name(hname);
+		
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        user.setDocuments(fileName);
+         
+        User savedUser = hqUserRepository.save(user);
+ 
+        String uploadDir = "user-photos/" + savedUser.getId();
+ 
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		
 		user.setCreate_date(createDateTime);
 		userService.saveUser(user);
