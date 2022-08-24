@@ -330,7 +330,9 @@ input[type=text] {
 										id="dropDownList" name="city_code">
 
 										<option th:each="city_name : ${city_name}"
-											th:value="${city_name.id}" th:text="${city_name.city_name}"></option>
+											th:value="${city_name.id}"
+											th:selected="${city_name.id} eq ${city_code_ID}?true:false" 
+											th:text="${city_name.city_name}"></option>
 									</select>
 								</div>
 							</div>

@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
 import javax.persistence.Id;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.Export.CountryExportExcel;
+import com.example.demo.Export.StateExportExcel;
 import com.example.demo.entity.Country;
 import com.example.demo.entity.State;
 import com.example.demo.repository.CountryRepository;
@@ -72,6 +76,23 @@ public class StateController {
 	 * @GetMapping("/{id}/state") public State createState(@RequestBody State state)
 	 * { return stateRepository.save(state); }
 	 */
+	
+	@GetMapping("/state/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+		/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
+        String currentDateTime = dateFormatter.format(new Date());*/
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=state.xlsx";
+        response.setHeader(headerKey, headerValue);
+         
+        List<State> listUsers = stateService.getAllState();
+         
+        StateExportExcel excelExporter = new StateExportExcel(listUsers);
+         
+        excelExporter.export(response);    
+    }  
 
 	@PostMapping("/state")
 	public String saveState(@ModelAttribute("state") State state) {

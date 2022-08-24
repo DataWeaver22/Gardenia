@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,9 +22,9 @@ public class ProductNew {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-		
+ 	
 	@Column(name = "mrp", length = 20)
-	private Double mrp;
+	private Long[] mrp;
 	
 	@Column(name = "active_date", length = 20)
 	private Date active_date;
@@ -34,9 +35,9 @@ public class ProductNew {
 	@Column(name = "mrp_status", length = 20)
 	private String mrp_status;
 	
-	@ManyToOne
+	@ManyToOne(targetEntity = Product.class)
     @JoinColumn(name="id", insertable = false, updatable = false)
-    private Product aproduct;
+	private Product product;
 
 	public Long getId() {
 		return id;
@@ -46,11 +47,11 @@ public class ProductNew {
 		this.id = id;
 	}
 
-	public Double getMrp() {
+	public Long[] getMrp() {
 		return mrp;
 	}
 
-	public void setMrp(Double mrp) {
+	public void setMrp(Long[] mrp) {
 		this.mrp = mrp;
 	}
 
@@ -78,7 +79,7 @@ public class ProductNew {
 		this.mrp_status = mrp_status;
 	}
 
-	public ProductNew(Long id, Double mrp, Date active_date, Date inactive_date, String mrp_status) {
+	public ProductNew(Long id, Long[] mrp, Date active_date, Date inactive_date, String mrp_status) {
 		super();
 		this.id = id;
 		this.mrp = mrp;
@@ -90,10 +91,15 @@ public class ProductNew {
 	public ProductNew() {
 		// TODO Auto-generated constructor stub
 	}
-
-	public void setProduct(ArrayList<ProductNew> lDD) {
-		// TODO Auto-generated method stub
-		
-	}
+	
+//	public void getProductNew(ArrayList<ProductNew> lDD) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	public void setProductNew(ArrayList<ProductNew> lDD) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 }

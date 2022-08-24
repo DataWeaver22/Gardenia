@@ -3,9 +3,15 @@ package com.example.demo.entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,13 +20,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "aproduct")
-public class Product {
+public class Product{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	
-		
 	@Column(name = "pname",length = 20)
 	private String pname;
 	
@@ -66,8 +70,8 @@ public class Product {
 	@Column(name = "sales_diary", length = 20)
 	private String sales_diary;
 	
-	@OneToMany(mappedBy = "aproduct")
-    private Collection<ProductNew> productNew;
+	@OneToMany(mappedBy="product",targetEntity = ProductNew.class)
+	public List<ProductNew> productNew;
 
 	public Long getId() {
 		return id;
@@ -221,5 +225,7 @@ public class Product {
 	public Product() {
 		// TODO Auto-generated constructor stub
 	}
+	
+
 
 }

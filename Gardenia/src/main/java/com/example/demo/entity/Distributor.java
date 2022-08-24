@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.beans.Transient;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -84,7 +86,8 @@ public class Distributor {
 	@Column(name = "documents", length = 64)
 	private String documents;
 	
-	
+	@OneToMany(mappedBy="distributor",targetEntity = DistNew.class)
+	public List<DistNew> distNew;
 	
 	private String fileName;
 

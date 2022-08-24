@@ -331,6 +331,7 @@ input[type=text] {
 
 										<option th:each="state_name : ${state_name}"
 											th:value="${state_name.id}"
+											th:selected="${state_name.id} eq ${state_code_ID}?true:false"
 											th:text="${state_name.state_name}"></option>
 									</select>
 								</div>

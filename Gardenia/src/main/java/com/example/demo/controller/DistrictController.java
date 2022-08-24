@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,11 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.Export.DistrictExportExcel;
+import com.example.demo.entity.Area;
 import com.example.demo.entity.District;
 import com.example.demo.entity.Region;
-import com.example.demo.entity.State;
 import com.example.demo.repository.DistrictRepository;
-import com.example.demo.repository.RegionRepository;
 import com.example.demo.service.DistrictService;
 import com.example.demo.service.RegionService;
 
@@ -52,6 +55,23 @@ public class DistrictController {
 		return "create_district";
 	}
 	
+	@GetMapping("/district/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+		/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
+        String currentDateTime = dateFormatter.format(new Date());*/
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=district.xlsx";
+        response.setHeader(headerKey, headerValue);
+         
+        List<District> listUsers = districtService.getAllDistrict();
+         
+        DistrictExportExcel excelExporter = new DistrictExportExcel(listUsers);
+         
+        excelExporter.export(response);    
+    }  
+	
 	@PostMapping("/district")
 	public String saveDistrict(@ModelAttribute("district") District district) {
 		String rId = district.getRegion_code();
@@ -63,13 +83,16 @@ public class DistrictController {
 		return "redirect:/district";
 	}
 	
-	@GetMapping("/district/edit/{id}")
-	public String editDistrict(@PathVariable Long id, Model model) {
-		List<Region> region_code = regionService.getAllRegion();
+	@GetMapping("/district/edit/{sid}")
+	public String editDistrict(@PathVariable Long sid, Model model) {
+		List<Region> did = regionService.getAllRegion();
 		List<Region> region_name = regionService.getAllRegion();
-		model.addAttribute("region_code",region_code);
+		model.addAttribute("regionId",did);
 		model.addAttribute("region_name",region_name);
-		model.addAttribute("district", districtService.getDistrictById(id));
+		District district = districtService.getDistrictById(sid);
+		String cIdString = district.getRegion_code();
+		model.addAttribute("region_code_ID", cIdString);
+		model.addAttribute("district", districtService.getDistrictById(sid));
 		return "edit_district";
 	}
 	

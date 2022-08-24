@@ -242,6 +242,10 @@ input[type=text] {
 	font-size: 12px;
 }
 
+input[type=number] {
+	font-size: 12px;
+}
+
 #dropDownList {
 	font-size: 12px;
 	height: auto;
@@ -510,14 +514,14 @@ var convertedIntoArray = [];
 						<div class="row">
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
-									<label>PTD</label> <input type="text" name="ptd"
+									<label>PTD</label> <input type="number" name="ptd"
 										th:field="*{ptd}" class="form-control" placeholder="Enter PTD" />
 								</div>
 							</div>
 
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
-									<label>PTR</label> <input type="text" name="ptr"
+									<label>PTR</label> <input type="number" name="ptr"
 										th:field="*{ptr}" class="form-control" placeholder="Enter PTR" />
 								</div>
 							</div>
@@ -561,7 +565,7 @@ var convertedIntoArray = [];
 					</div>
 				</div>
 
-				<div class="col-md-12 card mt-3 mb-5" th:object="${productNew}">
+				<div class="col-md-12 card mt-3 mb-5" th:object="${productnew}">
 					<table class="table table-striped table-bordered mt-3" id="pmrp">
 						<thead>
 							<tr>
@@ -583,7 +587,7 @@ var convertedIntoArray = [];
 									th:value="${productN.mrp}" onfocusout="mrpArray()"  required /></td>
 
 								<td class="col-xs-6"><select class="form-control"
-									id="mrpStatus" name="mrp_status">
+									id="mrpStatus" name="status1">
 										<option
 											th:each="mrpstatus : ${T(com.example.demo.Enum.Status).values()}"
 											th:value="${productN.mrp_status}" th:text="${mrpstatus}"></option>

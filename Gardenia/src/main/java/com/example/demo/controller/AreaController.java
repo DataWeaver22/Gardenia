@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.Export.AreaExportExcel;
+import com.example.demo.Export.CityExportExcel;
 import com.example.demo.entity.Area;
 import com.example.demo.entity.City;
 import com.example.demo.entity.District;
@@ -53,6 +58,23 @@ public class AreaController {
 		return "create_area";
 	}
 	
+	@GetMapping("/area/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+		/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
+        String currentDateTime = dateFormatter.format(new Date());*/
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=area.xlsx";
+        response.setHeader(headerKey, headerValue);
+         
+        List<Area> listUsers = areaService.getAllArea();
+         
+        AreaExportExcel excelExporter = new AreaExportExcel(listUsers);
+         
+        excelExporter.export(response);    
+    }  
+	
 	@PostMapping("/area")
 	public String saveArea(@ModelAttribute("area")Area area) {
 		String cyId = area.getCity_code();
@@ -64,13 +86,17 @@ public class AreaController {
 		return "redirect:/area";
 	}
 	
-	@GetMapping("/area/edit/{id}")
-	public String editArea(@PathVariable Long id, Model model) {
-		List<City> city_code = cityService.getAllCity();
+	@GetMapping("/area/edit/{sid}")
+	public String editArea(@PathVariable Long sid, Model model) {
+		List<City> did = cityService.getAllCity();
 		List<City> city_name = cityService.getAllCity();
-		model.addAttribute("city_code",city_code);
+		model.addAttribute("cityId", did);
 		model.addAttribute("city_name",city_name);
-		model.addAttribute("area", areaService.getAreaById(id));
+		Area area = areaService.getAreaById(sid);
+		String cIdString = area.getCity_code();
+		model.addAttribute("city_code_ID", cIdString);
+		System.out.println(cIdString);
+		model.addAttribute("area", areaService.getAreaById(sid));
 		return "edit_area";
 	}
 	

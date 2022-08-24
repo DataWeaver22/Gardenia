@@ -331,7 +331,7 @@ function myFunction() {
 					<th>Name</th>
 					<th>Code</th>
 					<th>Type Of Distributor</th>
-					<th>GSTIN</th>
+					<!-- <th>GSTIN</th>
 					<th>PAN</th>
 					<th>Contact Person</th>
 					<th>Mobile</th>
@@ -348,10 +348,10 @@ function myFunction() {
 					<th>Supplier Id</th>
 					<th>Status</th> 
 					<th>Create Date</th> 
-					<th>Inactive Date</th> 
+					<th>Inactive Date</th>  -->
 					<th>Documents</th>
-					<th>Serviced Status</th>
-					<th>Brand List</th>
+					<!-- <th>Serviced Status</th>
+					<th>Brand List</th> -->
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -360,7 +360,7 @@ function myFunction() {
 					<td th:text="${distributortable.distributor_name}"></td>
 					<td th:text="${distributortable.distributor_code}"></td>
 					<td th:text="${distributortable.distributor_type}"></td>
-					<td th:text="${distributortable.gstin}"></td>
+					<!-- <td th:text="${distributortable.gstin}"></td>
 					<td th:text="${distributortable.pan}"></td>
 					<td th:text="${distributortable.contact}"></td>
 					<td th:text="${distributortable.mobile}"></td>
@@ -377,14 +377,14 @@ function myFunction() {
 					<td th:text="${distributortable.supp_code}"></td>
 					<td th:text="${distributortable.status}"></td>
 					<td th:text="${distributortable.create_date}"></td>
-					<td th:text="${distributortable.inactive_date}"></td>
+					<td th:text="${distributortable.inactive_date}"></td> -->
 					<td><img th:src="${distributortable.photosImagePath}" class="dir-img" /></td>
-					<td th:text="${distributortable.service_status}"></td>
-					<td th:text="${distributortable.brand_list}"></td>
+					<!-- <td th:text="${distributortable.service_status}"></td>
+					<td th:text="${distributortable.brand_list}"></td> -->
 					<td><a
 						th:href="@{/distributor/edit/{id}(id=${distributortable.id})}"
-						class="btn btn-success">Edit</a> <!-- <a th:href="@{/distributor/{id}(id=${distributortable.id})}"
-						 class="btn btn-danger">Delete</a> --></td>
+						class="btn btn-success">Edit</a> <a th:href="@{/distributor/{id}(id=${distributortable.id})}"
+						 class="btn btn-danger">Delete</a> </td>
 				</tr>
 			</tbody>
 		</table>

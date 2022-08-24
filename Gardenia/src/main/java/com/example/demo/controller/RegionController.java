@@ -18,6 +18,9 @@ import com.example.demo.repository.DistributorCodeRepository;
 import com.example.demo.repository.RegionRepository;
 import com.example.demo.repository.StateRepository;
 import com.example.demo.Export.RegionExportExcel;
+import com.example.demo.Export.StateExportExcel;
+import com.example.demo.entity.Area;
+import com.example.demo.entity.City;
 import com.example.demo.entity.DistributorCode;
 import com.example.demo.entity.Region;
 import com.example.demo.service.DistributorCodeService;
@@ -65,7 +68,7 @@ public class RegionController {
 		model.addAttribute("state_code",state_code);
 		model.addAttribute("state_name",state_name);
 		return "create_region";
-	}
+	}  
 	
 	@PostMapping("/region")
 	public String saveRegion(@ModelAttribute("region") Region region, DistributorCode distributorCode ) {
@@ -102,13 +105,17 @@ public class RegionController {
         excelExporter.export(response);    
     }  
 	
-	@GetMapping("/region/edit/{id}")
-	public String editRegion(@PathVariable Long id, Model model) {
-		List<State> state_code = stateService.getAllState();
+	@GetMapping("/region/edit/{sid}")
+	public String editRegion(@PathVariable Long sid, Model model) {
+		List<State> did = stateService.getAllState();
 		List<State> state_name = stateService.getAllState();
-		model.addAttribute("state_code",state_code);
+		model.addAttribute("stateId", did);
 		model.addAttribute("state_name",state_name);
-		model.addAttribute("region", regionService.getRegionById(id));
+		Region region = regionService.getRegionById(sid);
+		String cIdString = region.getState_code();
+		model.addAttribute("state_code_ID", cIdString);
+		System.out.println(cIdString);
+		model.addAttribute("region", regionService.getRegionById(sid));
 		return "edit_region";
 	}
 	

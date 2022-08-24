@@ -137,8 +137,8 @@ public class DistController {
 	}
 	
 	@PostMapping("/distributor")
-	public String saveUser(@ModelAttribute("distributor") Distributor distributor,@ModelAttribute("disttso")DistNew distNew,
-			@RequestParam("tso") String tso[], DistributorCode distributorCode, Model model,
+	public String saveUser(@ModelAttribute("distributor") Distributor distributor,@ModelAttribute("disttso") DistNew distNew,
+			DistributorCode distributorCode, Model model,
 			@RequestParam("image") MultipartFile multipartFile) throws IOException {
 		
 		LocalDateTime createDateTime = LocalDateTime.now();
@@ -178,7 +178,7 @@ public class DistController {
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
          
       
-		
+		model.addAttribute("distTso",distNew);
 		distributorService.saveDistributor(distributor);
 		return "redirect:/distributor";
 	}

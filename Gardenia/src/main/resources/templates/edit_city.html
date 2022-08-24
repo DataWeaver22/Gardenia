@@ -331,6 +331,7 @@ input[type=text] {
 
 										<option th:each="district_name : ${district_name}"
 											th:value="${district_name.id}"
+											th:selected="${district_name.id} eq ${district_code_ID}?true:false"
 											th:text="${district_name.district_name}"></option>
 									</select>
 								</div>

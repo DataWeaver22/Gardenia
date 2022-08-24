@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,8 +13,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.demo.Export.CityExportExcel;
+import com.example.demo.Export.ProductExportExcel;
 import com.example.demo.entity.City;
+import com.example.demo.entity.Country;
 import com.example.demo.entity.District;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
 import com.example.demo.repository.CityRepository;
@@ -63,13 +70,33 @@ public class CityController {
 		return "redirect:/city";
 	}
 	
-	@GetMapping("/city/edit/{id}")
-	public String editCity(@PathVariable Long id, Model model) {
-		List<District> district_code = districtService.getAllDistrict();
+	@GetMapping("/city/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+		/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
+        String currentDateTime = dateFormatter.format(new Date());*/
+         
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=city.xlsx";
+        response.setHeader(headerKey, headerValue);
+         
+        List<City> listUsers = cityService.getAllCity();
+         
+        CityExportExcel excelExporter = new CityExportExcel(listUsers);
+         
+        excelExporter.export(response);    
+    }  
+	
+	@GetMapping("/city/edit/{sid}")
+	public String editCity(@PathVariable Long sid, Model model) {
+		List<District> did = districtService.getAllDistrict();
 		List<District> district_name = districtService.getAllDistrict();
-		model.addAttribute("district_code",district_code);
+		model.addAttribute("districtId", did);
 		model.addAttribute("district_name",district_name);
-		model.addAttribute("city", cityService.getCityById(id));
+		City city = cityService.getCityById(sid);
+		String cIdString = city.getDistrict_code();
+		model.addAttribute("district_code_ID", cIdString);
+		model.addAttribute("city", cityService.getCityById(sid));
 		return "edit_city";
 	}
 	
