@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.beans.Transient;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -19,25 +20,25 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 		
-	@Column(name = "login", nullable = false, length = 20)
+	@Column(name = "login",length = 20)
 	private String login;
 	
-	@Column(name = "firstName", nullable = false, length = 20)
+	@Column(name = "firstName",length = 20)
 	private String firstName;
 	
-	@Column(name = "lastName", nullable = false, length = 20)
+	@Column(name = "lastName",length = 20)
 	private String lastName;
 	
-	@Column(name = "emp_code", nullable = false, length = 20)
+	@Column(name = "emp_code", length = 20)
 	private String emp_code;
 	
-	@Column(name = "team", nullable = false, length = 20)
+	@Column(name = "team", length = 20)
 	private String team;
 	
-	@Column(name = "roles", nullable = false, length = 20)
+	@Column(name = "roles", length = 20)
 	private String roles;
 	
-	@Column(name = "status", nullable = false, length = 20)
+	@Column(name = "status", length = 20)
 	private String status;
 	
 	@Column(name = "create_date", length = 20)
@@ -46,28 +47,28 @@ public class User {
 	@Column(name = "resign_date", length = 20)
 	private LocalDateTime resign_date;
 	
-	@Column(name = "region_name", nullable = false, length = 20)
+	@Column(name = "region_name", length = 20)
 	private String region_name;
 
-	@Column(name = "region_id", nullable = false, length = 20)
+	@Column(name = "region_id", length = 20)
 	private String region_id;
 	
-	@Column(name = "state_name", nullable = false, length = 20)
+	@Column(name = "state_name", length = 20)
 	private String state_name;
 	
-	@Column(name = "state_id", nullable = false, length = 20)
+	@Column(name = "state_id", length = 20)
 	private String state_id;
 	
-	@Column(name = "area_name", nullable = false, length = 20)
+	@Column(name = "area_name",length = 20)
 	private String area_name;
 	
-	@Column(name = "area_id", nullable = false, length = 20)
+	@Column(name = "area_id", length = 20)
 	private String area_id;
 	
-	@Column(name = "hq_name", nullable = false, length = 20)
+	@Column(name = "hq_name", length = 20)
 	private String hq_name;
 	
-	@Column(name = "hq_id", nullable = false,  length = 20)
+	@Column(name = "hq_id", length = 20)
 	private String hq_id;
 	
 	@Column(name = "documents", length = 20)
@@ -244,7 +245,7 @@ public class User {
 
 	public User(Long id,String login,String firstName, String lastName, String emp_code,
 			String team, String roles, String status, LocalDateTime create_date, LocalDateTime resign_date, String region_name,
-			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents) {
+			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents,String area_id) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -263,10 +264,18 @@ public class User {
 		this.hq_name = hq_name;
 		this.hq_id = hq_id;
 		this.documents = documents;
+		this.area_id=area_id;
 	}
 	
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Transient
+    public String getPhotosImagePath() {
+        if (documents == null || id == null) return null;
+         
+        return "/user-photos/" + id + "/" + documents;
+    }
 		
 }

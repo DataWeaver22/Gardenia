@@ -3,21 +3,29 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>User Master</title>
-<link rel="stylesheet" 
-href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" 
-integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
-crossorigin="anonymous">
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/css/fileinput.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<link
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/css/fileinput.min.css">
 <link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/piexif.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/sortable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/purify.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
-<script type="text/javascript" th:src="@{/js/src/fileup.js}" ></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/piexif.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/sortable.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/purify.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
+<script type="text/javascript" th:src="@{/js/src/fileup.js}"></script>
 <style>
 nav {
 	background-color: #068203;
@@ -228,13 +236,22 @@ input[type=text] {
 .card h1 {
 	margin-top: 30px;
 }
+#thumbnail{
+width:70px;
+height:70px;
+}
+
+.file-upl{
+margin-top:33px;
+font-size:smaller;
+}
 </style>
 <script>
 
 </script>
 </head>
 <body>
-<div class="wrapper">
+	<div class="wrapper">
 		<nav>
 			<input type="checkbox" id="menu" name="menu" class="m-menu__checkbox">
 			<label class="m-menu__toggle" for="menu"> <svg width="20"
@@ -270,9 +287,9 @@ input[type=text] {
                 </svg>
 								</label> <span>Masters</span>
 							</div>
-							<ul>
+							<!--<ul>
 
-								<!-- <li>
+								 <li>
                 <label class="a-label__chevron" for="item-2-3">Item 2.3</label>
                 <input type="checkbox" id="item-2-3" name="item-2" class="m-menu__checkbox">
                 <div class="m-menu">
@@ -292,6 +309,38 @@ input[type=text] {
                     <li><label>Item 2.3.5</label></li>
                   </ul>                
               </li> -->
+							<ul>
+
+
+
+
+								<li style="list-style: none"><label
+									class="a-label__chevron" for="item-2-3">Country Master</label>
+									<input type="checkbox" id="item-2-3" name="item-2"
+									class="m-menu__checkbox">
+									<div class="m-menu">
+										<div class="m-menu__header">
+											<label class="m-menu__toggle" for="item-2-3"> <svg
+													width="20" height="35" viewBox="0 0 24 24" fill="none"
+													stroke="#000000" stroke-width="2" stroke-linecap="butt"
+													stroke-linejoin="arcs">
+                        <path d="M19 12H6M12 5l-7 7 7 7" />
+                      </svg>
+											</label> <span>Country Master</span>
+										</div>
+										<ul>
+											<li style="list-style: none"><label><a
+													th:href="@{/state}">State Master</a></label></li>
+											<li style="list-style: none"><label><a
+													th:href="@{/region}">Region Master</a></label></li>
+											<li style="list-style: none"><label><a
+													th:href="@{/district}">District Master</a></label></li>
+											<li style="list-style: none"><label><a
+													th:href="@{/city}">City Master</a></label></li>
+											<li style="list-style: none"><label><a
+													th:href="@{/area}">Area Master</a></label></li>
+										</ul></li>
+
 								<li style="list-style: none"><label><a
 										th:href="@{/user}">User Master</a></label></li>
 								<li style="list-style: none"><label><a
@@ -300,10 +349,26 @@ input[type=text] {
 										th:href="@{/product}">Product Master</a></label></li>
 								<li style="list-style: none"><label><a
 										th:href="@{/hqmaster}">HQ Master</a></label></li>
+							</ul>
 						</div></li>
 
 				</ul>
+
+				<ul>
+					<li style="list-style: none"><label><a
+							th:href="@{/user}">User Master</a></label></li>
+					<li style="list-style: none"><label><a
+							th:href="@{/distributor}">Distributor Master</a></label></li>
+					<li style="list-style: none"><label><a
+							th:href="@{/product}">Product Master</a></label></li>
+					<li style="list-style: none"><label><a
+							th:href="@{/hqmaster}">HQ Master</a></label></li>
+				</ul>
 			</div>
+			</li>
+			</ul>
+
+
 			<div class="mx-auto">
 				<header class="text-center text-white font-weight-bold">Gardenia</header>
 			</div>
@@ -311,160 +376,151 @@ input[type=text] {
 		</nav>
 
 	</div>
-<br>
-<br>
+	<br>
+	<br>
 
-<div class = "container">
-		<div class = "row">
-			<div class = "col-lg-12 col-md-12 col-sm-12 container justify-content-center card">
-				<h1 class = "text-center">Create New User</h1>
+	<div class="container">
+		<div class="row">
+			<div
+				class="col-lg-12 col-md-12 col-sm-12 container justify-content-center card">
+				<h1 class="text-center">Create New User</h1>
 				<div class="card-body">
-					<form th:action="@{/user/{id} (id=${user.id})}" th:object="${user}" method="POST">
-					<div class="row">
-						<div class="col-lg-6 col-md-6 col-sm-6 form-group">
-							<label>Login</label>
-							<input
-							type="text"
-							name="login"
-							th:field="*{login}"
-							class="form-control"
-							placeholder="Login"
-							/>
-							
-							<label>First Name</label>
-							<input
-							type="text"
-							name="firstName"
-							th:field="*{firstName}"
-							class="form-control"
-							placeholder="Enter First Name"
-							/>
-							
-							<label>Last Name</label>
-							<input
-							type="text"
-							name="lastName"
-							th:field="*{lastName}"
-							class="form-control"
-							placeholder="Enter Last Name"
-							/>
-							
-						</div>
-						
-						<div class = " form col-md-6 col-lg-6 col-sm-6">
-							
-  <div class="file-loading">
-        <input id="input-ficons-5" name="input-ficons-5[]" multiple type="file">
-      </div>
-
-      <p>&nbsp;</p>
-      <button type="submit" class="btn btn-default">Submit</button>
-
-						</div>
-						
-
-						
-						
-						</div>
-						
-						<div class = "row">
-						<div class="col-md-6">
-							<div class="form-group">
-							<label>Employee Code</label>
-							<input
-							type="text"
-							name="emp_code"
-							th:field="*{emp_code}"
-							class="form-control"
-							placeholder="Enter Employee Code"
-							/>
-						</div>
-						</div>
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>Team</label>
-							<input
-							type="text"
-							name="team"
-							th:field="*{team}"
-							class="form-control"
-							placeholder="Enter Team"
-							/>
-						</div>
-						</div>
-						</div>
-						
+					<form th:action="@{/user/{id} (id=${user.id})}" th:object="${user}"
+						method="POST">
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<label>Login</label> <input type="text" name="pname"
+									th:field="*{login}" class="form-control"
+									placeholder="Enter Login" />
+							</div>
+
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<label>FirstName</label> <input type="text" name="code"
+									th:field="*{firstName}" class="form-control"
+									placeholder="Enter FirstName" />
+							</div>
+
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
-							<label>Role</label>
-							<select class="form-control" id="dropDownList" name="roles">
-    						
-    						<option th:each="option : ${options}" th:value="${option}" th:text="${option}"></option>
-							</select>
-						</div>
-						</div>
-						
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>Status</label>
-							<select class="form-control" id="dropDownList" name="status">
-    						<option th:each="status : ${status}" th:value="${status}" th:text="${status}"></option>
-							</select>
-						</div>
+									<label>LastName</label> <input type="text" name="brand"
+										th:field="*{lastName}" class="form-control"
+										placeholder="Enter LastName" />
+								</div>
+							</div>
+
+							<div class="col-lg-3 col-md-3 col-sm-6 file-upl form-group">
+								<div class="form-group">
+									<input type="file" name="image"
+									accept="image/png, image/jpeg" id="fileImage" />
+								</div>
 							</div>
 						</div>
-						
-						
+
 						<div class="row">
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>Region </label>
-							<select class="form-control" id="dropDownList" name="region_id">
-    						
-    						<option th:each="region_name : ${region_name}" th:selected="${region_name.id} eq ${country_code_ID}?true:false" th:value="${region_name.id}" th:text="${region_name.region_name}"></option>
-							</select>
+
+
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<label>Employee Code</label> <input type="text" name="family"
+										th:field="*{emp_code}" class="form-control"
+										placeholder="Enter Employee Code" />
+								</div>
+							</div>
+
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<label>Team</label> <input type="text" name="variant"
+										th:field="*{team}" class="form-control"
+										placeholder="Enter Team" />
+								</div>
+							</div>
+
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<label>Role</label> <input type="text" name="group_name"
+										th:field="*{roles}" class="form-control"
+										placeholder="Enter Role" />
+								</div>
+							</div>
+
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<p>
+										<img id="thumbnail" alt="Image Preview" />
+									</p>
+								</div>
+							</div>
 						</div>
+
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<label>Status</label> <select class="form-control"
+										id="dropDownList" name="status">
+										<option
+											th:each="status : ${T(com.example.demo.Enum.Status).values()}"
+											th:value="${status}" th:text="${status}"></option>
+									</select>
+							</div>
 						</div>
-						
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>State</label>
-							<select class="form-control" id="dropDownList" name="state_id">
-    						
-    						<option th:each="state_name : ${state_name}" th:selected="${state_name.id} eq ${state_code_ID}?true:false" th:value="${state_name.id}" th:text="${state_name.state_name}"></option>
-							</select>
+
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<label>Region</label>  <select class="form-control"
+										id="dropDownList" name="region_code">
+
+										<option th:each="region_name : ${region_name}"
+											th:value="${region_name.id}"
+											th:selected="${region_name.id} eq ${region_code_ID}?true:false"
+											th:text="${region_name.region_name}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<label>State</label> <select class="form-control"
+										id="dropDownList" name="state_code">
+
+										<option th:each="state_name : ${state_name}"
+											th:value="${state_name.id}"
+											th:selected="${state_name.id} eq ${state_code_ID}?true:false"
+											th:text="${state_name.state_name}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<label>Area</label>  <select class="form-control"
+										id="dropDownList" name="state_code">
+
+										<option th:each="area_name : ${area_name}"
+											th:value="${area_name.id}"
+											th:selected="${area_name.id} eq ${area_code_ID}?true:false"
+											th:text="${area_name.area_name}"></option>
+									</select>
+								</div>
+							</div>
+							</div>
+
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<label>HQ Name</label> <select class="form-control"
+										id="dropDownList" name="state_code">
+
+										<option th:each="hq_name : ${hq_name}"
+											th:value="${hq_name.id}"
+											th:selected="${hq_name.id} eq ${hq_code_ID}?true:false"
+											th:text="${hq_name.hq_name}"></option>
+									</select>
+								</div>
+							</div>
 						</div>
-						</div>
-						</div>
-						
-						<div class= "row">
-						
-						<div class="col-md-6">
-							<div class="form-group">
-							<label>Area</label>
-							<select class="form-control" id="dropDownList" name="area_id">
-    						
-    						<option th:each="area_name : ${area_name}" th:selected="${area_name.id} eq ${area_code_ID}?true:false" th:value="${area_name.id}" th:text="${area_name.area_name}"></option>
-							</select>
-						</div>
-						</div>
-						<div class="col-md-6">
-						<div class="form-group">
-							<label>HQ Name </label>
-							<select class="form-control" id="dropDownList" name="hq_id">
-    						<option th:each="hq_name : ${hq_name}" th:selected="${hq_name.id} eq ${hq_code_ID}?true:false" th:value="${hq_name.id}" th:text="${hq_name.hq_name}"></option>
-							</select>
-						</div>
-						</div>
-						</div>
-						
+
 						<div class="box-footer">
-							<button type="submit" class="btn btn-primary">
-								Submit
-							</button>
+							<button type="submit" class="btn btn-success">Update</button>
 						</div>
 					</form>
 				</div>

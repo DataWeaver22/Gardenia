@@ -70,6 +70,9 @@ public class Product{
 	@Column(name = "sales_diary", length = 20)
 	private String sales_diary;
 	
+	@Column(name = "mrp", length = 20)
+	private String mrp;
+	
 	@OneToMany(mappedBy="product",targetEntity = ProductNew.class)
 	public List<ProductNew> productNew;
 
@@ -201,9 +204,17 @@ public class Product{
 		this.sales_diary = sales_diary;
 	}
 
+	public String getMrp() {
+		return mrp;
+	}
+
+	public void setMrp(String mrp) {
+		this.mrp = mrp;
+	}
+
 	public Product(Long id, String pname, String code, String brand, String category, String family, String variant,
 			String group_name, String uom, String ptd, String status, String description, LocalDateTime create_date,
-			LocalDateTime inactive_date, String sales_diary) {
+			LocalDateTime inactive_date, String sales_diary, String mrp) {
 		super();
 		this.id = id;
 		this.pname = pname;
@@ -220,6 +231,7 @@ public class Product{
 		this.create_date = create_date;
 		this.inactive_date = inactive_date;
 		this.sales_diary = sales_diary;
+		this.mrp = mrp;
 	}
 	
 	public Product() {

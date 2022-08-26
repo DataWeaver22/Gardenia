@@ -8,7 +8,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Lettuce;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,14 +76,9 @@ public class ProductController {
 		
 		String uom = product.getUom();
 		product.setCreate_date(createDateTime);
-		Long[] mrpLong = productNew.getMrp();
-		
-		System.out.println(mrpLong);
-		String mrpStatus = productNew.getMrp_status();
-		System.out.println(mrpStatus);
 		model.addAttribute("productNew",productNew);
-		productNewService.saveProductNew(productNew);
 		productService.saveProduct(product);
+		productNewService.saveProductNew(productNew);
 		return "redirect:/product";
 	}
 	
@@ -121,14 +115,13 @@ public class ProductController {
 	    options.add("Units");
 	    options.add("Carton");
 	    model.addAttribute("options", options);
-	    
 		model.addAttribute("product", productService.getProduct(id));
 		return "edit_product";
 	}
 	
 	@PostMapping("/product/{id}")
 	public String updateProduct(@PathVariable Long id,
-			@ModelAttribute("product") Product product,
+			@ModelAttribute("product") Product product,@ModelAttribute("productnew") ProductNew productNew,
 			Model model) {
 		
 		//Get Existing Student
@@ -137,6 +130,8 @@ public class ProductController {
 		existingProduct.setPname(product.getPname());
 		
 		//Save Student
+		model.addAttribute("products",productNewService.getProductNew(id));
+		productNewService.editProductNew(productNew);
 		productService.editProduct(existingProduct);
 		return "redirect:/product";
 	}

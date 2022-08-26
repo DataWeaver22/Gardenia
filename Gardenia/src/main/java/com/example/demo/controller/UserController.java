@@ -242,27 +242,15 @@ public class UserController {
 		
 		String sId = user.getState_id();
 		System.out.println(sId);
-		String name = hqUserRepository.findByStateName(Long.parseLong(sId));
-		System.out.println(name);
-		user.setState_name(name);
 		
 		String rId = user.getRegion_id();
 		System.out.println(rId);
-		String rname = hqUserRepository.findByRegionName(Long.parseLong(rId));
-		System.out.println(rname);
-		user.setRegion_name(rname);
 		
 		String aId = user.getArea_id();
 		System.out.println(aId);
-		String aname = hqUserRepository.findByAreaName(Long.parseLong(aId));
-		System.out.println(aname);
-		user.setArea_name(aname);
 		
 		String hId = user.getHq_id();
 		System.out.println(hId);
-		String hname = hqUserRepository.findByAreaName(Long.parseLong(hId));
-		System.out.println(hname);
-		user.setHq_name(hname);
 		
 		//Save User
 		userService.editUser(user);
