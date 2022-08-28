@@ -16,4 +16,7 @@ public interface StateRepository extends JpaRepository<State, Long> {
 	@Query("select c.country_name from Country c where c.id = ?1")
 	String findByCountryName(@Param("cId") Long cName);
 	
+	@Query("select c.id from Country c where c.country_name = ?1")
+	String findByCountry(@Param("cName") String counName);
+	
 }

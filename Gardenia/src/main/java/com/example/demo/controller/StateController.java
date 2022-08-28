@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
 import javax.persistence.Id;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,16 +17,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.Export.CountryExportExcel;
 import com.example.demo.Export.StateExportExcel;
+import com.example.demo.Import.StateHelper;
 import com.example.demo.entity.Country;
 import com.example.demo.entity.State;
 import com.example.demo.repository.CountryRepository;
 import com.example.demo.repository.StateRepository;
 import com.example.demo.service.CountryService;
+import com.example.demo.service.IFileUploaderService;
+import com.example.demo.service.StateImportService;
 import com.example.demo.service.StateService;
 
 
@@ -40,18 +47,36 @@ public class StateController {
 
 	@Autowired
 	private CountryService countryService;
-
+	
+	@Autowired
+	private StateImportService stateImportService;
+	
 	public StateController(StateService stateService) {
 		super();
 		this.stateService = stateService;
 	}
-
+	
 	@GetMapping("/state")
 	public String listState(Model model) {
 		model.addAttribute("state", stateService.getAllState());
 		return "state";
 	}
 
+	@GetMapping("/state/upload")
+    public String index() {
+        return "uploadPage";
+    }
+	
+	@RequestMapping(value="/state/upload/import", method=RequestMethod.POST)
+	public String upload(@RequestParam("file")MultipartFile file){
+		if(StateHelper.checkExcelFormat(file)) {
+			this.stateImportService.save(file);
+			
+			return "redirect:/state";
+		}
+		return "success";
+	}
+	
 	@GetMapping("/state/new")
 	public String CreateNewForm(Model model) {
 		// Create student object to hold student form data
@@ -63,24 +88,6 @@ public class StateController {
 		model.addAttribute("country_name", country_name);
 		return "create_state";
 	}
-
-	
-	/*
-	 * @PostMapping("/state/{id}") public ResponseEntity<State>
-	 * createState(@PathVariable(value = "id") Long id,
-	 * 
-	 * @RequestBody State stateRequest) { State state =
-	 * countryRepository.findById(id).map(country -> {
-	 * stateRequest.setCountry(country); return stateRepository.save(stateRequest);
-	 * }).orElseThrow(() -> new
-	 * ResourceNotFoundException("Not found Tutorial with id = " + id)); return new
-	 * ResponseEntity<>(state, HttpStatus.CREATED); }
-	 */
-	 	
-	/*
-	 * @GetMapping("/{id}/state") public State createState(@RequestBody State state)
-	 * { return stateRepository.save(state); }
-	 */
 	
 	@GetMapping("/state/export/excel")
     public void exportToExcel(HttpServletResponse response) throws IOException {

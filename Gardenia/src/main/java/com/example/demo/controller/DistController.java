@@ -49,6 +49,7 @@ import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
 import com.example.demo.entity.User;
 import com.example.demo.repository.DistRepository;
+import com.example.demo.repository.DistributorCodeRepository;
 import com.example.demo.repository.HqUserRepository;
 import com.example.demo.service.AreaService;
 import com.example.demo.service.CityService;
@@ -83,6 +84,9 @@ public class DistController {
 	
 	@Autowired
 	private DistRepository distRepository;
+	
+	@Autowired
+	private DistributorCodeRepository distributorCodeRepository;
 	
 	@Autowired
 	private DistributorCodeService distributorCodeService;
@@ -138,8 +142,14 @@ public class DistController {
 	
 	@PostMapping("/distributor")
 	public String saveUser(@ModelAttribute("distributor") Distributor distributor,@ModelAttribute("disttso") DistNew distNew,
-			DistributorCode distributorCode, Model model,
+			DistributorCode distributorCode, Model model,@RequestParam("rCodeUpdateString") String rCodeUpdateString, @RequestParam("rCodeUpdateNum") String rCodeUpdateNum,
 			@RequestParam("image") MultipartFile multipartFile) throws IOException {
+		
+		//Region Data Update
+		System.out.println("Region Code:" + rCodeUpdateString);
+		System.out.println("Code Number:" + rCodeUpdateNum);
+		
+		distributorCodeRepository.updateByRegionCode(rCodeUpdateNum, rCodeUpdateString);
 		
 		LocalDateTime createDateTime = LocalDateTime.now();
 		String sId = distributor.getState_id();
@@ -164,7 +174,7 @@ public class DistController {
 //		String codeNumberInteger = "000";
 //		distributorCode.setRegion_name(codeNumberInteger);
 		distributorCode.setRegion_code(regionCodeString);
-		distributor.setCreate_date(createDateTime);
+		//distributor.setCreate_date(createDateTime);
 		System.out.println(distributorCode);
 		
 		

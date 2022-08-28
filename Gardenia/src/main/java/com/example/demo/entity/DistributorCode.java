@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import java.security.KeyStore.PrivateKeyEntry;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

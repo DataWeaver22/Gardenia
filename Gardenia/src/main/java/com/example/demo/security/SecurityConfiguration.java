@@ -22,6 +22,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// TODO Auto-generated method stub
 		auth.userDetailsService(userDetailsService);
+		
 	}
 
 	@Override
@@ -30,6 +31,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http.authorizeRequests()
 				.antMatchers("/**").permitAll()
 				.and().formLogin();
+		
+		http.cors().and().csrf().disable();
 	}
 	
 	@Bean
