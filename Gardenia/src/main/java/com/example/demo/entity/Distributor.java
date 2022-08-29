@@ -101,6 +101,9 @@ public class Distributor {
 	
 	@Column(name = "assign_tso", length = 20)
 	private String assign_tso;
+	
+	@Column(name = "assign_tso_id", length = 20)
+	private String assign_tso_id;
 
 	public Long getId() {
 		return id;
@@ -326,11 +329,19 @@ public class Distributor {
 		this.assign_tso = assign_tso;
 	}
 
+	public String getAssign_tso_id() {
+		return assign_tso_id;
+	}
+	
+	public void setAssign_tso_id(String assign_tso_id) {
+		this.assign_tso_id = assign_tso_id;
+	}
+	
 	public Distributor(Long id, String distributor_name, String distributor_code, String distributor_type, String gstin,
 			String pan, String contact, String mobile, String phone, String email, String address, String region_name,
 			String region_id, String state_name, String state_id, String city_name, String city_id, String supp_name,
 			String supp_code, String status, LocalDateTime create_date, LocalDateTime inactive_date,
-			String service_status, String brand_list, String assign_tso) {
+			String service_status, String brand_list, String assign_tso,String assign_tso_id) {
 		super();
 		this.id = id;
 		this.distributor_name = distributor_name;
@@ -357,6 +368,7 @@ public class Distributor {
 		this.service_status = service_status;
 		this.brand_list = brand_list;
 		this.assign_tso = assign_tso;
+		this.assign_tso_id = assign_tso_id;
 	}
 	
 	public Distributor() {

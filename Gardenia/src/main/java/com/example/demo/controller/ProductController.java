@@ -17,15 +17,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Enum.Status;
 import com.example.demo.Enum.Uom;
 import com.example.demo.Export.ProductExportExcel;
+import com.example.demo.Import.ProductImportHelper;
+import com.example.demo.Import.UserImportHelper;
 import com.example.demo.entity.NewProduct;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductNew;
 import com.example.demo.entity.Region;
 import com.example.demo.repository.ProductNewRepository;
+import com.example.demo.service.ProductImportService;
 import com.example.demo.service.ProductNewService;
 import com.example.demo.service.ProductService;
 
@@ -47,9 +51,27 @@ public class ProductController {
 	
 	private List<ProductNew> productNew;
 
+	@Autowired
+	private ProductImportService productImportService;
+	
 	public ProductController(ProductService productService) {
 		super();
 		this.productService = productService;
+	}
+	
+	@GetMapping("/product/upload")
+    public String index() {
+        return "productUploadPage";
+    }
+	
+	@RequestMapping(value="/product/upload/import", method=RequestMethod.POST)
+	public String upload(@RequestParam("file")MultipartFile file){
+		if(ProductImportHelper.checkExcelFormat(file)) {
+			this.productImportService.save(file);
+			
+			return "redirect:/product";
+		}
+		return "success";
 	}
 	
 	@GetMapping("/product")

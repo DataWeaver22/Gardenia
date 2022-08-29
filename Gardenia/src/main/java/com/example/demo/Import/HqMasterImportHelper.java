@@ -13,18 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.entity.State;
-import com.example.demo.repository.StateRepository;
+import com.example.demo.entity.HqMaster;
+import com.example.demo.repository.HqRepository;
+
 
 @Component
-public class StateHelper {
-	
-	private static StateRepository stateRepository;
+public class HqMasterImportHelper {
+
+private static HqRepository hqRepository;
 	
 	@Autowired
-	public StateHelper(StateRepository stateRepository) {
+	public HqMasterImportHelper(HqRepository hqRepository) {
 		super();
-		StateHelper.stateRepository = stateRepository;
+		HqMasterImportHelper.hqRepository = hqRepository;
 	}
 	//check if file type is excel or not
 	public static boolean checkExcelFormat(MultipartFile file) {
@@ -38,8 +39,8 @@ public class StateHelper {
 	}
 	
 	//convert excel to list of states
-	public static List<State> convertToStates(InputStream iStream){
-		List<State> list = new ArrayList<>();
+	public static List<HqMaster> convertToHqMasters(InputStream iStream){
+		List<HqMaster> list = new ArrayList<>();
 		
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook(iStream);
@@ -58,30 +59,27 @@ public class StateHelper {
 				Iterator<Cell> cells = row.iterator();
 				
 				int cid=0;
-				State state = new State();
+				HqMaster hqMaster = new HqMaster();
 				
 				while(cells.hasNext()) {
 					Cell cell = cells.next();
 					
 					switch (cid){
 					case 0: 
-						state.setState_code(cell.getStringCellValue());
+						hqMaster.setHq_code(cell.getStringCellValue());
 						break;
 					case 1:
-						state.setState_name(cell.getStringCellValue());
+						hqMaster.setHq_name(cell.getStringCellValue());
 						break;
 					case 2:
-						state.setCountry_name(cell.getStringCellValue());
-						String cName = cell.getStringCellValue();
-						String cId = stateRepository.findByCountry(cName);
-						state.setCountry_code(cId);
+						hqMaster.setHq_designation(cell.getStringCellValue());
 						break;
 					default:
 						break;
 					}
 					cid++;
 				}
-				list.add(state);
+				list.add(hqMaster);
 				
 			}
 			
@@ -92,5 +90,4 @@ public class StateHelper {
 		return list;
 	}
 
-	
 }

@@ -24,6 +24,8 @@ import com.example.demo.Enum.Roles;
 import com.example.demo.Enum.Status;
 import com.example.demo.Export.RegionExportExcel;
 import com.example.demo.Export.UserExportExcel;
+import com.example.demo.Import.StateHelper;
+import com.example.demo.Import.UserImportHelper;
 import com.example.demo.entity.Area;
 import com.example.demo.entity.City;
 import com.example.demo.entity.Distributor;
@@ -36,6 +38,7 @@ import com.example.demo.service.AreaService;
 import com.example.demo.service.HqService;
 import com.example.demo.service.RegionService;
 import com.example.demo.service.StateService;
+import com.example.demo.service.UserImportService;
 import com.example.demo.service.UserService;
 
 @Controller
@@ -58,12 +61,30 @@ public class UserController {
 	
 	@Autowired
 	private HqUserRepository hqUserRepository;
+	
+	@Autowired
+	private UserImportService userImportService;
 
 	public UserController(UserService userService) {
 		super();
 		this.userService = userService;
 	}
 
+	@GetMapping("/user/upload")
+    public String index() {
+        return "userUploadPage";
+    }
+	
+	@RequestMapping(value="/user/upload/import", method=RequestMethod.POST)
+	public String upload(@RequestParam("file")MultipartFile file){
+		if(UserImportHelper.checkExcelFormat(file)) {
+			this.userImportService.save(file);
+			
+			return "redirect:/user";
+		}
+		return "success";
+	}
+	
 	@GetMapping("/user")
 	public String listUser(Model model){
 		model.addAttribute("user",userService.getAllUser());

@@ -18,14 +18,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Enum.Roles;
 import com.example.demo.Export.DistributorExportExcel;
 import com.example.demo.Export.HqExportExcel;
+import com.example.demo.Import.HqMasterImportHelper;
+import com.example.demo.Import.StateHelper;
 import com.example.demo.entity.Distributor;
 import com.example.demo.entity.HqMaster;
 import com.example.demo.repository.HqRepository;
+import com.example.demo.service.HqMasterImportService;
 import com.example.demo.service.HqService;
 
 @Controller
@@ -33,10 +38,28 @@ public class HqMasterController {
 	
 	@Autowired
 	private HqService hqService;
+	
+	@Autowired
+	private HqMasterImportService hqMasterImportService;
 
 	public HqMasterController(HqService hqService) {
 		super();
 		this.hqService = hqService;
+	}
+	
+	@GetMapping("/hqmaster/upload")
+    public String index() {
+        return "hqMasterUploadPage";
+    }
+	
+	@RequestMapping(value="/hqmaster/upload/import", method=RequestMethod.POST)
+	public String upload(@RequestParam("file")MultipartFile file){
+		if(HqMasterImportHelper.checkExcelFormat(file)) {
+			this.hqMasterImportService.save(file);
+			
+			return "redirect:/hqmaster";
+		}
+		return "success";
 	}
 	
 	@GetMapping("/hqmaster")

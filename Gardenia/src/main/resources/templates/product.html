@@ -344,7 +344,8 @@ function myFunction() {
 				</form>
 			</div>
 			<div class="col-md-4">
-			<a th:href="@{/product/export/excel}" class ="btn btn-success btn_sm mb-3 float-right export"> Export To Excel</a>
+				<a th:href="@{/product/export/excel}" class ="btn btn-success btn_sm mb-3 float-right export"> Export To Excel</a>
+				<a th:href="@{/product/upload}" class ="btn btn-success btn_sm mb-3 float-right export"> Import</a>
 				<a th:href="@{/product/new}" class ="btn btn-success btn_sm mb-3 float-right mr-2"> Add Product</a>
 			</div>
 		</div>
@@ -395,8 +396,6 @@ function myFunction() {
 					<td>
 						<a th:href="@{/product/edit/{id}(id=${aproduct.id})}"
 						 class="btn btn-success">Edit</a>
-						 <a th:href="@{/product/{id}(id=${aproduct.id})}"
-						 class="btn btn-danger">Delete</a>
 					</td>	
 				</tr>
 			</tbody>

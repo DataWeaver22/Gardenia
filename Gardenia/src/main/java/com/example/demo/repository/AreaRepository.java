@@ -9,4 +9,7 @@ import com.example.demo.entity.Area;
 public interface AreaRepository extends JpaRepository<Area, Long> {
 	@Query("select cy.city_name from City cy where cy.id = ?1")
 	String findByCityName(@Param("dId") Long cyName);
+	
+	@Query("select cy.id from City cy where cy.city_name = ?1")
+	String findByCity(@Param("cName") String cityName);
 }

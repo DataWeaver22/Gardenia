@@ -1,29 +1,13 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ProcessBuilder.Redirect;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -32,22 +16,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.demo.Export.DistributorExportExcel;
+import com.example.demo.Import.DistributorImportHelper;
+import com.example.demo.Import.DistributorImportService;
 import com.example.demo.entity.City;
 import com.example.demo.entity.DistNew;
 import com.example.demo.entity.Distributor;
 import com.example.demo.entity.DistributorCode;
-import com.example.demo.entity.ProductNew;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
-import com.example.demo.entity.User;
 import com.example.demo.repository.DistRepository;
 import com.example.demo.repository.DistributorCodeRepository;
 import com.example.demo.repository.HqUserRepository;
@@ -55,13 +37,8 @@ import com.example.demo.service.AreaService;
 import com.example.demo.service.CityService;
 import com.example.demo.service.DistributorCodeService;
 import com.example.demo.service.DistributorService;
-import com.example.demo.service.HqService;
 import com.example.demo.service.RegionService;
 import com.example.demo.service.StateService;
-import com.example.demo.service.UserService;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-
-import net.bytebuddy.asm.Advice.Local;
 
 @Controller
 public class DistController {
@@ -90,10 +67,28 @@ public class DistController {
 	
 	@Autowired
 	private DistributorCodeService distributorCodeService;
+	
+	@Autowired
+	private DistributorImportService distributorImportService;
 
 	public DistController(DistributorService distributorService) {
 		super();
 		this.distributorService = distributorService;
+	}
+	
+	@GetMapping("/distributor/upload")
+    public String index() {
+        return "distributorUploadPage";
+    }
+	
+	@RequestMapping(value="/distributor/upload/import", method=RequestMethod.POST)
+	public String upload(@RequestParam("file")MultipartFile file){
+		if(DistributorImportHelper.checkExcelFormat(file)) {
+			this.distributorImportService.save(file);
+			
+			return "redirect:/user";
+		}
+		return "success";
 	}
 
 	@GetMapping("/distributor")

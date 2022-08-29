@@ -12,14 +12,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Export.AreaExportExcel;
 import com.example.demo.Export.CityExportExcel;
+import com.example.demo.Import.AreaImportHelper;
+import com.example.demo.Import.StateHelper;
 import com.example.demo.entity.Area;
 import com.example.demo.entity.City;
 import com.example.demo.entity.District;
 import com.example.demo.repository.AreaRepository;
 import com.example.demo.repository.CityRepository;
+import com.example.demo.service.AreaImportService;
 import com.example.demo.service.AreaService;
 import com.example.demo.service.CityService;
 
@@ -35,11 +42,29 @@ public class AreaController {
 	@Autowired
 	private AreaRepository areaRepository;
 	
+	@Autowired
+	private AreaImportService areaImportService;
+	
 	public AreaController(AreaService areaService) {
 		super();
 		this.areaService = areaService;
 	}
 
+	@GetMapping("/area/upload")
+    public String index() {
+        return "areaUploadPage";
+    }
+	
+	@RequestMapping(value="/area/upload/import", method=RequestMethod.POST)
+	public String upload(@RequestParam("file")MultipartFile file){
+		if(AreaImportHelper.checkExcelFormat(file)) {
+			this.areaImportService.save(file);
+			
+			return "redirect:/area";
+		}
+		return "success";
+	}
+	
 	@GetMapping("/area")
 	public String listArea(Model model){
 		model.addAttribute("area",areaService.getAllArea());

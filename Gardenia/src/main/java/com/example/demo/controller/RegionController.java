@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.State;
 import com.example.demo.repository.DistributorCodeRepository;
@@ -19,11 +23,14 @@ import com.example.demo.repository.RegionRepository;
 import com.example.demo.repository.StateRepository;
 import com.example.demo.Export.RegionExportExcel;
 import com.example.demo.Export.StateExportExcel;
+import com.example.demo.Import.RegionImportHelper;
+import com.example.demo.Import.StateHelper;
 import com.example.demo.entity.Area;
 import com.example.demo.entity.City;
 import com.example.demo.entity.DistributorCode;
 import com.example.demo.entity.Region;
 import com.example.demo.service.DistributorCodeService;
+import com.example.demo.service.RegionImportService;
 import com.example.demo.service.RegionService;
 import com.example.demo.service.StateService;
 
@@ -46,6 +53,9 @@ public class RegionController {
 	
 	@Autowired
 	private DistributorCodeService distributorCodeService;
+	
+	@Autowired
+	private RegionImportService regionImportService;
 
 	public RegionController(RegionService regionService) {
 		super();
@@ -56,6 +66,21 @@ public class RegionController {
 	public String listRegion(Model model){
 		model.addAttribute("region",regionService.getAllRegion());
 		return "region";
+	}
+	
+	@GetMapping("/region/upload")
+    public String index() {
+        return "regionUploadPage";
+    }
+	
+	@RequestMapping(value="/region/upload/import", method=RequestMethod.POST)
+	public String upload(@RequestParam("file")MultipartFile file){
+		if(RegionImportHelper.checkExcelFormat(file)) {
+			this.regionImportService.save(file);
+			
+			return "redirect:/region";
+		}
+		return "success";
 	}
 	
 	@GetMapping("/region/new")

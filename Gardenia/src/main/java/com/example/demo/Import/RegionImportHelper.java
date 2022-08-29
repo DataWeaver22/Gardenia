@@ -13,18 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.entity.State;
-import com.example.demo.repository.StateRepository;
+import com.example.demo.entity.Region;
+import com.example.demo.repository.RegionRepository;
 
 @Component
-public class StateHelper {
-	
-	private static StateRepository stateRepository;
+public class RegionImportHelper {
+
+private static RegionRepository regionRepository;
 	
 	@Autowired
-	public StateHelper(StateRepository stateRepository) {
+	public RegionImportHelper(RegionRepository regionRepository) {
 		super();
-		StateHelper.stateRepository = stateRepository;
+		RegionImportHelper.regionRepository = regionRepository;
 	}
 	//check if file type is excel or not
 	public static boolean checkExcelFormat(MultipartFile file) {
@@ -38,8 +38,8 @@ public class StateHelper {
 	}
 	
 	//convert excel to list of states
-	public static List<State> convertToStates(InputStream iStream){
-		List<State> list = new ArrayList<>();
+	public static List<Region> convertToRegions(InputStream iStream){
+		List<Region> list = new ArrayList<>();
 		
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook(iStream);
@@ -58,30 +58,30 @@ public class StateHelper {
 				Iterator<Cell> cells = row.iterator();
 				
 				int cid=0;
-				State state = new State();
+				Region region = new Region();
 				
 				while(cells.hasNext()) {
 					Cell cell = cells.next();
 					
 					switch (cid){
 					case 0: 
-						state.setState_code(cell.getStringCellValue());
+						region.setRegion_code(cell.getStringCellValue());
 						break;
 					case 1:
-						state.setState_name(cell.getStringCellValue());
+						region.setRegion_name(cell.getStringCellValue());
 						break;
 					case 2:
-						state.setCountry_name(cell.getStringCellValue());
-						String cName = cell.getStringCellValue();
-						String cId = stateRepository.findByCountry(cName);
-						state.setCountry_code(cId);
+						region.setState_name(cell.getStringCellValue());
+						String sName = cell.getStringCellValue();
+						String cId = regionRepository.findByState(sName);
+						region.setState_code(cId);
 						break;
 					default:
 						break;
 					}
 					cid++;
 				}
-				list.add(state);
+				list.add(region);
 				
 			}
 			
@@ -92,5 +92,4 @@ public class StateHelper {
 		return list;
 	}
 
-	
 }

@@ -9,4 +9,7 @@ import com.example.demo.entity.Region;
 public interface RegionRepository extends JpaRepository<Region, Long> {
 	@Query("select s.state_name from State s where s.id = ?1")
 	String findByStateName(@Param("sId") Long sName);
+	
+	@Query("select s.id from State s where s.state_name = ?1")
+	String findByState(@Param("sName") String stateName);
 }

@@ -13,18 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.entity.State;
-import com.example.demo.repository.StateRepository;
+import com.example.demo.entity.Product;
+import com.example.demo.repository.ProductRepository;
+
 
 @Component
-public class StateHelper {
-	
-	private static StateRepository stateRepository;
+public class ProductImportHelper {
+
+private static ProductRepository productRepository;
 	
 	@Autowired
-	public StateHelper(StateRepository stateRepository) {
+	public ProductImportHelper(ProductRepository productRepository) {
 		super();
-		StateHelper.stateRepository = stateRepository;
+		ProductImportHelper.productRepository = productRepository;
 	}
 	//check if file type is excel or not
 	public static boolean checkExcelFormat(MultipartFile file) {
@@ -38,8 +39,8 @@ public class StateHelper {
 	}
 	
 	//convert excel to list of states
-	public static List<State> convertToStates(InputStream iStream){
-		List<State> list = new ArrayList<>();
+	public static List<Product> convertToProducts(InputStream iStream){
+		List<Product> list = new ArrayList<>();
 		
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook(iStream);
@@ -58,30 +59,60 @@ public class StateHelper {
 				Iterator<Cell> cells = row.iterator();
 				
 				int cid=0;
-				State state = new State();
+				Product product = new Product();
 				
 				while(cells.hasNext()) {
 					Cell cell = cells.next();
 					
 					switch (cid){
 					case 0: 
-						state.setState_code(cell.getStringCellValue());
+						product.setPname(cell.getStringCellValue());
 						break;
 					case 1:
-						state.setState_name(cell.getStringCellValue());
+						product.setCode(cell.getStringCellValue());
 						break;
 					case 2:
-						state.setCountry_name(cell.getStringCellValue());
-						String cName = cell.getStringCellValue();
-						String cId = stateRepository.findByCountry(cName);
-						state.setCountry_code(cId);
+						product.setBrand(cell.getStringCellValue());
+						break;
+					case 3:
+						product.setCategory(cell.getStringCellValue());
+						break;
+					case 4:
+						product.setFamily(cell.getStringCellValue());
+						break;
+					case 5:
+						product.setVariant(cell.getStringCellValue());
+						break;
+					case 6:
+						product.setGroup_name(cell.getStringCellValue());
+						break;
+					case 7:
+						product.setUom(cell.getStringCellValue());
+						break;
+					case 8:
+						product.setPtd(cell.getStringCellValue());
+						break;
+					case 9:
+						product.setPtr(cell.getStringCellValue());
+						break;
+					case 10:
+						product.setStatus(cell.getStringCellValue());
+						break;
+					case 11:
+						product.setDescription(cell.getStringCellValue());
+						break;
+					case 12:
+						product.setSales_diary(cell.getStringCellValue());
+						break;
+					case 13:
+						product.setMrp(cell.getStringCellValue());
 						break;
 					default:
 						break;
 					}
 					cid++;
 				}
-				list.add(state);
+				list.add(product);
 				
 			}
 			
@@ -91,6 +122,4 @@ public class StateHelper {
 		}
 		return list;
 	}
-
-	
 }
