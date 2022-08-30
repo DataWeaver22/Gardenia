@@ -241,6 +241,11 @@ width:70px;
 height:70px;
 }
 
+#statusList{
+	font-size: 12px;
+	height: auto;
+}
+
 .file-upl{
 margin-top:33px;
 font-size:smaller;
@@ -395,7 +400,7 @@ function myFunc(){
 		<div class="row">
 			<div
 				class="col-lg-12 col-md-12 col-sm-12 container justify-content-center card">
-				<h1 class="text-center">Create New User</h1>
+				<h1 class="text-center">Update User</h1>
 				<div class="card-body">
 					<form th:action="@{/user/{id} (id=${user.id})}" th:object="${user}"
 						method="POST">
@@ -473,9 +478,13 @@ function myFunc(){
 						<div class="row">
 						<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
-									<label>Role</label> <input type="text" name="roles"
-										th:field="*{roles}" class="form-control"
-										placeholder="Enter Role" />
+									<label>Role</label><select class="form-control" id="dropDownList" name="roles">
+    						
+    								<option th:each="option : ${options}"
+    								th:selected="${option} eq ${userRoles}?true:false"
+    										th:value="${option}"
+											th:text="${option}"></option>
+							</select>
 								</div>
 							</div>
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">

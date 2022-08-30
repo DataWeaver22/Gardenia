@@ -228,7 +228,7 @@ public class UserController {
 		User user4 = userService.getUser(id);
 		String hIdString = user4.getHq_id();
 		model.addAttribute("hq_code_ID", hIdString);
-
+		
 //		List<String> status = new ArrayList<String>();
 //		status.add("Active");
 //		status.add("Inactive");
@@ -240,6 +240,11 @@ public class UserController {
 	    options.add("Area Sales Manager");
 	    options.add("Regional Sales Manager");
 	    model.addAttribute("options", options);
+	    
+
+		User user5 = userService.getUser(id);
+		String userRoles = user5.getRoles();
+		model.addAttribute("userRoles", userRoles);
 	    
 		model.addAttribute("user", userService.getUser(id));
 		return "edit_user";

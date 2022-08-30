@@ -374,8 +374,8 @@ input[type=text] {
 									<label>Designation</label> <select class="form-control"
 										id="dropDownList" name="hq_designation">
 
-										<option th:each="option : ${options}" 
-											th:selected="${option.name()} eq ${hqRole}?true:false"
+										<option th:each="option : ${options}"
+										th:selected="${option} eq ${userRoles}?true:false"
 											th:value="${option}"
 											th:text="${option}"></option>
 									</select>

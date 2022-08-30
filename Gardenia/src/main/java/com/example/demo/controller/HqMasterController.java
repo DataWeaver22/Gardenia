@@ -29,6 +29,7 @@ import com.example.demo.Import.HqMasterImportHelper;
 import com.example.demo.Import.StateHelper;
 import com.example.demo.entity.Distributor;
 import com.example.demo.entity.HqMaster;
+import com.example.demo.entity.User;
 import com.example.demo.repository.HqRepository;
 import com.example.demo.service.HqMasterImportService;
 import com.example.demo.service.HqService;
@@ -117,6 +118,9 @@ public class HqMasterController {
 		HqMaster hqMaster = hqService.getHqMaster(id);
 		model.addAttribute("hqRole", hqMaster.getHq_designation());
 		model.addAttribute("hqmaster", hqService.getHqMaster(id));
+		HqMaster user5 = hqService.getHqMaster(id);
+		String userRoles = user5.getHq_designation();
+		model.addAttribute("userRoles", userRoles);
 		return "edit_hqmaster";
 	}
 	

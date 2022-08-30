@@ -4,6 +4,7 @@ public enum Roles {
 	
 	TERRITORY_SALES_OFFICER("Territory Sales Officer"),
 	AREA_SALES_EXECUTIVES("Area Sales Executives");
+	
 
     private String name;
 
