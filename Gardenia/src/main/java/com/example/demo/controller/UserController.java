@@ -202,6 +202,8 @@ public class UserController {
 		User user1 = userService.getUser(id);
 		String sIdString = user1.getState_id();
 		model.addAttribute("state_code_ID", sIdString);
+		String userStatus = user1.getStatus();
+		model.addAttribute("userStatus", userStatus);
 		
 		List<Region> region_id = regionService.getAllRegion();
 		List<Region> region_name = regionService.getAllRegion();
@@ -255,23 +257,29 @@ public class UserController {
 	
 	@PostMapping("/user/{id}")
 	public String updateUser(@PathVariable Long id,
-			@ModelAttribute("hquser") User user,
+			@ModelAttribute("user") User user,
 			Model model) {
 		
 		//Get Existing User
-		User existingUser = userService.getUser(id);
-		
 		String sId = user.getState_id();
 		System.out.println(sId);
+		String stateName = hqUserRepository.findByStateName(Long.parseLong(sId));
+		user.setState_name(stateName);
 		
 		String rId = user.getRegion_id();
 		System.out.println(rId);
+		String regionName = hqUserRepository.findByRegionName(Long.parseLong(rId));
+		user.setRegion_name(regionName);
 		
 		String aId = user.getArea_id();
 		System.out.println(aId);
+		String areaName = hqUserRepository.findByAreaName(Long.parseLong(aId));
+		user.setArea_name(areaName);
 		
 		String hId = user.getHq_id();
 		System.out.println(hId);
+		String hqName = hqUserRepository.findByHqName(Long.parseLong(hId));
+		user.setHq_name(hqName);
 		
 		//Save User
 		userService.editUser(user);

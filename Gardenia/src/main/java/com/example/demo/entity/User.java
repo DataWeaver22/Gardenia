@@ -29,6 +29,9 @@ public class User {
 	@Column(name = "lastName",length = 20)
 	private String lastName;
 	
+	@Column(name = "fullName",length = 20)
+	private String fullName;
+	
 	@Column(name = "emp_code", length = 20)
 	private String emp_code;
 	
@@ -242,10 +245,17 @@ public class User {
 		this.area_id = area_id;
 	}
 	
+	public String getFullName() {
+		return fullName;
+	}
+	
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 
 	public User(Long id,String login,String firstName, String lastName, String emp_code,
 			String team, String roles, String status, LocalDateTime create_date, LocalDateTime resign_date, String region_name,
-			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents,String area_id) {
+			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents,String area_id,String fullName) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -265,6 +275,7 @@ public class User {
 		this.hq_id = hq_id;
 		this.documents = documents;
 		this.area_id=area_id;
+		this.fullName = fullName;
 	}
 	
 	public User() {

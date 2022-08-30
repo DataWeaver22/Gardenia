@@ -114,6 +114,8 @@ public class HqMasterController {
 
 	@GetMapping("/hqmaster/edit/{id}")
 	public String editHqMaster(@PathVariable Long id, Model model) {
+		HqMaster hqMaster = hqService.getHqMaster(id);
+		model.addAttribute("hqRole", hqMaster.getHq_designation());
 		model.addAttribute("hqmaster", hqService.getHqMaster(id));
 		return "edit_hqmaster";
 	}

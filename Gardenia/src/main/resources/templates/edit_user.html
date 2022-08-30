@@ -247,7 +247,19 @@ font-size:smaller;
 }
 </style>
 <script>
-
+function myFunc(){
+	var firstName = $("#firstName").val();
+	var lastName = $("#lastName").val();
+	if(firstName!= null && lastName != null){
+		$("#fullName").val(firstName + " " + lastName);
+	}else if(firstName!= null && lastName == null){
+		$("#fullName").val(firstName);
+	}else if(firstName== null && lastName != null){
+		$("#fullName").val(lastName);
+	}else{
+		$("#fullName").val("");
+	}
+}
 </script>
 </head>
 <body>
@@ -389,22 +401,22 @@ font-size:smaller;
 						method="POST">
 						<div class="row">
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
-								<label>Login</label> <input type="text" name="pname"
+								<label>Login</label> <input type="text" name="login"
 									th:field="*{login}" class="form-control"
 									placeholder="Enter Login" />
 							</div>
 
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
-								<label>FirstName</label> <input type="text" name="code"
+								<label>First Name</label> <input type="text" name="first_name" id="firstName" oninput="myFunc()"
 									th:field="*{firstName}" class="form-control"
-									placeholder="Enter FirstName" />
+									placeholder="Enter First Name" />
 							</div>
 
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
-									<label>LastName</label> <input type="text" name="brand"
+									<label>Last Name</label> <input type="text" name="last_name" id="lastName" oninput="myFunc()"
 										th:field="*{lastName}" class="form-control"
-										placeholder="Enter LastName" />
+										placeholder="Enter Last Name" />
 								</div>
 							</div>
 
@@ -417,11 +429,23 @@ font-size:smaller;
 						</div>
 
 						<div class="row">
-
-
+							<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+					
+							<div class="form-group">	
+							<label>Full Name</label>
+							<input
+							type="text"
+							id="fullName"
+							name="fullName"
+							th:field="*{fullName}"
+							class="form-control"
+							placeholder="Enter Full Name"
+							/>
+						</div>
+						</div>
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
-									<label>Employee Code</label> <input type="text" name="family"
+									<label>Employee Code</label> <input type="text" name="emp_code"
 										th:field="*{emp_code}" class="form-control"
 										placeholder="Enter Employee Code" />
 								</div>
@@ -429,19 +453,13 @@ font-size:smaller;
 
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
-									<label>Team</label> <input type="text" name="variant"
+									<label>Team</label> <input type="text" name="team"
 										th:field="*{team}" class="form-control"
 										placeholder="Enter Team" />
 								</div>
 							</div>
 
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
-								<div class="form-group">
-									<label>Role</label> <input type="text" name="group_name"
-										th:field="*{roles}" class="form-control"
-										placeholder="Enter Role" />
-								</div>
-							</div>
+							
 
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
@@ -453,12 +471,20 @@ font-size:smaller;
 						</div>
 
 						<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+								<div class="form-group">
+									<label>Role</label> <input type="text" name="roles"
+										th:field="*{roles}" class="form-control"
+										placeholder="Enter Role" />
+								</div>
+							</div>
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
 									<label>Status</label> <select class="form-control"
-										id="dropDownList" name="status">
+										id="statusList" name="status">
 										<option
 											th:each="status : ${T(com.example.demo.Enum.Status).values()}"
+											th:selected="${status.name()} eq ${userStatus}?true:false"
 											th:value="${status}" th:text="${status}"></option>
 									</select>
 							</div>
@@ -467,7 +493,7 @@ font-size:smaller;
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
 									<label>Region</label>  <select class="form-control"
-										id="dropDownList" name="region_code">
+										id="dropDownList" name="region_id">
 
 										<option th:each="region_name : ${region_name}"
 											th:value="${region_name.id}"
@@ -480,7 +506,7 @@ font-size:smaller;
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
 									<label>State</label> <select class="form-control"
-										id="dropDownList" name="state_code">
+										id="dropDownList" name="state_id">
 
 										<option th:each="state_name : ${state_name}"
 											th:value="${state_name.id}"
@@ -490,10 +516,14 @@ font-size:smaller;
 								</div>
 							</div>
 
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+							
+							</div>
+
+						<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
 									<label>Area</label>  <select class="form-control"
-										id="dropDownList" name="state_code">
+										id="dropDownList" name="area_id">
 
 										<option th:each="area_name : ${area_name}"
 											th:value="${area_name.id}"
@@ -502,13 +532,10 @@ font-size:smaller;
 									</select>
 								</div>
 							</div>
-							</div>
-
-						<div class="row">
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
 									<label>HQ Name</label> <select class="form-control"
-										id="dropDownList" name="state_code">
+										id="dropDownList" name="hq_id">
 
 										<option th:each="hq_name : ${hq_name}"
 											th:value="${hq_name.id}"
