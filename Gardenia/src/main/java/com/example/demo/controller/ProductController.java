@@ -137,6 +137,11 @@ public class ProductController {
 	    options.add("Units");
 	    options.add("Carton");
 	    model.addAttribute("options", options);
+	    Product product2 = productService.getProduct(id);
+	    String userStatus = product2.getStatus();
+		model.addAttribute("userStatus", userStatus);
+	    String userUom = product2.getUom();
+		model.addAttribute("userUom", userUom);
 		model.addAttribute("product", productService.getProduct(id));
 		return "edit_product";
 	}
@@ -150,10 +155,20 @@ public class ProductController {
 		Product existingProduct = productService.getProduct(id);
 		existingProduct.setCode(product.getCode());
 		existingProduct.setPname(product.getPname());
+		existingProduct.setBrand(product.getBrand());
+		existingProduct.setCategory(product.getCategory());
+		existingProduct.setFamily(product.getFamily());
+		existingProduct.setGroup_name(product.getGroup_name());
+		existingProduct.setUom(product.getUom());
+		existingProduct.setPtd(product.getPtd());
+		existingProduct.setPtr(product.getPtr());
+		existingProduct.setStatus(product.getStatus());
+		existingProduct.setDescription(product.getDescription());
+		existingProduct.setSales_diary(product.getSales_diary());
+		existingProduct.setMrp(product.getMrp());
+		
 		
 		//Save Student
-		model.addAttribute("products",productNewService.getProductNew(id));
-		productNewService.editProductNew(productNew);
 		productService.editProduct(existingProduct);
 		return "redirect:/product";
 	}

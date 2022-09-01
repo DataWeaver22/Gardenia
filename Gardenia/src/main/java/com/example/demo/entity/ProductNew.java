@@ -24,7 +24,7 @@ public class ProductNew {
 	private Long id;
  	
 	@Column(name = "mrp", length = 20)
-	private Long mrp;
+	private String mrp;
 	
 	@Column(name = "active_date", length = 20)
 	private Date active_date;
@@ -47,11 +47,11 @@ public class ProductNew {
 		this.id = id;
 	}
 
-	public Long getMrp() {
+	public String getMrp() {
 		return mrp;
 	}
 
-	public void setMrp(Long mrp) {
+	public void setMrp(String mrp) {
 		this.mrp = mrp;
 	}
 
@@ -79,7 +79,7 @@ public class ProductNew {
 		this.mrp_status = mrp_status;
 	}
 
-	public ProductNew(Long id, Long mrp, Date active_date, Date inactive_date, String mrp_status) {
+	public ProductNew(Long id, String mrp, Date active_date, Date inactive_date, String mrp_status) {
 		super();
 		this.id = id;
 		this.mrp = mrp;
@@ -91,7 +91,6 @@ public class ProductNew {
 	public ProductNew() {
 		// TODO Auto-generated constructor stub
 	}
-	
 //	public void getProductNew(ArrayList<ProductNew> lDD) {
 //		// TODO Auto-generated method stub
 //		

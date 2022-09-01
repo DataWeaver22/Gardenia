@@ -213,7 +213,7 @@ public class Product{
 	}
 
 	public Product(Long id, String pname, String code, String brand, String category, String family, String variant,
-			String group_name, String uom, String ptd, String status, String description, LocalDateTime create_date,
+			String group_name, String uom, String ptd, String ptr, String status, String description, LocalDateTime create_date,
 			LocalDateTime inactive_date, String sales_diary, String mrp) {
 		super();
 		this.id = id;
@@ -226,6 +226,7 @@ public class Product{
 		this.group_name = group_name;
 		this.uom = uom;
 		this.ptd = ptd;
+		this.ptr = ptr;
 		this.status = status;
 		this.description = description;
 		this.create_date = create_date;

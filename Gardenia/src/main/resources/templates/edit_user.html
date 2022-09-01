@@ -250,8 +250,35 @@ height:70px;
 margin-top:33px;
 font-size:smaller;
 }
+.dir-img{
+width:70px;
+height:70px;
+postion:relative;
+}
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 </style>
 <script>
+$(document).ready(function(){	
+	$('#fileImage').change(function(){
+		showImageThumbnail(this);
+	});
+	
+	function showImageThumbnail(fileInput){
+		file = fileInput.files[0];
+		reader = new FileReader();
+		
+		reader.onload = function(e) {
+			$('#thumbnail').attr('src',e.target.result);
+		};
+		
+		reader.readAsDataURL(file);
+	}
+	});
+
 function myFunc(){
 	var firstName = $("#firstName").val();
 	var lastName = $("#lastName").val();
@@ -469,7 +496,8 @@ function myFunc(){
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
 									<p>
-										<img id="thumbnail" alt="Image Preview" />
+										<img th:src="@{${images + ''}}" class="dir-img" />
+										<img class="close" src="" />
 									</p>
 								</div>
 							</div>
@@ -481,7 +509,7 @@ function myFunc(){
 									<label>Role</label><select class="form-control" id="dropDownList" name="roles">
     						
     								<option th:each="option : ${options}"
-    								th:selected="${option} eq ${userRoles}?true:false"
+    										th:selected="${option} eq ${userRoles}?true:false"
     										th:value="${option}"
 											th:text="${option}"></option>
 							</select>

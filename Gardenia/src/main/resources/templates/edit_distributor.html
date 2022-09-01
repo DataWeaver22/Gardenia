@@ -237,9 +237,37 @@ input[type=email] {
 .card h1 {
 	margin-top: 30px;
 }
+#thumbnail{
+width:70px;
+height:70px;
+}
+
+.file-upl{
+margin-top:33px;
+font-size:smaller;
+}
+.dir-img{
+width:70px;
+height:70px;
+}
 </style>
 <script>
-
+$(document).ready(function(){	
+	$('#fileImage').change(function(){
+		showImageThumbnail(this);
+	});
+	
+	function showImageThumbnail(fileInput){
+		file = fileInput.files[0];
+		reader = new FileReader();
+		
+		reader.onload = function(e) {
+			$('#thumbnail').attr('src',e.target.result);
+		};
+		
+		reader.readAsDataURL(file);
+	}
+	});
 </script>
 </head>
 <body>
@@ -417,7 +445,7 @@ input[type=email] {
 							</div>
 							<div class="col-md-3">
 								<p>
-									<img id="thumbnail" alt="Image Preview" />
+									<img th:src="@{${images + ''}}" class="dir-img" />
 
 								</p>
 							</div>

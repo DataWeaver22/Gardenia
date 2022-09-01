@@ -194,7 +194,7 @@ public class UserController {
     }  
 	
 	@GetMapping("/user/edit/{id}")
-	public String editUser(@PathVariable Long id,User user, Model model) {
+	public String editUser(@PathVariable Long id,User user, Model model){
 		List<State> state_id = stateService.getAllState();
 		List<State> state_name = stateService.getAllState();
 		model.addAttribute("state_code",state_id);
@@ -245,7 +245,11 @@ public class UserController {
 		User user5 = userService.getUser(id);
 		String userRoles = user5.getRoles();
 		model.addAttribute("userRoles", userRoles);
-	    
+		
+		User user6 = userService.getUser(id);
+		String images = user6.getPhotosImagePath();
+		model.addAttribute("images", images);
+		
 		model.addAttribute("user", userService.getUser(id));
 		return "edit_user";
 	}

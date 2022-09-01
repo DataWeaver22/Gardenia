@@ -30,6 +30,7 @@ import com.example.demo.entity.Distributor;
 import com.example.demo.entity.DistributorCode;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
+import com.example.demo.entity.User;
 import com.example.demo.repository.DistRepository;
 import com.example.demo.repository.DistributorCodeRepository;
 import com.example.demo.repository.HqUserRepository;
@@ -241,6 +242,10 @@ public class DistController {
 	    options.add("Unserviced");
 	    model.addAttribute("options", options);
 	    
+	    Distributor dist6 = distributorService.getDistributor(id);
+		String images = dist6.getPhotosImagePath();
+		model.addAttribute("images", images);
+	    
 		model.addAttribute("distributor", distributorService.getDistributor(id));
 		return "edit_distributor";
 	}
@@ -270,6 +275,7 @@ public class DistController {
 		String ctyname = distRepository.findByCityName(Long.parseLong(ctyId));
 		System.out.println(ctyname);
 		distributor.setCity_name(ctyname);
+		
 		
 		//Save User
 		distributorService.editDistributor(distributor);
