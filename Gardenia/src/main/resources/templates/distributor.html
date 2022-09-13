@@ -3,6 +3,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Distributor Master</title>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -199,6 +200,34 @@ h1 {
 	width:150px;
 	height:150px;
 }
+
+.astatus{
+	color:#000;
+	font-size:14px;
+	font-weight:bolder;
+}
+.fa{
+	font-size:24px;
+}
+
+.fa-check{
+	color:green;
+	margin:0px 5px;
+}
+.fa-times{
+	color:red;
+	margin:0px 5px;
+}
+
+button{
+	cursor:pointer;
+}
+
+.disabled {
+  color: #666;
+  cursor: not-allowed;
+}
+
 </style>
 <script>
 function myFunction() {
@@ -218,6 +247,19 @@ function myFunction() {
     }
   }
 }
+
+$(document).ready(function () {
+  $('#approved').on('click', function (e) {
+    var parent = $(this).parent();
+    parent.find('#approved').addClass('disabled');
+    parent.find('#rejected').addClass('disabled');
+  });
+  $('#approved, #rejected').on('click', function (e) {
+    if ($(this).hasClass('disabled')) return alert('no click allowed'), e.preventDefault(),false;
+    else alert('clicked');
+  });
+})
+
 </script>
 </head>
 <body>
@@ -390,6 +432,8 @@ function myFunction() {
 					<th>Create Date</th> 
 					<th>Inactive Date</th>  -->
 					<th>Documents</th>
+					<th>Approval Status</th>
+					<th>Approval Actions</th>
 					<!-- <th>Serviced Status</th>
 					<th>Brand List</th> -->
 					<th>Actions</th>
@@ -419,6 +463,13 @@ function myFunction() {
 					<td th:text="${distributortable.create_date}"></td>
 					<td th:text="${distributortable.inactive_date}"></td> -->
 					<td><img th:src="${distributortable.photosImagePath}" class="dir-img" /></td>
+					<td th:text="${distributortable.approval_status}" class="astatus" id="aStatus" onload="loadStatus()"></td>
+					
+					<td class="text-center" id="action">
+						<a th:href="@{/distributor/approve/{id}(id=${distributortable.id})}" id="approved"><i class="fa fa-check"></i></a>
+						<a th:href="@{/distributor/reject/{id}(id=${distributortable.id})}" id="rejected"><i class="fa fa-times"></i></a>
+					</td>
+					
 					<!-- <td th:text="${distributortable.service_status}"></td>
 					<td th:text="${distributortable.brand_list}"></td> -->
 					<td><a
@@ -429,5 +480,9 @@ function myFunction() {
 			</tbody>
 		</table>
 	</div>
+	
+<script>
+
+</script>
 </body>
 </html>

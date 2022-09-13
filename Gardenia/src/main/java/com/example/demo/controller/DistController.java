@@ -287,4 +287,22 @@ public class DistController {
 		distributorService.deleteDistributorById(id);
 		return "redirect:/distributor";
 	}
+	
+	@GetMapping("/distributor/approve/{id}")
+	public String approveDistributor(@PathVariable Long id) {
+		Long distID = id;
+		System.out.println(distID);
+		String approved = "Approved";
+		distRepository.updateByStatus(approved,distID);
+		return "redirect:/distributor";
+	}
+	
+	@GetMapping("/distributor/reject/{id}")
+	public String rejectDistributor(@PathVariable Long id) {
+		Long distID = id;
+		System.out.println(distID);
+		String approved = "Rejected";
+		distRepository.updateByStatus(approved,distID);
+		return "redirect:/distributor";
+	}
 }

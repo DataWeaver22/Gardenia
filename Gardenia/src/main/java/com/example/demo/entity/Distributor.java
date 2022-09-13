@@ -104,6 +104,12 @@ public class Distributor {
 	
 	@Column(name = "assign_tso_id", length = 20)
 	private String assign_tso_id;
+	
+	@Column(name = "approval_status", length = 45)
+	private String approval_status;
+	
+	@Column(name = "approval_action", length = 45)
+	private String approval_action;
 
 	public Long getId() {
 		return id;
@@ -337,11 +343,28 @@ public class Distributor {
 		this.assign_tso_id = assign_tso_id;
 	}
 	
+	public String getApproval_status() {
+		return approval_status;
+	}
+
+	public void setApproval_status(String approval_status) {
+		this.approval_status = approval_status;
+	}
+
+	public String getApproval_action() {
+		return approval_action;
+	}
+
+	public void setApproval_action(String approval_action) {
+		this.approval_action = approval_action;
+	}
+
 	public Distributor(Long id, String distributor_name, String distributor_code, String distributor_type, String gstin,
 			String pan, String contact, String mobile, String phone, String email, String address, String region_name,
 			String region_id, String state_name, String state_id, String city_name, String city_id, String supp_name,
 			String supp_code, String status, LocalDateTime create_date, LocalDateTime inactive_date,
-			String service_status, String brand_list, String assign_tso,String assign_tso_id) {
+			String service_status, String brand_list, String assign_tso,String assign_tso_id, String approval_status,
+			String approval_action) {
 		super();
 		this.id = id;
 		this.distributor_name = distributor_name;
@@ -369,6 +392,8 @@ public class Distributor {
 		this.brand_list = brand_list;
 		this.assign_tso = assign_tso;
 		this.assign_tso_id = assign_tso_id;
+		this.approval_status = approval_status;
+		this.approval_action = approval_action;
 	}
 	
 	public Distributor() {

@@ -267,7 +267,7 @@ public class UserController {
 	@PostMapping("/user/{id}")
 	public String updateUser(@PathVariable Long id,
 			@ModelAttribute("user") User user,
-			Model model) {
+			Model model,@RequestParam("image") MultipartFile multipartFile) throws IOException {
 		
 		//Get Existing User
 		String sId = user.getState_id();
@@ -289,6 +289,19 @@ public class UserController {
 		System.out.println(hId);
 		String hqName = hqUserRepository.findByHqName(Long.parseLong(hId));
 		user.setHq_name(hqName);
+		
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        user.setDocuments(fileName);
+         
+        User savedUser = hqUserRepository.save(user);
+ 
+        String uploadDir = "user-photos/" + savedUser.getId();
+ 
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		
+		User user6 = userService.getUser(id);
+		String images = user6.getPhotosImagePath();
+		model.addAttribute("images", images);
 		
 		//Save User
 		userService.editUser(user);

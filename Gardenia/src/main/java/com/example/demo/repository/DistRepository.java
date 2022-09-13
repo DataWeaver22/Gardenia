@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +36,9 @@ public interface DistRepository extends JpaRepository<Distributor, Long>{
 	
 	@Query("select u.id from User u where u.fullName = ?1")
 	String findByAssignedTSO(@Param("aTSOName") String aTSOID);
+	
+	@Transactional
+	@Modifying
+	@Query("update Distributor d set d.approval_status=:approved where d.id=:distID")
+	void updateByStatus(@Param("approved") String approved,@Param("distID") Long distID);
 }

@@ -1,0 +1,3370 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>CMA2</title>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th{
+  padding: 5px 15px;
+  text-align: left;
+  font-size:11px;
+}
+td {
+  padding: 5px;
+  text-align: left;
+  font-size:12px;
+}
+.extra-space{
+  height:35px;
+  border:1px solid black;
+}
+.headers{
+  border-right: none;
+  font-size:14px;
+  text-decoration:underline;
+}
+#addBtn, #addBtn1, #addBtn2, #addBtn3, 
+#addBtn4, #addBtn5, #addBtn6, #addBtn7,
+#addBtn8,#addBtn9,#addBtn10,#addBtn11,
+#addBtn12,#addBtn13{
+  cursor:pointer;
+}
+
+.remove,.remove1,.remove2,.remove3,
+.remove4,.remove5,.remove6,.remove7,
+.remove8,.remove9,.remove10,.remove11,
+.remove12,.remove13{
+	cursor:pointer;
+}
+
+input[type=text]{
+	width:100%;
+	height:30px;
+	border:2px solid #000;
+}
+
+.pages1,.pages2,.pages3,.pages4,.pages5,
+.pages6,.pages7,.pages8,.pages9,.pages10,
+.pages11,.pages12,.pages13,.pages14,.pages15,
+.pages16,.pages17,.pages18,.pages19,.pages20,
+.pages21,.pages22,.pages23,.pages24,.pages25,
+.pages26,.pages27,.pages28,.pages29,.pages30,
+.pages31,.pages32,.pages33,.pages34,.pages35,
+.pages36,.pages37,.pages38,.pages39,.pages40,
+.pages41,.pages42,.pages43,.pages44,.pages45,
+.pages46,.pages47,.pages48,.pages49,.pages50,
+.pages51,.pages52,.pages53,.pages54,.pages55,
+.pages56,.pages57,.pages58,.pages59,.pages60,
+.pages61,.pages62,.pages63,.pages64,.pages65,
+.pages66,.pages67,.pages68,.pages69,.pages70{
+	border:2px solid #000;
+	height:30px;
+}
+
+.fa-plus{
+	background-color: #00d61d;
+  	border: none;
+  	color: white;
+  	padding: 6px;
+  	font-size: 8px;
+  	cursor: pointer;
+  	border-radius:50%;
+  	margin-left:20px;
+}
+
+.fa-minus{
+	background-color: #d60000;
+  	border: none;
+  	color: white;
+  	padding: 6px;
+  	font-size: 8px;
+  	cursor: pointer;
+  	border-radius:50%;
+  	margin-left:20px;
+}
+
+#total1,#total2,#total3,#total4,#total5,
+#total6,#total7,#total8,#total9,#total10,
+#total11,#total12,#total13,#total14,#total15,
+#total16,#total17,#total18,#total19,#total20,
+#total21,#total22,#total23,#total24,#total25,
+#total26,#total27,#total28,#total29,#total30,
+#total31,#total32,#total33,#total34,#total35,
+#total36,#total37,#total38,#total39,#total40,
+#total41,#total42,#total43,#total44,#total45,
+#total46,#total47,#total48,#total49,#total50,
+#total51,#total52,#total53,#total54,#total55,
+#total56,#total57,#total58,#total59,#total60,
+#total61,#total62,#total63,#total64,#total65,
+#total66,#total67,#total68,#total69,#total70{
+	height:30px;
+	padding:2px 5px;
+}
+</style>
+<script>
+$(document).ready(function () {
+  
+      // Denotes total number of rows
+      var rowIdx = 0;
+  
+      // jQuery button click event to add a row
+      $('#addBtn').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages1" id="h10" oninput='totalPgs1()'></td>
+    		 <td><input type="number" class="pages2" id="i10" oninput='totalPgs2()'></td>
+    		 <td><input type="number" class="pages3" id="j10" oninput='totalPgs3()'></td>
+    		 <td><input type="number" class="pages4" id="k10" oninput='totalPgs4()'></td>
+    		 <td><input type="number" class="pages5" id="l10" oninput='totalPgs5()'></td>
+    		 <td><i class="fa fa-minus remove"></i></td>
+              </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody').on('click', '.remove', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn1').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody1').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages6" id="h11" oninput='totalPgs6()'></td>
+    		 <td><input type="number" class="pages7" id="i11" oninput='totalPgs7()'></td>
+    		 <td><input type="number" class="pages8" id="j11" oninput='totalPgs8()'></td>
+    		 <td><input type="number" class="pages9" id="k11" oninput='totalPgs9()'></td>
+    		 <td><input type="number" class="pages10" id="l11" oninput='totalPgs10()'></td>
+    		 <td><i class="fa fa-minus remove1"></i></td>
+              </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody1').on('click', '.remove1', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn2').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody2').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages11" id="h12" oninput='totalPgs11()'></td>
+    		 <td><input type="number" class="pages12" id="i12" oninput='totalPgs12()'></td>
+    		 <td><input type="number" class="pages13" id="j12" oninput='totalPgs13()'></td>
+    		 <td><input type="number" class="pages14" id="k12" oninput='totalPgs14()'></td>
+    		 <td><input type="number" class="pages15" id="l12" oninput='totalPgs15()'></td>
+    		 <td><i class="fa fa-minus remove2"></i></td>
+              </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody2').on('click', '.remove2', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+       // jQuery button click event to add a row
+      $('#addBtn3').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody3').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages16" id="h13" oninput='totalPgs16()'></td>
+    		 <td><input type="number" class="pages17" id="i13" oninput='totalPgs17()'></td>
+    		 <td><input type="number" class="pages18" id="j13" oninput='totalPgs18()'></td>
+    		 <td><input type="number" class="pages19" id="k13" oninput='totalPgs19()'></td>
+    		 <td><input type="number" class="pages20" id="l13" oninput='totalPgs20()'></td>
+    		 <td><i class="fa fa-minus remove3"></i></td>
+              </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody3').on('click', '.remove3', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn4').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody4').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages21" id="h14" oninput='totalPgs21()'></td>
+    		 <td><input type="number" class="pages22" id="i14" oninput='totalPgs22()'></td>
+    		 <td><input type="number" class="pages23" id="j14" oninput='totalPgs23()'></td>
+    		 <td><input type="number" class="pages24" id="k14" oninput='totalPgs24()'></td>
+    		 <td><input type="number" class="pages25" id="l14" oninput='totalPgs25()'></td>
+    		 <<td><i class="fa fa-minus remove4"></i></td>
+              </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody4').on('click', '.remove4', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn5').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody5').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages26" id="h15" oninput='totalPgs26()'></td>
+    		 <td><input type="number" class="pages27" id="i15" oninput='totalPgs27()'></td>
+    		 <td><input type="number" class="pages28" id="j14" oninput='totalPgs28()'></td>
+    		 <td><input type="number" class="pages29" id="k14" oninput='totalPgs29()'></td>
+    		 <td><input type="number" class="pages30" id="l14" oninput='totalPgs30()'></td>
+    		 <td><i class="fa fa-minus remove5"></i></td>
+           </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody5').on('click', '.remove5', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn6').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody6').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages31" id="h15" oninput='totalPgs31()'></td>
+    		 <td><input type="number" class="pages32" id="i15" oninput='totalPgs32()'></td>
+    		 <td><input type="number" class="pages33" id="j15" oninput='totalPgs33()'></td>
+    		 <td><input type="number" class="pages34" id="k15" oninput='totalPgs34()'></td>
+    		 <td><input type="number" class="pages35" id="l15" oninput='totalPgs35()'></td>
+    		 <td><i class="fa fa-minus remove6"></i></td>
+              </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody6').on('click', '.remove6', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn7').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody7').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages36" id="h16" oninput='totalPgs36()'></td>
+    		 <td><input type="number" class="pages37" id="i16" oninput='totalPgs37()'></td>
+    		 <td><input type="number" class="pages38" id="j16" oninput='totalPgs38()'></td>
+    		 <td><input type="number" class="pages39" id="k16" oninput='totalPgs39()'></td>
+    		 <td><input type="number" class="pages40" id="l16" oninput='totalPgs40()'></td>
+    		 <td><i class="fa fa-minus remove7"></i></td>
+           </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody7').on('click', '.remove7', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn8').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody8').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages41" id="h17" oninput='totalPgs41()'></td>
+    		 <td><input type="number" class="pages42" id="i17" oninput='totalPgs42()'></td>
+    		 <td><input type="number" class="pages43" id="j17" oninput='totalPgs43()'></td>
+    		 <td><input type="number" class="pages44" id="k17" oninput='totalPgs44()'></td>
+    		 <td><input type="number" class="pages45" id="l17" oninput='totalPgs45()'></td>
+    		 <td><i class="fa fa-minus remove8"></i></td>
+           </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody8').on('click', '.remove8', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn9').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody9').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+             <td><input type="number" class="pages46" id="h18" oninput='totalPgs46()'></td>
+    		 <td><input type="number" class="pages47" id="i18" oninput='totalPgs47()'></td>
+    		 <td><input type="number" class="pages48" id="j18" oninput='totalPgs48()'></td>
+    		 <td><input type="number" class="pages49" id="k18" oninput='totalPgs49()'></td>
+    		 <td><input type="number" class="pages50" id="l18" oninput='totalPgs50()'></td>
+    		 <td><i class="fa fa-minus remove9"></i></td>
+           </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody9').on('click', '.remove9', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn10').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody10').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+        	 <td><input type="number" class="pages51" id="h19" oninput='totalPgs51()'></td>
+    		 <td><input type="number" class="pages52" id="i19" oninput='totalPgs52()'></td>
+    		 <td><input type="number" class="pages53" id="j19" oninput='totalPgs53()'></td>
+    		 <td><input type="number" class="pages54" id="k19" oninput='totalPgs54()'></td>
+     		 <td><input type="number" class="pages55" id="l19" oninput='totalPgs55()'></td>
+     		 <td><i class="fa fa-minus remove10"></i></td>
+           </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody10').on('click', '.remove10', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn11').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody11').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+        	 <td><input type="number" class="pages56" id="h20" oninput='totalPgs56()'></td>
+    		 <td><input type="number" class="pages57" id="i20" oninput='totalPgs57()'></td>
+    		 <td><input type="number" class="pages58" id="j20" oninput='totalPgs58()'></td>
+    		 <td><input type="number" class="pages59" id="k20" oninput='totalPgs59()'></td>
+    		 <td><input type="number" class="pages60" id="l20" oninput='totalPgs60()'></td>
+    		 <td><i class="fa fa-minus remove11"></i></td>
+           </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody11').on('click', '.remove11', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn12').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody12').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+        	 <td><input type="number" class="pages61" id="h21" oninput='totalPgs61()'></td>
+    		 <td><input type="number" class="pages62" id="i17" oninput='totalPgs62()'></td>
+    		 <td><input type="number" class="pages63" id="j17" oninput='totalPgs63()'></td>
+    		 <td><input type="number" class="pages64" id="k17" oninput='totalPgs64()'></td>
+    		 <td><input type="number" class="pages65" id="l17" oninput='totalPgs65()'></td>
+    		 <td><i class="fa fa-minus remove12"></i></td>
+           </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody12').on('click', '.remove12', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+      
+      // jQuery button click event to add a row
+      $('#addBtn13').on('click', function () {
+  
+        // Adding a row inside the tbody.
+        $('#tbody13').append(`<tr id="R${++rowIdx}">
+        	 <td><input type="text"></td>
+        	 <td><input type="number" class="pages66" id="h21" oninput='totalPgs66()'></td>
+    		 <td><input type="number" class="pages67" id="h21" oninput='totalPgs67()'></td>
+    		 <td><input type="number" class="pages68" id="h21" oninput='totalPgs68()'></td>
+    		 <td><input type="number" class="pages69" id="h21" oninput='totalPgs69()'></td>
+    		 <td><input type="number" class="pages70" id="h21" oninput='totalPgs70()'></td>
+    		 <td><i class="fa fa-minus remove13"></i></td>
+           </tr>`);
+      });
+      
+      // jQuery button click event to remove a row.
+      $('#tbody13').on('click', '.remove13', function () {
+  
+        // Getting all the rows next to the row
+        // containing the clicked button
+        var child = $(this).closest('tr').nextAll();
+  
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+  
+          // Getting <tr> id.
+          var id = $(this).attr('id');
+  
+          // Getting the <p> inside the .row-index class.
+          var idx = $(this).children('.row-index').children('td');
+  
+          // Gets the row number from <tr> id.
+          var dig = parseInt(id.substring(1));
+  
+          // Modifying row index.
+          idx.html(`Row ${dig - 1}`);
+  
+          // Modifying row id.
+          $(this).attr('id', `R${dig - 1}`);
+        });
+  
+        // Removing the current row.
+        $(this).closest('tr').remove();
+  
+        // Decreasing total number of rows by 1.
+        rowIdx--;
+      });
+  });
+  
+  
+  
+</script>
+</head>
+<body>
+<div class="container-fluid mt-5 mb-5">
+	<table style="width:100%">
+	<tr>
+		<th></th>
+		<th colspan="2" class="text-center">Previous 2 years</th>
+		<th>Current Year</th>
+		<th>Following Year</th>
+		<th>Following Year</th>
+		<th>Actions</th>
+	</tr>
+  <tr>
+    <th class="headers">Gross Sales</th>
+    
+  </tr>
+  <tr class="success">
+    <th>Domestic Sales + Commission & Brokerage:</th>
+    <td><output id='total1' class="form-control" name="total1" type="number" step=1></output></td>
+    <td><output id='total2' class="form-control" name="total2"></output></td>
+    <td><output id='total3' class="form-control" name="total3"></output></td>
+    <td><output id='total4' class="form-control" name="total4"></output></td>
+    <td><output id='total5' class="form-control" name="total5"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn"></i>
+    </td>
+  </tr>
+  <tbody id="tbody">
+  </tbody>
+  <tr>
+    <th>Export Sales:</th>
+    <td><output id='total6' class="form-control" name="total6"></output></td>
+    <td><output id='total7' class="form-control" name="total7"></output></td>
+    <td><output id='total8' class="form-control" name="total8"></output></td>
+    <td><output id='total9' class="form-control" name="total9"></output></td>
+    <td><output id='total10' class="form-control" name="total10"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn1"></i>
+    </td>
+  </tr>
+  <tbody id="tbody1">
+  </tbody>
+  <tr>
+    <th>Other Operating Revenue</th>
+    <td><output id='total11' class="form-control" name="total11"></output></td>
+    <td><output id='total12' class="form-control" name="total12"></output></td>
+    <td><output id='total13' class="form-control" name="total13"></output></td>
+    <td><output id='total14' class="form-control" name="total14"></output></td>
+    <td><output id='total15' class="form-control" name="total15"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn2"></i>
+    </td>
+  </tr>
+  <tbody id="tbody2">
+  </tbody>
+  <tr>
+    <th>Total</th>
+    <td></td>
+    <td>10676.95</td>
+    <td>11967.18</td>
+    <td>13478.69</td>
+    <td>14562.78</td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>Less:Excise Duty</th>
+    <td><output id='total16' class="form-control" name="total16"></output></td>
+    <td><output id='total17' class="form-control" name="total17"></output></td>
+    <td><output id='total18' class="form-control" name="total18"></output></td>
+    <td><output id='total19' class="form-control" name="total19"></output></td>
+    <td><output id='total20' class="form-control" name="total20"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn3"></i>
+    </td>
+   </tr>
+  <tbody id="tbody3">
+  </tbody>
+   <tr>
+    <th>Net Sales</th>
+    <td>10272.13</td>
+    <td>10643.50</td>
+    <td>11913.36</td>
+    <td>13421.89</td>
+    <td>14505.72</td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>%age rise or fall in net sales as compared to previous year</th>
+    <td>10308.89</td>
+    <td>10676.95</td>
+    <td>11967.18</td>
+    <td>13478.69</td>
+    <td>14562.78</td>
+    <td></td>
+  </tr>
+  <tr rowspan="5">
+    <th class="headers">Cost Of Sales</th>
+    
+  </tr>
+  <tr rowspan="5" style="border: 1px solid black">
+    <th class="headers">Raw materials (including stores and other items used in the process of manufacture)</th>
+    
+  </tr>
+  <tr>
+  	<th>Imported</th>
+    <td><output id='total21' class="form-control" name="total21"></output></td>
+    <td><output id='total22' class="form-control" name="total22"></output></td>
+    <td><output id='total23' class="form-control" name="total23"></output></td>
+    <td><output id='total24' class="form-control" name="total24"></output></td>
+    <td><output id='total25' class="form-control" name="total25"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn4"></i>
+    </td>
+  </tr>
+  <tbody id="tbody4">
+  </tbody>
+  <tr>
+  	<th>Indigenous</th>
+    <td><output id='total26' class="form-control" name="total26"></output></td>
+    <td><output id='total27' class="form-control" name="total27"></output></td>
+    <td><output id='total28' class="form-control" name="total28"></output></td>
+    <td><output id='total29' class="form-control" name="total29"></output></td>
+    <td><output id='total30' class="form-control" name="total30"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn5"></i>
+    </td>
+  </tr>
+  <tbody id="tbody5">
+  </tbody>
+  <tr rowspan="5" style="border: 1px solid black">
+    <th class="headers">Other Spares</th>
+    
+  </tr>
+  <tr>
+  	<th>Imported</th>
+    <td><output id='total31' class="form-control" name="total31"></output></td>
+    <td><output id='total32' class="form-control" name="total32"></output></td>
+    <td><output id='total33' class="form-control" name="total33"></output></td>
+    <td><output id='total34' class="form-control" name="total34"></output></td>
+    <td><output id='total35' class="form-control" name="total35"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn6"></i>
+    </td>
+  </tr>
+  <tbody id="tbody6">
+  </tbody>
+  <tr>
+  	<th>Indigenous</th>
+    <td><output id='total36' class="form-control" name="total36"></output></td>
+    <td><output id='total37' class="form-control" name="total37"></output></td>
+    <td><output id='total38' class="form-control" name="total38"></output></td>
+    <td><output id='total39' class="form-control" name="total39"></output></td>
+    <td><output id='total40' class="form-control" name="total40"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn7"></i>
+    </td>
+  </tr>
+  <tbody id="tbody7">
+  </tbody>
+  <tr>
+  	<th>Power&Fuel</th>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Direct Labour (factory wages & salaries)</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Other mfg. expenses</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Repairs and maintainance</th>
+  	<td>93.60</td>
+    <td>38.21</td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Depreciation</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td>485.62</td>
+    <td>442.81</td>
+    <td>397.69</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Sub-Total (i-vi)</th>
+  	<td>10364.67</td>
+    <td>9523.05</td>
+    <td>10632.62</td>
+    <td>11687.28</td>
+    <td>12450.69</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Add : Opening stocks- in-process</th>
+  	<td><output id='total41' class="form-control" name="total41"></output></td>
+    <td><output id='total42' class="form-control" name="total42"></output></td>
+    <td><output id='total43' class="form-control" name="total43"></output></td>
+    <td><output id='total44' class="form-control" name="total44"></output></td>
+    <td><output id='total45' class="form-control" name="total45"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn8"></i>
+    </td>
+  </tr>
+  <tbody id="tbody8">
+  </tbody>
+  <tr>
+  	<th>Sub-Total</th>
+  	<td>10658.31</td>
+    <td>9887.52</td>
+    <td>11014.82</td>
+    <td>12159.21</td>
+    <td>12943.79</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Deduct : Closing stocks-in-process</th>
+  	<td><output id='total46' class="form-control" name="total46"></output></td>
+    <td><output id='total47' class="form-control" name="total47"></output></td>
+    <td><output id='total48' class="form-control" name="total48"></output></td>
+    <td><output id='total49' class="form-control" name="total49"></output></td>
+    <td><output id='total50' class="form-control" name="total50"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn9"></i>
+    </td>
+  </tr>
+  <tbody id="tbody9">
+  </tbody>
+  <tr>
+  	<th>Cost of production</th>
+  	<td>10293.84</td>
+    <td>9505.32</td>
+    <td>10542.90</td>
+    <td>11666.11</td>
+    <td>12449.60</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Add : Opening stock of finished goods</th>
+  	<td><output id='total51' class="form-control" name="total51"></output></td>
+    <td><output id='total52' class="form-control" name="total52"></output></td>
+    <td><output id='total53' class="form-control" name="total53"></output></td>
+    <td><output id='total54' class="form-control" name="total54"></output></td>
+    <td><output id='total55' class="form-control" name="total55"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn10"></i>
+    </td>
+  </tr>
+  <tbody id="tbody10">
+  </tbody>
+  <tr>
+  	<th>Sub-Total</th>
+  	<td>10675.10</td>
+    <td>10094.68</td>
+    <td>11064.68</td>
+    <td>12252.87</td>
+    <td>13064.60</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Deduct : Closing stock of  finished goods</th>
+  	<td><output id='total56' class="form-control" name="total56"></output></td>
+    <td><output id='total57' class="form-control" name="total57"></output></td>
+    <td><output id='total58' class="form-control" name="total58"></output></td>
+    <td><output id='total59' class="form-control" name="total59"></output></td>
+    <td><output id='total60' class="form-control" name="total60"></output></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn11"></i>
+    </td>
+  </tr>
+  <tbody id="tbody11">
+  </tbody>
+  <tr>
+  	<th>SUB-TOTAL (Total cost of  sales) </th>
+  	<td>10085.74</td>
+    <td>9572.90</td>
+    <td>10477.91</td>
+    <td>11637.87</td>
+    <td>12447.00</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>SUB-TOTAL (Total cost of  sales) </th>
+  	<td>10085.74</td>
+    <td>9572.90</td>
+    <td>10477.91</td>
+    <td>11637.87</td>
+    <td>12447.00</td>
+    <td></td>
+  </tr>
+  <tr rowspan="5" class="extra-space" style="">
+    <th class="headers"></th>
+    
+  </tr>
+  <tr rowspan="5" class="extra-space">
+    <th class="headers"></th>
+   
+  </tr>
+  	<tr>
+		<th></th>
+		<th colspan="2" class="text-center">Actual(As per Audited Accounts)</th>
+		<th>Year Estimates</th>
+		<th>Year Projections</th>
+		<th>Year Projections</th>
+	</tr>
+  <tr>
+  	<th>Selling, general and administrative expenses</th>
+  	<td>629</td>
+    <td>727.67</td>
+    <td>842.95</td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>SUB-TOTAL (5+6)</th>
+  	<td>10714.74</td>
+    <td>10300.57</td>
+    <td>11320.86</td>
+    <td>12588.87</td>
+    <td>13499.00</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Operating profit before interest (3-7)</th>
+  	<td>(442.61)</td>
+    <td>342.93</td>
+    <td>592.50</td>
+    <td>833.02</td>
+    <td>1006.72</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Interest</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td>55.69</td>
+    <td>60.75</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Operating profit after </th>
+  	<td>(449.65)</td>
+    <td>336.41</td>
+    <td>568.34</td>
+    <td>777.33</td>
+    <td>945.97</td>
+    <td></td>
+  </tr>
+  <tr rowspan="5">
+  	<th class="headers">Interest (8-9) </th>
+  	
+  </tr>
+  <tr rowspan="5">
+  	<th>Add other non-operating Income </th>
+  	<td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>
+    	<i class="fa fa-plus" id="addBtn12"></i>
+    </td>
+  </tr>
+  <tr>
+  	<th>[a] Interest on bank deposit</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>[b] Other interest and late payment charges</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>[c] Discounts and sundry balance written off</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>[d] Other Income (MODVAT etc.)</th>
+  	<td>219.13</td>
+    <td>77.48</td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tbody id="tbody12">
+  </tbody>
+  <tr>
+  	<th>Sub-total (income)</th>
+  	<td>333.15</td>
+    <td>204.67</td>
+    <td>130</td>
+    <td>112</td>
+    <td>114</td>
+    <td></td>
+  </tr>
+  <tr rowspan="5">
+  	<th>Deduct other non-operating expenses </th>
+  	<td></td>
+  	<td></td>
+  	<td></td>
+  	<td></td>
+  	<td></td>
+  	<td>
+    	<i class="fa fa-plus" id="addBtn13"></i>
+    </td>
+  </tr>
+  <tr>
+  	<th>a. Deferred Tax Expenses</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    
+  </tr>
+  <tr>
+  	<th>b. Preli. & Preop. Expenses written off</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>c. Other expenses</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td>0.00</td>
+    <td></td>
+  </tr>
+  <tbody id="tbody13">
+  </tbody>
+  <tr>
+  	<th>Sub-total (expenses)</th>
+  	<td>2.65</td>
+    <td>0.00</td>
+    <td>4.00</td>
+    <td>0.00</td>
+    <td>0.00</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Net of other non-operating  </th>
+  	<td>330.50</td>
+    <td>204.67</td>
+    <td>126.00</td>
+    <td>112.00</td>
+    <td>114.00</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Net of other non-operating  </th>
+  	<td>330.50</td>
+    <td>204.67</td>
+    <td>126.00</td>
+    <td>112.00</td>
+    <td>114.00</td>
+    <td></td>
+  </tr>
+  <tr rowspan="5">
+  	<th class="headers">Income/Expenses</th>
+  	
+  </tr>
+  <tr>
+  	<th>Profit before Tax/Loss</th>
+  	<td>(119.15)</td>
+    <td>417.43</td>
+    <td>522.05</td>
+    <td>695.74</td>
+    <td>861.59</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>[a] Equity dividend paid / proposed </th>
+  	<td>96.73</td>
+    <td>145.09</td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>[b] Dividend rate</th>
+  	<td>50.00%</td>
+    <td>75.00%</td>
+    <td>0.75</td>
+    <td>75.00%</td>
+    <td>75.00%</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>[c] Transfer to general reserve</th>
+  	<td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td><input type="number"></td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Retained profit (14-15)</th>
+  	<td>(288.58)</td>
+    <td>229.34</td>
+    <td>376.96</td>
+    <td>550.65</td>
+    <td>716.50</td>
+    <td></td>
+  </tr>
+  <tr>
+  	<th>Retained profit/Net</th>
+  	<td>242.20</td>
+    <td>54.94</td>
+    <td>72.21</td>
+    <td>79.15</td>
+    <td>83.16</td>
+    <td></td>
+  </tr>
+  <tr rowspan="5">
+    <th class="headers">Profit(%age)</th>
+    
+  </tr>
+</table>
+</div>
+
+<script>
+function totalPgs1() {
+      // Reference the <output> as out 
+      var out1 = document.getElementById('total1');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs1 = document.querySelectorAll('.pages1');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr1 = Array.prototype.map.call(pgs1, function(pg1) {
+        var cnt1 = parseFloat(pg1.value, 10);
+        return cnt1;
+      });
+      // .apply the function sum() to array called arr
+      var total1 = sum1.apply(sum1, arr1);
+      // The value of out is whatever total is
+      out1.value = total1;
+      // return the value of total
+      return total1;
+    }
+	function sum1() {
+      var res1 = 0;
+      var i1 = 0;
+      var qty1 = arguments.length;
+      while (i1 < qty1) {
+        res1 += arguments[i1];
+        i1++;
+      }
+      return res1;
+    }
+    
+function totalPgs2() {
+      // Reference the <output> as out 
+      var out2 = document.getElementById('total2');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs2 = document.querySelectorAll('.pages2');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr2 = Array.prototype.map.call(pgs2, function(pg2) {
+        var cnt2 = parseFloat(pg2.value, 10);
+        return cnt2;
+      });
+      // .apply the function sum() to array called arr
+      var total2 = sum2.apply(sum2, arr2);
+      // The value of out is whatever total is
+      out2.value = total2;
+      // return the value of total
+      return total2;
+    }
+	function sum2() {
+      var res2 = 0;
+      var i2 = 0;
+      var qty2 = arguments.length;
+      while (i2 < qty2) {
+        res2 += arguments[i2];
+        i2++;
+      }
+      return res2;
+    }
+    
+function totalPgs3() {
+      // Reference the <output> as out 
+      var out3 = document.getElementById('total3');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs3 = document.querySelectorAll('.pages3');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr3 = Array.prototype.map.call(pgs3, function(pg3) {
+        var cnt3 = parseFloat(pg3.value, 10);
+        return cnt3;
+      });
+      // .apply the function sum() to array called arr
+      var total3 = sum3.apply(sum3, arr3);
+      // The value of out is whatever total is
+      out3.value = total3;
+      // return the value of total
+      return total3;
+    }
+	function sum3() {
+      var res3 = 0;
+      var i3 = 0;
+      var qty3 = arguments.length;
+      while (i3 < qty3) {
+        res3 += arguments[i3];
+        i3++;
+      }
+      return res3;
+    }
+
+function totalPgs4() {
+      // Reference the <output> as out 
+      var out4 = document.getElementById('total4');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs4 = document.querySelectorAll('.pages4');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr4 = Array.prototype.map.call(pgs4, function(pg4) {
+        var cnt4 = parseFloat(pg4.value, 10);
+        return cnt4;
+      });
+      // .apply the function sum() to array called arr
+      var total4 = sum4.apply(sum4, arr4);
+      // The value of out is whatever total is
+      out4.value = total4;
+      // return the value of total
+      return total4;
+    }
+	function sum4() {
+      var res4 = 0;
+      var i4 = 0;
+      var qty4 = arguments.length;
+      while (i4 < qty4) {
+        res4 += arguments[i4];
+        i4++;
+      }
+      return res4;
+    }
+    
+function totalPgs5() {
+      // Reference the <output> as out 
+      var out5 = document.getElementById('total5');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs5 = document.querySelectorAll('.pages5');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr5 = Array.prototype.map.call(pgs5, function(pg5) {
+        var cnt5 = parseFloat(pg5.value, 10);
+        return cnt5;
+      });
+      // .apply the function sum() to array called arr
+      var total5 = sum5.apply(sum5, arr5);
+      // The value of out is whatever total is
+      out5.value = total5;
+      // return the value of total
+      return total5;
+    }
+	function sum5() {
+      var res5 = 0;
+      var i5 = 0;
+      var qty5 = arguments.length;
+      while (i5 < qty5) {
+        res5 += arguments[i5];
+        i5++;
+      }
+      return res5;
+    }   
+    
+function totalPgs6() {
+      // Reference the <output> as out 
+      var out6 = document.getElementById('total6');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs6 = document.querySelectorAll('.pages6');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr6 = Array.prototype.map.call(pgs6, function(pg6) {
+        var cnt6 = parseFloat(pg6.value, 10);
+        return cnt6;
+      });
+      // .apply the function sum() to array called arr
+      var total6 = sum6.apply(sum6, arr6);
+      // The value of out is whatever total is
+      out6.value = total6;
+      // return the value of total
+      return total6;
+    }
+	function sum6() {
+      var res6 = 0;
+      var i6 = 0;
+      var qty6 = arguments.length;
+      while (i6 < qty6) {
+        res6 += arguments[i6];
+        i6++;
+      }
+      return res6;
+    }    
+
+function totalPgs7() {
+      // Reference the <output> as out 
+      var out7 = document.getElementById('total7');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs7 = document.querySelectorAll('.pages7');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr7 = Array.prototype.map.call(pgs7, function(pg7) {
+        var cnt7 = parseFloat(pg7.value, 10);
+        return cnt7;
+      });
+      // .apply the function sum() to array called arr
+      var total7 = sum7.apply(sum7, arr7);
+      // The value of out is whatever total is
+      out7.value = total7;
+      // return the value of total
+      return total7;
+    }
+	function sum7() {
+      var res7 = 0;
+      var i7 = 0;
+      var qty7 = arguments.length;
+      while (i7 < qty7) {
+        res7 += arguments[i7];
+        i7++;
+      }
+      return res7;
+    }   
+
+function totalPgs8() {
+      // Reference the <output> as out 
+      var out8 = document.getElementById('total8');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs8 = document.querySelectorAll('.pages8');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr8 = Array.prototype.map.call(pgs8, function(pg8) {
+        var cnt8 = parseFloat(pg8.value, 10);
+        return cnt8;
+      });
+      // .apply the function sum() to array called arr
+      var total8 = sum8.apply(sum8, arr8);
+      // The value of out is whatever total is
+      out8.value = total8;
+      // return the value of total
+      return total8;
+    }
+	function sum8() {
+      var res8 = 0;
+      var i8 = 0;
+      var qty8 = arguments.length;
+      while (i8 < qty8) {
+        res8 += arguments[i8];
+        i8++;
+      }
+      return res8;
+    }  
+    
+function totalPgs9() {
+      // Reference the <output> as out 
+      var out9 = document.getElementById('total9');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs9 = document.querySelectorAll('.pages9');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr9 = Array.prototype.map.call(pgs9, function(pg9) {
+        var cnt9 = parseFloat(pg9.value, 10);
+        return cnt9;
+      });
+      // .apply the function sum() to array called arr
+      var total9 = sum9.apply(sum9, arr9);
+      // The value of out is whatever total is
+      out9.value = total9;
+      // return the value of total
+      return total9;
+    }
+	function sum9() {
+      var res9 = 0;
+      var i9 = 0;
+      var qty9 = arguments.length;
+      while (i9 < qty9) {
+        res9 += arguments[i9];
+        i9++;
+      }
+      return res9;
+    }   
+    
+function totalPgs10() {
+      // Reference the <output> as out 
+      var out10 = document.getElementById('total10');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs10 = document.querySelectorAll('.pages10');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr10 = Array.prototype.map.call(pgs10, function(pg10) {
+        var cnt10 = parseFloat(pg10.value, 10);
+        return cnt10;
+      });
+      // .apply the function sum() to array called arr
+      var total10 = sum10.apply(sum10, arr10);
+      // The value of out is whatever total is
+      out10.value = total10;
+      // return the value of total
+      return total10;
+    }
+	function sum10() {
+      var res10 = 0;
+      var i10 = 0;
+      var qty10 = arguments.length;
+      while (i10 < qty10) {
+        res10 += arguments[i10];
+        i10++;
+      }
+      return res10;
+    } 
+
+function totalPgs11() {
+      // Reference the <output> as out 
+      var out11 = document.getElementById('total11');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs11 = document.querySelectorAll('.pages11');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr11 = Array.prototype.map.call(pgs11, function(pg11) {
+        var cnt11 = parseFloat(pg11.value, 10);
+        return cnt11;
+      });
+      // .apply the function sum() to array called arr
+      var total11 = sum11.apply(sum11, arr11);
+      // The value of out is whatever total is
+      out11.value = total11;
+      // return the value of total
+      return total11;
+    }
+	function sum11() {
+      var res11 = 0;
+      var i11 = 0;
+      var qty11 = arguments.length;
+      while (i11 < qty11) {
+        res11 += arguments[i11];
+        i11++;
+      }
+      return res11;
+    }
+    
+function totalPgs12() {
+      // Reference the <output> as out 
+      var out12 = document.getElementById('total12');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs12 = document.querySelectorAll('.pages12');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr12 = Array.prototype.map.call(pgs12, function(pg12) {
+        var cnt12 = parseFloat(pg12.value, 10);
+        return cnt12;
+      });
+      // .apply the function sum() to array called arr
+      var total12 = sum12.apply(sum12, arr12);
+      // The value of out is whatever total is
+      out12.value = total12;
+      // return the value of total
+      return total12;
+    }
+	function sum12() {
+      var res12 = 0;
+      var i12 = 0;
+      var qty12 = arguments.length;
+      while (i12 < qty12) {
+        res12 += arguments[i12];
+        i12++;
+      }
+      return res12;
+    }
+    
+function totalPgs13() {
+      // Reference the <output> as out 
+      var out13 = document.getElementById('total13');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs13 = document.querySelectorAll('.pages13');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr13 = Array.prototype.map.call(pgs13, function(pg13) {
+        var cnt13 = parseFloat(pg13.value, 10);
+        return cnt13;
+      });
+      // .apply the function sum() to array called arr
+      var total13 = sum10.apply(sum13, arr13);
+      // The value of out is whatever total is
+      out13.value = total13;
+      // return the value of total
+      return total13;
+    }
+	function sum13() {
+      var res13 = 0;
+      var i13 = 0;
+      var qty13 = arguments.length;
+      while (i13 < qty13) {
+        res13 += arguments[i13];
+        i13++;
+      }
+      return res13;
+    }
+    
+function totalPgs14() {
+      // Reference the <output> as out 
+      var out14 = document.getElementById('total14');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs14 = document.querySelectorAll('.pages14');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr14 = Array.prototype.map.call(pgs14, function(pg14) {
+        var cnt14 = parseFloat(pg14.value, 10);
+        return cnt14;
+      });
+      // .apply the function sum() to array called arr
+      var total14 = sum14.apply(sum14, arr14);
+      // The value of out is whatever total is
+      out14.value = total14;
+      // return the value of total
+      return total14;
+    }
+	function sum14() {
+      var res14 = 0;
+      var i14 = 0;
+      var qty14 = arguments.length;
+      while (i14 < qty14) {
+        res14 += arguments[i14];
+        i14++;
+      }
+      return res14;
+    }
+    
+function totalPgs15() {
+      // Reference the <output> as out 
+      var out15 = document.getElementById('total15');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs15 = document.querySelectorAll('.pages15');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr15 = Array.prototype.map.call(pgs15, function(pg15) {
+        var cnt15 = parseFloat(pg15.value, 10);
+        return cnt15;
+      });
+      // .apply the function sum() to array called arr
+      var total15 = sum15.apply(sum15, arr15);
+      // The value of out is whatever total is
+      out15.value = total15;
+      // return the value of total
+      return total15;
+    }
+	function sum15() {
+      var res15 = 0;
+      var i15 = 0;
+      var qty15 = arguments.length;
+      while (i15 < qty15) {
+        res15 += arguments[i15];
+        i15++;
+      }
+      return res15;
+    }
+    
+function totalPgs16() {
+      // Reference the <output> as out 
+      var out16 = document.getElementById('total16');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs16 = document.querySelectorAll('.pages16');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr16 = Array.prototype.map.call(pgs16, function(pg16) {
+        var cnt16 = parseFloat(pg16.value, 10);
+        return cnt16;
+      });
+      // .apply the function sum() to array called arr
+      var total16 = sum16.apply(sum16, arr16);
+      // The value of out is whatever total is
+      out16.value = total16;
+      // return the value of total
+      return total16;
+    }
+	function sum16() {
+      var res16 = 0;
+      var i16 = 0;
+      var qty16 = arguments.length;
+      while (i16 < qty16) {
+        res16 += arguments[i16];
+        i16++;
+      }
+      return res16;
+    }                    
+
+function totalPgs17() {
+      // Reference the <output> as out 
+      var out17 = document.getElementById('total17');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs17 = document.querySelectorAll('.pages17');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr17 = Array.prototype.map.call(pgs17, function(pg17) {
+        var cnt17 = parseFloat(pg17.value, 10);
+        return cnt17;
+      });
+      // .apply the function sum() to array called arr
+      var total17 = sum17.apply(sum17, arr17);
+      // The value of out is whatever total is
+      out17.value = total17;
+      // return the value of total
+      return total17;
+    }
+	function sum17() {
+      var res17 = 0;
+      var i17 = 0;
+      var qty17 = arguments.length;
+      while (i17 < qty17) {
+        res17 += arguments[i17];
+        i17++;
+      }
+      return res17;
+    } 
+    
+function totalPgs18() {
+      // Reference the <output> as out 
+      var out18 = document.getElementById('total18');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs18 = document.querySelectorAll('.pages18');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr18 = Array.prototype.map.call(pgs18, function(pg18) {
+        var cnt18 = parseFloat(pg18.value, 10);
+        return cnt18;
+      });
+      // .apply the function sum() to array called arr
+      var total18 = sum18.apply(sum18, arr18);
+      // The value of out is whatever total is
+      out18.value = total18;
+      // return the value of total
+      return total18;
+    }
+	function sum18() {
+      var res18 = 0;
+      var i18 = 0;
+      var qty18 = arguments.length;
+      while (i18 < qty18) {
+        res18 += arguments[i18];
+        i18++;
+      }
+      return res18;
+    } 
+    
+function totalPgs19() {
+      // Reference the <output> as out 
+      var out19 = document.getElementById('total19');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs19 = document.querySelectorAll('.pages19');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr19 = Array.prototype.map.call(pgs19, function(pg19) {
+        var cnt19 = parseFloat(pg19.value, 10);
+        return cnt19;
+      });
+      // .apply the function sum() to array called arr
+      var total19 = sum19.apply(sum19, arr19);
+      // The value of out is whatever total is
+      out19.value = total19;
+      // return the value of total
+      return total19;
+    }
+	function sum19() {
+      var res19 = 0;
+      var i19 = 0;
+      var qty19 = arguments.length;
+      while (i19 < qty19) {
+        res19 += arguments[i19];
+        i19++;
+      }
+      return res19;
+    }
+    
+function totalPgs20() {
+      // Reference the <output> as out 
+      var out20 = document.getElementById('total20');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs20 = document.querySelectorAll('.pages20');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr20 = Array.prototype.map.call(pgs20, function(pg20) {
+        var cnt20 = parseFloat(pg20.value, 10);
+        return cnt20;
+      });
+      // .apply the function sum() to array called arr
+      var total20 = sum20.apply(sum20, arr20);
+      // The value of out is whatever total is
+      out20.value = total20;
+      // return the value of total
+      return total20;
+    }
+	function sum20() {
+      var res20 = 0;
+      var i20 = 0;
+      var qty20 = arguments.length;
+      while (i20 < qty20) {
+        res20 += arguments[i20];
+        i20++;
+      }
+      return res20;
+    }  
+
+function totalPgs21() {
+      // Reference the <output> as out 
+      var out21 = document.getElementById('total21');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs21 = document.querySelectorAll('.pages21');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr21 = Array.prototype.map.call(pgs21, function(pg21) {
+        var cnt21 = parseFloat(pg21.value, 10);
+        return cnt21;
+      });
+      // .apply the function sum() to array called arr
+      var total21 = sum21.apply(sum21, arr21);
+      // The value of out is whatever total is
+      out21.value = total21;
+      // return the value of total
+      return total21;
+    }
+	function sum21() {
+      var res21 = 0;
+      var i21 = 0;
+      var qty21 = arguments.length;
+      while (i21 < qty21) {
+        res21 += arguments[i21];
+        i21++;
+      }
+      return res21;
+    }
+
+function totalPgs22() {
+      // Reference the <output> as out 
+      var out22 = document.getElementById('total22');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs22 = document.querySelectorAll('.pages22');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr22 = Array.prototype.map.call(pgs22, function(pg22) {
+        var cnt22 = parseFloat(pg22.value, 10);
+        return cnt22;
+      });
+      // .apply the function sum() to array called arr
+      var total22 = sum22.apply(sum22, arr22);
+      // The value of out is whatever total is
+      out22.value = total22;
+      // return the value of total
+      return total22;
+    }
+	function sum22() {
+      var res22 = 0;
+      var i22 = 0;
+      var qty22 = arguments.length;
+      while (i22 < qty22) {
+        res22 += arguments[i22];
+        i22++;
+      }
+      return res22;
+    }
+    
+function totalPgs23() {
+      // Reference the <output> as out 
+      var out23 = document.getElementById('total23');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs23 = document.querySelectorAll('.pages23');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr23 = Array.prototype.map.call(pgs23, function(pg23) {
+        var cnt23 = parseFloat(pg23.value, 10);
+        return cnt23;
+      });
+      // .apply the function sum() to array called arr
+      var total23 = sum23.apply(sum23, arr23);
+      // The value of out is whatever total is
+      out23.value = total23;
+      // return the value of total
+      return total23;
+    }
+	function sum23() {
+      var res23 = 0;
+      var i23 = 0;
+      var qty23 = arguments.length;
+      while (i23 < qty23) {
+        res23 += arguments[i23];
+        i23++;
+      }
+      return res23;
+    }
+    
+function totalPgs24() {
+      // Reference the <output> as out 
+      var out24 = document.getElementById('total24');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs24 = document.querySelectorAll('.pages24');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr24 = Array.prototype.map.call(pgs24, function(pg24) {
+        var cnt24 = parseFloat(pg24.value, 10);
+        return cnt24;
+      });
+      // .apply the function sum() to array called arr
+      var total24 = sum24.apply(sum24, arr24);
+      // The value of out is whatever total is
+      out24.value = total24;
+      // return the value of total
+      return total24;
+    }
+	function sum24() {
+      var res24 = 0;
+      var i24 = 0;
+      var qty24 = arguments.length;
+      while (i24 < qty24) {
+        res24 += arguments[i24];
+        i24++;
+      }
+      return res24;
+    }
+    
+function totalPgs25() {
+      // Reference the <output> as out 
+      var out25 = document.getElementById('total25');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs25 = document.querySelectorAll('.pages25');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr25 = Array.prototype.map.call(pgs25, function(pg25) {
+        var cnt25 = parseFloat(pg25.value, 10);
+        return cnt25;
+      });
+      // .apply the function sum() to array called arr
+      var total25 = sum25.apply(sum25, arr25);
+      // The value of out is whatever total is
+      out25.value = total25;
+      // return the value of total
+      return total25;
+    }
+	function sum25() {
+      var res25 = 0;
+      var i25 = 0;
+      var qty25 = arguments.length;
+      while (i25 < qty25) {
+        res25 += arguments[i25];
+        i25++;
+      }
+      return res25;
+    }
+    
+function totalPgs26() {
+      // Reference the <output> as out 
+      var out26 = document.getElementById('total26');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs26 = document.querySelectorAll('.pages26');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr26 = Array.prototype.map.call(pgs26, function(pg26) {
+        var cnt26 = parseFloat(pg26.value, 10);
+        return cnt26;
+      });
+      // .apply the function sum() to array called arr
+      var total26 = sum26.apply(sum26, arr26);
+      // The value of out is whatever total is
+      out26.value = total26;
+      // return the value of total
+      return total26;
+    }
+	function sum26() {
+      var res26 = 0;
+      var i26 = 0;
+      var qty26 = arguments.length;
+      while (i26 < qty26) {
+        res26 += arguments[i26];
+        i26++;
+      }
+      return res26;
+    }
+    
+function totalPgs27() {
+      // Reference the <output> as out 
+      var out27 = document.getElementById('total27');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs27 = document.querySelectorAll('.pages27');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr27 = Array.prototype.map.call(pgs27, function(pg27) {
+        var cnt27 = parseFloat(pg27.value, 10);
+        return cnt27;
+      });
+      // .apply the function sum() to array called arr
+      var total27 = sum27.apply(sum27, arr27);
+      // The value of out is whatever total is
+      out27.value = total27;
+      // return the value of total
+      return total27;
+    }
+	function sum27() {
+      var res27 = 0;
+      var i27 = 0;
+      var qty27 = arguments.length;
+      while (i27 < qty27) {
+        res27 += arguments[i27];
+        i27++;
+      }
+      return res27;
+    }
+    
+function totalPgs28() {
+      // Reference the <output> as out 
+      var out28 = document.getElementById('total28');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs28 = document.querySelectorAll('.pages28');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr28 = Array.prototype.map.call(pgs28, function(pg28) {
+        var cnt28 = parseFloat(pg28.value, 10);
+        return cnt28;
+      });
+      // .apply the function sum() to array called arr
+      var total28 = sum28.apply(sum28, arr28);
+      // The value of out is whatever total is
+      out28.value = total28;
+      // return the value of total
+      return total28;
+    }
+	function sum28() {
+      var res28 = 0;
+      var i28 = 0;
+      var qty28 = arguments.length;
+      while (i28 < qty28) {
+        res28 += arguments[i28];
+        i28++;
+      }
+      return res28;
+    }
+    
+function totalPgs29() {
+      // Reference the <output> as out 
+      var out29 = document.getElementById('total29');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs29 = document.querySelectorAll('.pages29');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr29 = Array.prototype.map.call(pgs29, function(pg29) {
+        var cnt29 = parseFloat(pg29.value, 10);
+        return cnt29;
+      });
+      // .apply the function sum() to array called arr
+      var total29 = sum29.apply(sum29, arr29);
+      // The value of out is whatever total is
+      out29.value = total29;
+      // return the value of total
+      return total29;
+    }
+	function sum29() {
+      var res29 = 0;
+      var i29 = 0;
+      var qty29 = arguments.length;
+      while (i29 < qty29) {
+        res29 += arguments[i29];
+        i29++;
+      }
+      return res29;
+    }
+    
+function totalPgs30() {
+      // Reference the <output> as out 
+      var out30 = document.getElementById('total30');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs30 = document.querySelectorAll('.pages30');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr30 = Array.prototype.map.call(pgs30, function(pg30) {
+        var cnt30 = parseFloat(pg30.value, 10);
+        return cnt30;
+      });
+      // .apply the function sum() to array called arr
+      var total30 = sum30.apply(sum30, arr30);
+      // The value of out is whatever total is
+      out30.value = total30;
+      // return the value of total
+      return total30;
+    }
+	function sum30() {
+      var res30 = 0;
+      var i30 = 0;
+      var qty30 = arguments.length;
+      while (i30 < qty30) {
+        res30 += arguments[i30];
+        i30++;
+      }
+      return res30;
+    }
+    
+function totalPgs31() {
+      // Reference the <output> as out 
+      var out31 = document.getElementById('total31');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs31 = document.querySelectorAll('.pages31');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr31 = Array.prototype.map.call(pgs31, function(pg31) {
+        var cnt31= parseFloat(pg31.value, 10);
+        return cnt31;
+      });
+      // .apply the function sum() to array called arr
+      var total31 = sum31.apply(sum31, arr31);
+      // The value of out is whatever total is
+      out31.value = total31;
+      // return the value of total
+      return total31;
+    }
+	function sum31() {
+      var res31 = 0;
+      var i31 = 0;
+      var qty31 = arguments.length;
+      while (i31 < qty31) {
+        res31 += arguments[i31];
+        i31++;
+      }
+      return res31;
+    }
+    
+function totalPgs32() {
+      // Reference the <output> as out 
+      var out32 = document.getElementById('total32');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs32 = document.querySelectorAll('.pages32');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr32 = Array.prototype.map.call(pgs32, function(pg32) {
+        var cnt32= parseFloat(pg32.value, 10);
+        return cnt32;
+      });
+      // .apply the function sum() to array called arr
+      var total32 = sum32.apply(sum32, arr32);
+      // The value of out is whatever total is
+      out32.value = total32;
+      // return the value of total
+      return total32;
+    }
+	function sum32() {
+      var res32 = 0;
+      var i32 = 0;
+      var qty32 = arguments.length;
+      while (i32 < qty32) {
+        res32 += arguments[i32];
+        i32++;
+      }
+      return res32;
+    }
+    
+function totalPgs33() {
+      // Reference the <output> as out 
+      var out33 = document.getElementById('total33');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs33 = document.querySelectorAll('.pages33');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr33 = Array.prototype.map.call(pgs33, function(pg33) {
+        var cnt33= parseFloat(pg33.value, 10);
+        return cnt33;
+      });
+      // .apply the function sum() to array called arr
+      var total33 = sum33.apply(sum33, arr33);
+      // The value of out is whatever total is
+      out33.value = total33;
+      // return the value of total
+      return total33;
+    }
+	function sum33() {
+      var res33 = 0;
+      var i33 = 0;
+      var qty33 = arguments.length;
+      while (i33 < qty33) {
+        res33 += arguments[i33];
+        i33++;
+      }
+      return res33;
+    }
+    
+function totalPgs34() {
+      // Reference the <output> as out 
+      var out34 = document.getElementById('total34');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs34 = document.querySelectorAll('.pages34');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr34 = Array.prototype.map.call(pgs34, function(pg34) {
+        var cnt34= parseFloat(pg34.value, 10);
+        return cnt34;
+      });
+      // .apply the function sum() to array called arr
+      var total34 = sum34.apply(sum34, arr34);
+      // The value of out is whatever total is
+      out34.value = total34;
+      // return the value of total
+      return total34;
+    }
+	function sum34() {
+      var res34 = 0;
+      var i34 = 0;
+      var qty34 = arguments.length;
+      while (i34 < qty34) {
+        res34 += arguments[i34];
+        i34++;
+      }
+      return res34;
+    }
+    
+function totalPgs35() {
+      // Reference the <output> as out 
+      var out35 = document.getElementById('total35');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs35 = document.querySelectorAll('.pages35');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr35 = Array.prototype.map.call(pgs35, function(pg35) {
+        var cnt35= parseFloat(pg35.value, 10);
+        return cnt35;
+      });
+      // .apply the function sum() to array called arr
+      var total35 = sum35.apply(sum35, arr35);
+      // The value of out is whatever total is
+      out35.value = total35;
+      // return the value of total
+      return total35;
+    }
+	function sum35() {
+      var res35 = 0;
+      var i35 = 0;
+      var qty35 = arguments.length;
+      while (i35 < qty35) {
+        res35 += arguments[i35];
+        i35++;
+      }
+      return res35;
+    }
+    
+function totalPgs36() {
+      // Reference the <output> as out 
+      var out36 = document.getElementById('total36');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs36 = document.querySelectorAll('.pages36');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr36 = Array.prototype.map.call(pgs36, function(pg36) {
+        var cnt36= parseFloat(pg36.value, 10);
+        return cnt36;
+      });
+      // .apply the function sum() to array called arr
+      var total36 = sum36.apply(sum36, arr36);
+      // The value of out is whatever total is
+      out36.value = total36;
+      // return the value of total
+      return total36;
+    }
+	function sum36() {
+      var res36 = 0;
+      var i36 = 0;
+      var qty36 = arguments.length;
+      while (i36 < qty36) {
+        res36 += arguments[i36];
+        i36++;
+      }
+      return res36;
+    }
+    
+function totalPgs37() {
+      // Reference the <output> as out 
+      var out37 = document.getElementById('total37');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs37 = document.querySelectorAll('.pages37');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr37 = Array.prototype.map.call(pgs37, function(pg37) {
+        var cnt37= parseFloat(pg37.value, 10);
+        return cnt37;
+      });
+      // .apply the function sum() to array called arr
+      var total37 = sum37.apply(sum37, arr37);
+      // The value of out is whatever total is
+      out37.value = total37;
+      // return the value of total
+      return total37;
+    }
+	function sum37() {
+      var res37 = 0;
+      var i37 = 0;
+      var qty37 = arguments.length;
+      while (i37 < qty37) {
+        res37 += arguments[i37];
+        i37++;
+      }
+      return res37;
+    }
+    
+function totalPgs38() {
+      // Reference the <output> as out 
+      var out38 = document.getElementById('total38');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs38 = document.querySelectorAll('.pages38');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr38 = Array.prototype.map.call(pgs38, function(pg38) {
+        var cnt38= parseFloat(pg38.value, 10);
+        return cnt38;
+      });
+      // .apply the function sum() to array called arr
+      var total38 = sum38.apply(sum38, arr38);
+      // The value of out is whatever total is
+      out38.value = total38;
+      // return the value of total
+      return total38;
+    }
+	function sum38() {
+      var res38 = 0;
+      var i38 = 0;
+      var qty38 = arguments.length;
+      while (i38 < qty38) {
+        res38 += arguments[i38];
+        i38++;
+      }
+      return res38;
+    }
+ 
+function totalPgs39() {
+      // Reference the <output> as out 
+      var out39 = document.getElementById('total39');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs39 = document.querySelectorAll('.pages39');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr39 = Array.prototype.map.call(pgs39, function(pg39) {
+        var cnt39= parseFloat(pg39.value, 10);
+        return cnt39;
+      });
+      // .apply the function sum() to array called arr
+      var total39 = sum39.apply(sum39, arr39);
+      // The value of out is whatever total is
+      out39.value = total39;
+      // return the value of total
+      return total39;
+    }
+	function sum39() {
+      var res39 = 0;
+      var i39 = 0;
+      var qty39 = arguments.length;
+      while (i39 < qty39) {
+        res39 += arguments[i39];
+        i39++;
+      }
+      return res39;
+    }   
+
+function totalPgs40() {
+      // Reference the <output> as out 
+      var out40 = document.getElementById('total40');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs40 = document.querySelectorAll('.pages40');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr40 = Array.prototype.map.call(pgs40, function(pg40) {
+        var cnt40= parseFloat(pg40.value, 10);
+        return cnt40;
+      });
+      // .apply the function sum() to array called arr
+      var total40 = sum40.apply(sum40, arr40);
+      // The value of out is whatever total is
+      out40.value = total40;
+      // return the value of total
+      return total40;
+    }
+	function sum40() {
+      var res40 = 0;
+      var i40 = 0;
+      var qty40 = arguments.length;
+      while (i40 < qty40) {
+        res40 += arguments[i40];
+        i40++;
+      }
+      return res40;
+    }
+    
+function totalPgs41() {
+      // Reference the <output> as out 
+      var out41 = document.getElementById('total41');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs41 = document.querySelectorAll('.pages41');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr41 = Array.prototype.map.call(pgs41, function(pg41) {
+        var cnt41= parseFloat(pg41.value, 10);
+        return cnt41;
+      });
+      // .apply the function sum() to array called arr
+      var total41 = sum41.apply(sum41, arr41);
+      // The value of out is whatever total is
+      out41.value = total41;
+      // return the value of total
+      return total41;
+    }
+	function sum41() {
+      var res41 = 0;
+      var i41 = 0;
+      var qty41 = arguments.length;
+      while (i41 < qty41) {
+        res41 += arguments[i41];
+        i41++;
+      }
+      return res41;
+    }
+    
+function totalPgs42() {
+      // Reference the <output> as out 
+      var out42 = document.getElementById('total42');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs42 = document.querySelectorAll('.pages42');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr42 = Array.prototype.map.call(pgs42, function(pg42) {
+        var cnt42= parseFloat(pg42.value, 10);
+        return cnt42;
+      });
+      // .apply the function sum() to array called arr
+      var total42 = sum42.apply(sum42, arr42);
+      // The value of out is whatever total is
+      out42.value = total42;
+      // return the value of total
+      return total42;
+    }
+	function sum42() {
+      var res42 = 0;
+      var i42 = 0;
+      var qty42 = arguments.length;
+      while (i42 < qty42) {
+        res42 += arguments[i42];
+        i42++;
+      }
+      return res42;
+    }
+    
+function totalPgs43() {
+      // Reference the <output> as out 
+      var out43 = document.getElementById('total43');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs43 = document.querySelectorAll('.pages43');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr43 = Array.prototype.map.call(pgs43, function(pg43) {
+        var cnt43= parseFloat(pg43.value, 10);
+        return cnt43;
+      });
+      // .apply the function sum() to array called arr
+      var total43 = sum43.apply(sum43, arr43);
+      // The value of out is whatever total is
+      out43.value = total43;
+      // return the value of total
+      return total43;
+    }
+	function sum43() {
+      var res43 = 0;
+      var i43 = 0;
+      var qty43 = arguments.length;
+      while (i43 < qty43) {
+        res43 += arguments[i43];
+        i43++;
+      }
+      return res43;
+    }
+    
+function totalPgs44() {
+      // Reference the <output> as out 
+      var out44 = document.getElementById('total44');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs44 = document.querySelectorAll('.pages44');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr44 = Array.prototype.map.call(pgs44, function(pg44) {
+        var cnt44= parseFloat(pg44.value, 10);
+        return cnt44;
+      });
+      // .apply the function sum() to array called arr
+      var total44 = sum44.apply(sum44, arr44);
+      // The value of out is whatever total is
+      out44.value = total44;
+      // return the value of total
+      return total44;
+    }
+	function sum44() {
+      var res44 = 0;
+      var i44 = 0;
+      var qty44 = arguments.length;
+      while (i44 < qty44) {
+        res44 += arguments[i44];
+        i44++;
+      }
+      return res44;
+    }
+    
+function totalPgs45() {
+      // Reference the <output> as out 
+      var out45 = document.getElementById('total45');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs45 = document.querySelectorAll('.pages45');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr45 = Array.prototype.map.call(pgs45, function(pg45) {
+        var cnt45= parseFloat(pg45.value, 10);
+        return cnt45;
+      });
+      // .apply the function sum() to array called arr
+      var total45 = sum45.apply(sum45, arr45);
+      // The value of out is whatever total is
+      out45.value = total45;
+      // return the value of total
+      return total45;
+    }
+	function sum45() {
+      var res45 = 0;
+      var i45 = 0;
+      var qty45 = arguments.length;
+      while (i45 < qty45) {
+        res45 += arguments[i45];
+        i45++;
+      }
+      return res45;
+    }
+    
+function totalPgs46() {
+      // Reference the <output> as out 
+      var out46 = document.getElementById('total46');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs46 = document.querySelectorAll('.pages46');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr46 = Array.prototype.map.call(pgs46, function(pg46) {
+        var cnt46= parseFloat(pg46.value, 10);
+        return cnt46;
+      });
+      // .apply the function sum() to array called arr
+      var total46 = sum46.apply(sum46, arr46);
+      // The value of out is whatever total is
+      out46.value = total46;
+      // return the value of total
+      return total46;
+    }
+	function sum46() {
+      var res46 = 0;
+      var i46 = 0;
+      var qty46 = arguments.length;
+      while (i46 < qty46) {
+        res46 += arguments[i46];
+        i46++;
+      }
+      return res46;
+    }
+    
+function totalPgs47() {
+      // Reference the <output> as out 
+      var out47 = document.getElementById('total47');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs47 = document.querySelectorAll('.pages47');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr47 = Array.prototype.map.call(pgs47, function(pg47) {
+        var cnt47= parseFloat(pg47.value, 10);
+        return cnt47;
+      });
+      // .apply the function sum() to array called arr
+      var total47 = sum47.apply(sum47, arr47);
+      // The value of out is whatever total is
+      out47.value = total47;
+      // return the value of total
+      return total47;
+    }
+	function sum47() {
+      var res47 = 0;
+      var i47 = 0;
+      var qty47 = arguments.length;
+      while (i47 < qty47) {
+        res47 += arguments[i47];
+        i47++;
+      }
+      return res47;
+    }
+    
+function totalPgs48() {
+      // Reference the <output> as out 
+      var out48 = document.getElementById('total48');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs48 = document.querySelectorAll('.pages48');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr48 = Array.prototype.map.call(pgs48, function(pg48) {
+        var cnt48= parseFloat(pg48.value, 10);
+        return cnt48;
+      });
+      // .apply the function sum() to array called arr
+      var total48 = sum48.apply(sum48, arr48);
+      // The value of out is whatever total is
+      out48.value = total48;
+      // return the value of total
+      return total48;
+    }
+	function sum48() {
+      var res48 = 0;
+      var i48 = 0;
+      var qty48 = arguments.length;
+      while (i48 < qty48) {
+        res48 += arguments[i48];
+        i48++;
+      }
+      return res48;
+    }
+    
+function totalPgs49() {
+      // Reference the <output> as out 
+      var out49 = document.getElementById('total49');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs49 = document.querySelectorAll('.pages49');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr49 = Array.prototype.map.call(pgs49, function(pg49) {
+        var cnt49= parseFloat(pg49.value, 10);
+        return cnt49;
+      });
+      // .apply the function sum() to array called arr
+      var total49 = sum49.apply(sum49, arr49);
+      // The value of out is whatever total is
+      out49.value = total49;
+      // return the value of total
+      return total49;
+    }
+	function sum49() {
+      var res49 = 0;
+      var i49 = 0;
+      var qty49 = arguments.length;
+      while (i49 < qty49) {
+        res49 += arguments[i49];
+        i49++;
+      }
+      return res49;
+    }
+    
+function totalPgs50() {
+      // Reference the <output> as out 
+      var out50 = document.getElementById('total50');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs50 = document.querySelectorAll('.pages50');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr50 = Array.prototype.map.call(pgs50, function(pg50) {
+        var cnt50= parseFloat(pg50.value, 10);
+        return cnt50;
+      });
+      // .apply the function sum() to array called arr
+      var total50 = sum50.apply(sum50, arr50);
+      // The value of out is whatever total is
+      out50.value = total50;
+      // return the value of total
+      return total50;
+    }
+	function sum50() {
+      var res50 = 0;
+      var i50 = 0;
+      var qty50 = arguments.length;
+      while (i50 < qty50) {
+        res50 += arguments[i50];
+        i50++;
+      }
+      return res50;
+    }
+    
+function totalPgs51() {
+      // Reference the <output> as out 
+      var out51 = document.getElementById('total51');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs51 = document.querySelectorAll('.pages51');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr51 = Array.prototype.map.call(pgs51, function(pg51) {
+        var cnt51= parseFloat(pg51.value, 10);
+        return cnt51;
+      });
+      // .apply the function sum() to array called arr
+      var total51 = sum51.apply(sum51, arr51);
+      // The value of out is whatever total is
+      out51.value = total51;
+      // return the value of total
+      return total51;
+    }
+	function sum51() {
+      var res51 = 0;
+      var i51 = 0;
+      var qty51 = arguments.length;
+      while (i51 < qty51) {
+        res51 += arguments[i51];
+        i51++;
+      }
+      return res51;
+    }
+    
+function totalPgs52() {
+      // Reference the <output> as out 
+      var out52 = document.getElementById('total52');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs52 = document.querySelectorAll('.pages52');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr52 = Array.prototype.map.call(pgs52, function(pg52) {
+        var cnt52= parseFloat(pg52.value, 10);
+        return cnt52;
+      });
+      // .apply the function sum() to array called arr
+      var total52 = sum52.apply(sum52, arr52);
+      // The value of out is whatever total is
+      out52.value = total52;
+      // return the value of total
+      return total52;
+    }
+	function sum50() {
+      var res52 = 0;
+      var i52 = 0;
+      var qty52 = arguments.length;
+      while (i52 < qty52) {
+        res52 += arguments[i52];
+        i52++;
+      }
+      return res52;
+    }
+    
+function totalPgs53() {
+      // Reference the <output> as out 
+      var out53 = document.getElementById('total53');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs53 = document.querySelectorAll('.pages53');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr53 = Array.prototype.map.call(pgs53, function(pg53) {
+        var cnt53= parseFloat(pg53.value, 10);
+        return cnt53;
+      });
+      // .apply the function sum() to array called arr
+      var total53 = sum53.apply(sum53, arr53);
+      // The value of out is whatever total is
+      out53.value = total53;
+      // return the value of total
+      return total53;
+    }
+	function sum53() {
+      var res53 = 0;
+      var i53 = 0;
+      var qty53 = arguments.length;
+      while (i53 < qty53) {
+        res53 += arguments[i53];
+        i53++;
+      }
+      return res53;
+    }
+    
+function totalPgs54() {
+      // Reference the <output> as out 
+      var out54 = document.getElementById('total54');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs54 = document.querySelectorAll('.pages54');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr54 = Array.prototype.map.call(pgs54, function(pg54) {
+        var cnt54= parseFloat(pg54.value, 10);
+        return cnt54;
+      });
+      // .apply the function sum() to array called arr
+      var total54 = sum54.apply(sum54, arr54);
+      // The value of out is whatever total is
+      out54.value = total54;
+      // return the value of total
+      return total54;
+    }
+	function sum54() {
+      var res54 = 0;
+      var i54 = 0;
+      var qty54 = arguments.length;
+      while (i54 < qty54) {
+        res54 += arguments[i54];
+        i54++;
+      }
+      return res54;
+    }
+    
+function totalPgs55() {
+      // Reference the <output> as out 
+      var out55 = document.getElementById('total55');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs55 = document.querySelectorAll('.pages55');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr55 = Array.prototype.map.call(pgs55, function(pg55) {
+        var cnt55= parseFloat(pg55.value, 10);
+        return cnt55;
+      });
+      // .apply the function sum() to array called arr
+      var total55 = sum50.apply(sum55, arr55);
+      // The value of out is whatever total is
+      out55.value = total55;
+      // return the value of total
+      return total55;
+    }
+	function sum55() {
+      var res55 = 0;
+      var i55 = 0;
+      var qty55 = arguments.length;
+      while (i50 < qty50) {
+        res55 += arguments[i50];
+        i55++;
+      }
+      return res55;
+    }
+    
+function totalPgs56() {
+      // Reference the <output> as out 
+      var out56 = document.getElementById('total56');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs56 = document.querySelectorAll('.pages56');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr56 = Array.prototype.map.call(pgs56, function(pg56) {
+        var cnt56= parseFloat(pg56.value, 10);
+        return cnt56;
+      });
+      // .apply the function sum() to array called arr
+      var total56 = sum56.apply(sum56, arr56);
+      // The value of out is whatever total is
+      out56.value = total56;
+      // return the value of total
+      return total56;
+    }
+	function sum56() {
+      var res56 = 0;
+      var i56 = 0;
+      var qty56 = arguments.length;
+      while (i56 < qty56) {
+        res56 += arguments[i56];
+        i56++;
+      }
+      return res56;
+    }
+    
+function totalPgs57() {
+      // Reference the <output> as out 
+      var out57 = document.getElementById('total57');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs57 = document.querySelectorAll('.pages57');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr57 = Array.prototype.map.call(pgs57, function(pg57) {
+        var cnt57= parseFloat(pg57.value, 10);
+        return cnt57;
+      });
+      // .apply the function sum() to array called arr
+      var total57 = sum57.apply(sum57, arr57);
+      // The value of out is whatever total is
+      out57.value = total57;
+      // return the value of total
+      return total57;
+    }
+	function sum57() {
+      var res57 = 0;
+      var i57 = 0;
+      var qty57 = arguments.length;
+      while (i57 < qty57) {
+        res57 += arguments[i57];
+        i57++;
+      }
+      return res57;
+    }
+    
+function totalPgs58() {
+      // Reference the <output> as out 
+      var out58 = document.getElementById('total58');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs58 = document.querySelectorAll('.pages58');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr58 = Array.prototype.map.call(pgs58, function(pg58) {
+        var cnt58= parseFloat(pg58.value, 10);
+        return cnt58;
+      });
+      // .apply the function sum() to array called arr
+      var total58 = sum50.apply(sum58, arr58);
+      // The value of out is whatever total is
+      out58.value = total58;
+      // return the value of total
+      return total58;
+    }
+	function sum58() {
+      var res58 = 0;
+      var i58 = 0;
+      var qty58 = arguments.length;
+      while (i58 < qty58) {
+        res58 += arguments[i58];
+        i58++;
+      }
+      return res58;
+    }
+    
+function totalPgs59() {
+      // Reference the <output> as out 
+      var out59 = document.getElementById('total59');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs59 = document.querySelectorAll('.pages59');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr59 = Array.prototype.map.call(pgs59, function(pg59) {
+        var cnt59= parseFloat(pg59.value, 10);
+        return cnt59;
+      });
+      // .apply the function sum() to array called arr
+      var total59 = sum59.apply(sum59, arr59);
+      // The value of out is whatever total is
+      out59.value = total59;
+      // return the value of total
+      return total59;
+    }
+	function sum59() {
+      var res59 = 0;
+      var i59 = 0;
+      var qty59 = arguments.length;
+      while (i59 < qty59) {
+        res59 += arguments[i59];
+        i59++;
+      }
+      return res59;
+    }
+    
+function totalPgs60() {
+      // Reference the <output> as out 
+      var out60 = document.getElementById('total60');
+      // Collect all nodes with class .pages into a NodeList called pgs
+      var pgs60 = document.querySelectorAll('.pages60');
+
+        /* Array called arr is made by...
+	|| ...map.call pgs NodeList on each node called pg...
+	|| ...convert each pg value to a true number...
+	|| ...return all number values as an array called arr
+	*/
+      var arr60 = Array.prototype.map.call(pgs60, function(pg60) {
+        var cnt60= parseFloat(pg60.value, 10);
+        return cnt60;
+      });
+      // .apply the function sum() to array called arr
+      var total60 = sum60.apply(sum60, arr60);
+      // The value of out is whatever total is
+      out60.value = total60;
+      // return the value of total
+      return total60;
+    }
+	function sum60() {
+      var res60 = 0;
+      var i60 = 0;
+      var qty60 = arguments.length;
+      while (i60 < qty60) {
+        res60 += arguments[i60];
+        i60++;
+      }
+      return res60;
+    }
+
+let num1 = 52324830/100000;
+let n1 = num1.toFixed(2);
+document.getElementById("h11").innerHTML = n1;
+let num2 = 155071918/100000;
+let n2 = num2.toFixed(2);
+document.getElementById("i11").innerHTML = n2;
+let num3 = 9782.17+264.55-n1;
+let n3 = num3.toFixed(2);
+document.getElementById("h10").innerHTML = n3;
+let num4 = 10226.76+267.26-num2;
+let n4 = num4.toFixed(2);
+document.getElementById("i10").innerHTML = n4;
+</script>
+</body>
+</html>

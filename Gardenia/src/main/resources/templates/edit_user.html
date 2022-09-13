@@ -251,15 +251,14 @@ margin-top:33px;
 font-size:smaller;
 }
 .dir-img{
+
+position:relative;
 width:70px;
 height:70px;
-postion:relative;
 }
-.close {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
+#thumbnail {position:absolute; top: 0px; left: 70px; font-size:15px; cursor: pointer }
+#img-preview{display: none;width:70px;
+height:70px;}
 </style>
 <script>
 $(document).ready(function(){	
@@ -292,6 +291,35 @@ function myFunc(){
 		$("#fullName").val("");
 	}
 }
+
+function closeWin() {
+  document.getElementById("image1").style.display = "none";
+  document.getElementById("thumbnail").style.display = "none";
+  document.getElementById("img-preview").style.display = "block";
+  var x = document.getElementById("img-preview");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+$(document).ready(function(){	
+	$('#fileImage').change(function(){
+		showImageThumbnail(this);
+	});
+	
+	function showImageThumbnail(fileInput){
+		file = fileInput.files[0];
+		reader = new FileReader();
+		
+		reader.onload = function(e) {
+			$('#img-preview').attr('src',e.target.result);
+		};
+		
+		reader.readAsDataURL(file);
+	}
+	});
 </script>
 </head>
 <body>
@@ -496,8 +524,11 @@ function myFunc(){
 							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
 								<div class="form-group">
 									<p>
-										<img th:src="@{${images + ''}}" class="dir-img" />
-										<img class="close" src="" />
+										<img th:src="@{${images + ''}}" class="dir-img" id="image1"/>
+										<span id="thumbnail" onclick="closeWin()">X</span>
+										<p>
+											<img id="img-preview" alt="Image Preview"/>
+										</p>
 									</p>
 								</div>
 							</div>
