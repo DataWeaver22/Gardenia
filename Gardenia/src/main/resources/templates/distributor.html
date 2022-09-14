@@ -8,8 +8,8 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <style>
 nav {
 	background-color: #068203;
@@ -224,17 +224,24 @@ button{
 	cursor:pointer;
 }
 
-
-.approved {
-	font-size: 9px;
-	width: 65px;
-	height: 25px;
+table {
+  border-collapse: collapse;
+  width: 100%;
 }
 
-.rejected {
-	font-size: 9px;
-	width: 65px;
-	height: 25px;
+#countriesDropdown{
+	padding: 5px;
+    border-radius: 5px;
+    width: 180px;
+    height: 30px;
+    margin-left:30px;
+}
+.inYear{
+	background : red;
+}
+
+.action{
+	display:none;
 }
 
 </style>
@@ -257,39 +264,28 @@ function myFunction() {
   }
 }
 
-$(document).ready(function() {
-
-  function addRemoveClass(theRows) {
-
-    theRows.removeClass("odd even");
-    theRows.filter(":odd").addClass("odd");
-    theRows.filter(":even").addClass("even");
-  }
-
-  var rows = $("table#userTable tr:not(:first-child)");
-
-  addRemoveClass(rows);
-
-
-  $("#selectField").on("change", function() {
-
-    var selected = this.value;
-
-    if (selected != "All") {
-
-      rows.filter("[position=" + selected + "]").show();
-      rows.not("[position=" + selected + "]").hide();
-      var visibleRows = rows.filter("[position=" + selected + "]");
-      addRemoveClass(visibleRows);
-    } else {
-
-      rows.show();
-      addRemoveClass(rows);
-
+function filterTable() {
+  var input, filter, table, tr, td, cell, i, j;
+  filter = document.getElementById("countriesDropdown").value.toLowerCase();
+  table = document.getElementById("userTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 1; i < tr.length; i++) {
+    tr[i].style.display = "none";
+    const tdArray = tr[i].getElementsByTagName("td");
+    for (var j = 0; j < tdArray.length; j++) {
+      const cellValue = tdArray[j];
+      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+        break;
+      }
+      
     }
+  }
+}
 
-  });
-});
+var act = document.getElementById("countriesDropdown").val();
+
+
 </script>
 </head>
 <body>
@@ -425,17 +421,11 @@ $(document).ready(function() {
 					</form>
 				</div>
 				<div class="col-md-3">
-					<div class="optionsDiv">
-    Filter By Position
-    <select id="selectField">
-      <option value="All" selected>All</option>
-      <option value="Approved">Approved</option>
-      <option value="Rejected">Rejected</option>
-      <option value="Pending">Pending</option>
-
-    </select>
-
-  </div>
+					<select id="countriesDropdown" onchange="filterTable()">
+  						<option selected="selected">Approved</option>
+  						<option>Rejected</option>
+  						<option>Pending</option>
+					</select>
 				</div>
 				
 				<div class="col-md-3">
@@ -477,7 +467,7 @@ $(document).ready(function() {
 					<th>Inactive Date</th>  -->
 					<th>Documents</th>
 					<th>Approval Status</th>
-					<!-- <th>Approval Actions</th> -->
+					<!-- <th class="action">Approval Actions</th>  -->
 					<!-- <th>Serviced Status</th>
 					<th>Brand List</th> -->
 					<th>Actions</th>
@@ -509,12 +499,12 @@ $(document).ready(function() {
 					<td><img th:src="${distributortable.photosImagePath}" class="dir-img" /></td>
 					<td th:text="${distributortable.approval_status}" class="astatus" id="aStatus" onload="loadStatus()"></td>
 					
-					<!-- <td data-type="option" class="text-center action" id="action">
+					<td data-type="option" class="text-center action" id="action">
 						<span class="isDisabled">
-							<a th:href="@{/distributor/approve/{id}(id=${distributortable.id})}" class="approved" id="approved" onclick="myApproved()">Approved</a>
+							<a th:href="@{/distributor/approve/{id}(id=${distributortable.id})}" class="a" id="a"><i class="fa fa-check"></i></a>
 						</span>
-						<a th:href="@{/distributor/reject/{id}(id=${distributortable.id})}" class="rejected" id="rejected">Rejected</a>
-					</td> -->
+						<a th:href="@{/distributor/reject/{id}(id=${distributortable.id})}" class="r" id="r"><i class="fa fa-times"></i></a>
+					</td>
 					
 					<!-- <td th:text="${distributortable.service_status}"></td>
 					<td th:text="${distributortable.brand_list}"></td> -->
@@ -529,10 +519,6 @@ $(document).ready(function() {
 	
 <script>
 
-	
-	$('#approved').click(function(){
-		$(this).removeAttr("href");
-	});
 </script>
 </body>
 </html>
