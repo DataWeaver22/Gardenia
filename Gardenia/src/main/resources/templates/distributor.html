@@ -8,7 +8,9 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
-
+<script src="node_modules/xel/xel.js" type="module"></script>
+<meta name="xel-theme" content="node_modules/xel/themes/adwaita.css">
+<meta name="xel-accent-color" content="blue">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <style>
 nav {
@@ -208,16 +210,16 @@ h1 {
 	font-weight:bolder;
 }
 .fa{
-	font-size:24px;
+	font-size:12px;
+	
 }
 
 .fa-check{
-	color:green;
-	margin:0px 5px;
+	color:white;
+	display: inline-block;
 }
 .fa-times{
-	color:red;
-	margin:0px 5px;
+	color:white;
 }
 
 button{
@@ -227,21 +229,87 @@ button{
 table {
   border-collapse: collapse;
   width: 100%;
+  margin-top:30px;
 }
 
 #countriesDropdown{
-	padding: 5px;
-    border-radius: 5px;
     width: 180px;
     height: 30px;
-    margin-left:30px;
+    margin-left:50px;
+    border-radius:50%;
 }
 .inYear{
 	background : red;
 }
 
-.action{
-	display:none;
+.btn-group button {
+  background-color: #fff; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: black; /* White text */
+  padding: 7px 14px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+  font-size:10px;
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+#approve:focus
+ {
+     
+     color:white;
+     outline:none!important;
+     background:#3e8e41;
+  }
+  
+#reject:focus
+ {
+     
+     color:white;
+     outline:none!important;
+     background:#3e8e41;
+  }
+  
+#pending:focus
+ {
+     
+     color:white;
+     outline:none!important;
+     background:#3e8e41;
+  }
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e8e41;
+}
+
+#approve{border-top-left-radius: 15px;border-bottom-left-radius: 15px;}
+
+#pending{border-top-right-radius: 15px;border-bottom-right-radius: 15px;}
+
+.a{
+	border-radius: 50%;
+    height: 33px;
+    padding-top: 10px;
+    padding-right:23px;
+    width: 35px;
+}
+
+.r{
+	border-radius: 50%;
+    height: 33px;
+    padding-top: 10px;
+    padding-right:22px;
+    width: 35px;
 }
 
 </style>
@@ -264,10 +332,84 @@ function myFunction() {
   }
 }
 
-function filterTable() {
-  var input, filter, table, tr, td, cell, i, j;
-  filter = document.getElementById("countriesDropdown").value.toLowerCase();
-  table = document.getElementById("userTable");
+function approve(){
+	document.getElementById("approve").style.backgroundColor = "#3e8e41";
+	document.getElementById("approve").style.color = "white";
+	document.getElementById("approve").style.outline = "none";
+	document.getElementById("reject").style.backgroundColor = "white";
+	document.getElementById("reject").style.color = "black";
+	document.getElementById("reject").style.outline = "none";
+	document.getElementById("pending").style.backgroundColor = "white";
+	document.getElementById("pending").style.color = "black";
+	document.getElementById("pending").style.outline = "none";
+	var input, filter, table, table1, tr, td, cell, i, j;
+  filter = document.getElementById("approve").value.toLowerCase();
+  console.log(document.getElementById("approve").value.toLowerCase());
+  table1 = document.getElementById("userTable");
+  document.getElementById("pendingTable").style.display = "none";
+  document.getElementById("userTable").style.display = "";
+  tr = table1.getElementsByTagName("tr");
+  for (i = 1; i < tr.length; i++) {
+    tr[i].style.display = "none";
+    const tdArray = tr[i].getElementsByTagName("td");
+    for (var j = 0; j < tdArray.length; j++) {
+      const cellValue = tdArray[j];
+      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+        break;
+      }
+      
+    }
+  }
+}
+
+function reject(){
+	document.getElementById("reject").style.backgroundColor = "#3e8e41";
+	document.getElementById("reject").style.color = "white";
+	document.getElementById("reject").style.outline = "none";
+	document.getElementById("approve").style.backgroundColor = "white";
+	document.getElementById("approve").style.color = "black";
+	document.getElementById("approve").style.outline = "none";
+	document.getElementById("pending").style.backgroundColor = "white";
+	document.getElementById("pending").style.color = "black";
+	document.getElementById("pending").style.outline = "none";
+	var input, filter, table, table1, tr, td, cell, i, j;
+  filter = document.getElementById("reject").value.toLowerCase();
+  console.log(document.getElementById("reject").value.toLowerCase());
+  table1 = document.getElementById("userTable");
+  document.getElementById("pendingTable").style.display = "none";
+  document.getElementById("userTable").style.display = "";
+  tr = table1.getElementsByTagName("tr");
+  for (i = 1; i < tr.length; i++) {
+    tr[i].style.display = "none";
+    const tdArray = tr[i].getElementsByTagName("td");
+    for (var j = 0; j < tdArray.length; j++) {
+      const cellValue = tdArray[j];
+      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+        break;
+      }
+      
+    }
+  }
+}
+
+function pending(){
+document.getElementById("pending").style.backgroundColor = "#3e8e41";
+	document.getElementById("pending").style.color = "white";
+	document.getElementById("pending").style.outline = "none";
+	document.getElementById("approve").style.backgroundColor = "white";
+	document.getElementById("approve").style.color = "black";
+	document.getElementById("approve").style.outline = "none";
+	document.getElementById("reject").style.backgroundColor = "white";
+	document.getElementById("reject").style.color = "black";
+	document.getElementById("reject").style.outline = "none";
+	var input, filter, table, table1, tr, td, cell, i, j;
+  filter = document.getElementById("pending").value.toLowerCase();
+  console.log(document.getElementById("pending").value.toLowerCase());
+  table = document.getElementById("pendingTable");
+   document.getElementById("userTable").style.display = "none";
+   document.getElementById("pendingTable").style.display = "";
   tr = table.getElementsByTagName("tr");
   for (i = 1; i < tr.length; i++) {
     tr[i].style.display = "none";
@@ -283,12 +425,19 @@ function filterTable() {
   }
 }
 
-var act = document.getElementById("countriesDropdown").val();
+function clickApprove(){
+	$(function() {
+    	$('#approve').click();
+	});
+	
+}
+
+
 
 
 </script>
 </head>
-<body>
+<body onload="clickApprove()">
 	<div class="wrapper">
 		<nav>
 			<input type="checkbox" id="menu" name="menu" class="m-menu__checkbox">
@@ -412,6 +561,14 @@ var act = document.getElementById("countriesDropdown").val();
 					<h1>Distributor List</h1>
 				</div>
 				<div class="col-md-3">
+					<select>
+						<option>Code</option>
+						<option>Name</option>
+						<option>Type</option>
+						<option>Status</option>
+						<option>Region</option>
+						<option>State</option>
+					</select>
 					<form>
 						<input type="text" name="keyword" size="30" th:value="${keyword}"
 							id="searchInput" onkeyup="myFunction()" placeholder="Search..." />
@@ -421,11 +578,11 @@ var act = document.getElementById("countriesDropdown").val();
 					</form>
 				</div>
 				<div class="col-md-3">
-					<select id="countriesDropdown" onchange="filterTable()">
-  						<option selected="selected">Approved</option>
-  						<option>Rejected</option>
-  						<option>Pending</option>
-					</select>
+					<div id="countriesDropdown" class="btn-group" >
+  						<button id="approve" onclick="approve()" value="approved">Approved</button>
+  						<button id="reject" onclick="reject()" value="rejected">Rejected</button>
+  						<button id="pending" onclick="pending()" value="pending">Pending</button>
+					</div>
 				</div>
 				
 				<div class="col-md-3">
@@ -465,9 +622,83 @@ var act = document.getElementById("countriesDropdown").val();
 					<th>Status</th> 
 					<th>Create Date</th> 
 					<th>Inactive Date</th>  -->
-					<th>Documents</th>
+					<!-- <th>Documents</th> -->
 					<th>Approval Status</th>
 					<!-- <th class="action">Approval Actions</th>  -->
+					<!-- <th>Serviced Status</th>
+					<th>Brand List</th> -->
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="distributortable: ${distributortable}" class="main">
+					<td th:text="${distributortable.distributor_name}"></td>
+					<td th:text="${distributortable.distributor_code}"></td>
+					<td th:text="${distributortable.distributor_type}"></td>
+					<!-- <td th:text="${distributortable.gstin}"></td>
+					<td th:text="${distributortable.pan}"></td>
+					<td th:text="${distributortable.contact}"></td>
+					<td th:text="${distributortable.mobile}"></td>
+					<td th:text="${distributortable.phone}"></td>
+					<td th:text="${distributortable.email}"></td>
+					<td th:text="${distributortable.address}"></td>
+					<td th:text="${distributortable.region_name}"></td>
+					<td th:text="${distributortable.region_id}"></td>
+					<td th:text="${distributortable.state_name}"></td>
+					<td th:text="${distributortable.state_id}"></td>
+					<td th:text="${distributortable.city_name}"></td>
+					<td th:text="${distributortable.city_id}"></td>
+					<td th:text="${distributortable.supp_name}"></td>
+					<td th:text="${distributortable.supp_code}"></td>
+					<td th:text="${distributortable.status}"></td>
+					<td th:text="${distributortable.create_date}"></td>
+					<td th:text="${distributortable.inactive_date}"></td> -->
+					<!-- <td><img th:src="${distributortable.photosImagePath}" class="dir-img" /></td> -->
+					<td th:text="${distributortable.approval_status}" class="astatus" id="aStatus" onload="loadStatus()"></td>
+					
+					<!-- <td data-type="option" class="text-center action" id="action">
+						<span class="isDisabled">
+							<a th:href="@{/distributor/approve/{id}(id=${distributortable.id})}" class="a" id="a"><i class="fa fa-check"></i></a>
+						</span>
+						<a th:href="@{/distributor/reject/{id}(id=${distributortable.id})}" class="r" id="r"><i class="fa fa-times"></i></a>
+					</td> -->
+					
+					<!-- <td th:text="${distributortable.service_status}"></td>
+					<td th:text="${distributortable.brand_list}"></td> -->
+					<td><a
+						th:href="@{/distributor/edit/{id}(id=${distributortable.id})}"
+						class="btn btn-success">Edit</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table class="table table-striped table-bordered" id="pendingTable">
+			<thead class="table-light">
+				<tr class="header">
+					<th>Name</th>
+					<th>Code</th>
+					<th>Type Of Distributor</th>
+					<!-- <th>GSTIN</th>
+					<th>PAN</th>
+					<th>Contact Person</th>
+					<th>Mobile</th>
+					<th>Phone</th>
+					<th>Email </th>
+					<th>Address</th>
+					<th>Region Name</th>
+					<th>Region Id</th>
+					<th>State Name</th>
+					<th>State Id </th>
+					<th>City Name</th>
+					<th>City Id</th>
+					<th>Supplier Name</th>
+					<th>Supplier Id</th>
+					<th>Status</th> 
+					<th>Create Date</th> 
+					<th>Inactive Date</th>  -->
+					<th>Documents</th>
+					<th>Approval Status</th>
+					<th class="action">Approval Actions</th>
 					<!-- <th>Serviced Status</th>
 					<th>Brand List</th> -->
 					<th>Actions</th>
@@ -501,9 +732,11 @@ var act = document.getElementById("countriesDropdown").val();
 					
 					<td data-type="option" class="text-center action" id="action">
 						<span class="isDisabled">
-							<a th:href="@{/distributor/approve/{id}(id=${distributortable.id})}" class="a" id="a"><i class="fa fa-check"></i></a>
+							<a th:href="@{/distributor/approve/{id}(id=${distributortable.id})}" class="btn btn-success a" id="a">
+							<i class="fa fa-check"></i>
+							</a>
 						</span>
-						<a th:href="@{/distributor/reject/{id}(id=${distributortable.id})}" class="r" id="r"><i class="fa fa-times"></i></a>
+						<a th:href="@{/distributor/reject/{id}(id=${distributortable.id})}" class="btn btn-danger r" id="r"><i class="fa fa-times"></i></a>
 					</td>
 					
 					<!-- <td th:text="${distributortable.service_status}"></td>

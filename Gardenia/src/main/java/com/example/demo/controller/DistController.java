@@ -172,7 +172,7 @@ public class DistController {
 		distributorCode.setRegion_code(regionCodeString);
 		//distributor.setCreate_date(createDateTime);
 		System.out.println(distributorCode);
-		
+		distributor.setApproval_status("Pending");
 		
 		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         distributor.setDocuments(fileName);
