@@ -7,153 +7,157 @@
 href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" 
 integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
 crossorigin="anonymous">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <style>
-
-nav {
-  background-color: #068203;
-  width:100%;
-  height: 50px;
-  padding: 0 16px;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-align-items: center;
-  align-items: center;
-  /* fade in checked menu */
-}
-nav .m-menu__checkbox {
-  display: none;
-}
-nav label.m-menu__toggle {
-  cursor: pointer;
-  margin-top:0.5rem;
-  margin-bottom:0rem!important;
-}
-nav .m-menu {
-  position: absolute;
-  top: 0;
-  left: 0;
-  max-width: 230px;
-  width: calc(100vw - 30px);
-  height: 100%;
-  -moz-transform: translate3d(-450px, 0, 0);
-  -o-transform: translate3d(-450px, 0, 0);
-  -ms-transform: translate3d(-450px, 0, 0);
-  -webkit-transform: translate3d(-450px, 0, 0);
-  transform: translate3d(-450px, 0, 0);
-  -moz-transition: transform 0.35s;
-  -o-transition: transform 0.35s;
-  -webkit-transition: transform 0.35s;
-  transition: transform 0.35s;
-  z-index: 1;
-  overflow: hidden;
-  background-color: #fff;
-}
-nav .m-menu__overlay {
-  background-color: rgba(103, 103, 103, 0.5);
-  position: absolute;
-  top: 0;
-  width: 100%;
-  bottom: 0;
-  z-index: 1;
-  display: none;
-}
-nav .m-menu__header {
-  padding: 0 16px;
-  height: 50px;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-justify-content: space-around;
-  justify-content: space-around;
-  -ms-flex-pack: space-around;
-  -webkit-align-items: center;
-  align-items: center;
-  border-bottom: 1px solid #e8e8e8;
-}
-nav .m-menu__header span {
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
-  width: 100%;
-  margin-top: 0.6rem;
-}
-nav .m-menu .m-menu {
-  -moz-transform: translate3d(480px, 0, 0);
-  -o-transform: translate3d(480px, 0, 0);
-  -ms-transform: translate3d(480px, 0, 0);
-  -webkit-transform: translate3d(480px, 0, 0);
-  transform: translate3d(480px, 0, 0);
-}
-nav .m-menu ul {
-  height: 100%;
-  overflow-y: auto;
-}
-nav .m-menu ul li a, nav .m-menu ul li label {
-  display: block;
-  text-align: left;
-  line-height: 70px;
-  text-decoration: none;
-  color: #333;
-  cursor: pointer;
-  font-size: 14px;
-  
-  position: relative;
-}
-nav .m-menu ul li label.a-label__chevron::after {
-  content: "";
-  position: absolute;
-  display: inline-block;
-  height: 5px;
-  width: 5px;
-  border-color: #333;
-  border-style: solid;
-  border-width: 1px 1px 0 0;
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-  top: 57%;
-  margin-top: -5px;
-  right: 16px;
-}
-nav .m-menu ul li .-invisible {
-  border-bottom: 0;
-}
-nav .m-menu .m-menu label.m-menu__toggle {
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  border-bottom: 0;
-  padding: 0;
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-}
-nav .m-menu__checkbox:checked ~ .m-menu__overlay {
-  display: block;
-}
-nav .m-menu__checkbox:checked ~ .m-menu {
-  -moz-transform: translate3d(0, 0, 0);
-  -o-transform: translate3d(0, 0, 0);
-  -ms-transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-}
-
-header{
-	
-}
-
-body {
-  background-color: #f1f1f1;
-  padding: 0;
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+*{
   margin: 0;
-  font-family: sans-serif;
+  padding: 0;
+  user-select: none;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+.btn1{
+  position: absolute;
+  top: 15px;
+  left: 45px;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  background: #e6e6e6;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: left 0.4s ease;
+}
+.btn1.click{
+  left: 248px;
+}
+.btn1 span {
+    color: #000;
+    font-size: 14px;
+    line-height: 31px;
+}
+.btn1.click span:before{
+  content: '\f104';
+}
+.sidebar{
+  position: fixed;
+  width: 250px;
+  height: 100%;
+  left: -250px;
+  background: #1b1b1b;
+  transition: left 0.4s ease;
+  margin-top:-50px;
+  z-index:9999;
+}
+.sidebar.show{
+  left: 0px;
+}
+.sidebar .text{
+  color: black;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 110px;
+  text-align: center;
+  background: #e6e6e6;
+  letter-spacing: 1px;
+}
+nav ul{
+  background: #e6e6e6;
+  height: 100%;
+  width: 100%;
+  list-style: none;
+}
+nav ul li{
+  line-height: 50px;
+  border-top: 1px solid darkgray;
+}
+nav ul li:last-child{
+  border-bottom: 1px solid darkgray;
+}
+nav ul li a{
+  position: relative;
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+  padding-left: 40px;
+  font-weight: 500;
+  display: block;
+  width: 100%;
+  border-left: 3px solid transparent;
+}
+/* nav ul li.active a{
+  color: cyan;
+  background: #1e1e1e;
+  border-left-color: cyan;
+} */
+nav ul li a:hover{
+  background: #4b9c52;
+  color:white;
+  background-position: 100% 0;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    text-decoration: none;
+}
+nav ul ul{
+  position: static;
+  display: none;
+}
+nav ul .feat-show.show{
+  display: block;
+}
+nav ul .serv-show.show1{
+  display: block;
+}
+nav ul ul li{
+  line-height: 34px;
+  border-top: none;
+}
+nav ul ul li a{
+  font-size: 10px;
+  color: #e6e6e6;
+  padding-left: 40px;
+}
+nav ul li.active ul li a{
+  color: #000;
+  background: #e6e6e6;
+  border-left-color: transparent;
+}
+nav ul ul li a:hover{
+  background: #068203!important;
+  color:white!important;
+}
+nav ul li a span{
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  font-size: 22px;
+  transition: transform 0.4s;
+}
+nav ul li a span.rotate{
+  transform: translateY(-50%) rotate(-180deg);
+}
+.content{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  color: #202020;
+  z-index: -1;
+  text-align: center;
+}
+.content .header{
+  font-size: 45px;
+  font-weight: 600;
+}
+.content p{
+  font-size: 30px;
+  font-weight: 500;
 }
 
 thead th{
@@ -211,122 +215,47 @@ function myFunction() {
 </script>
 </head>
 <body>
-<div class="wrapper">
-		<nav>
-			<input type="checkbox" id="menu" name="menu" class="m-menu__checkbox">
-			<label class="m-menu__toggle" for="menu"> <svg width="20"
-					height="35" viewBox="0 0 24 24" fill="none" stroke="#fff"
-					stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-					<line x1="3" y1="12" x2="21" y2="12"></line>
-					<line x1="3" y1="6" x2="21" y2="6"></line>
-					<line x1="3" y1="18" x2="21" y2="18"></line></svg>
-			</label> <label class="m-menu__overlay" for="menu"></label>
-
-			<div class="m-menu">
-				<div class="m-menu__header">
-					<label class="m-menu__toggle" for="menu"> <svg width="20"
-							height="35" viewBox="0 0 24 24" fill="none" stroke="#000000"
-							stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-					</label> <span style="color: #fff">MENU</span>
-				</div>
-				<ul>
-
-					<li style="list-style: none"><label class="a-label__chevron"
-						for="item-2">Masters</label> <input type="checkbox" id="item-2"
-						name="item-2" class="m-menu__checkbox">
-						<div class="m-menu">
-							<div class="m-menu__header">
-								<label class="m-menu__toggle" for="item-2"> <svg
-										width="20" height="35" viewBox="0 0 24 24" fill="none"
-										stroke="#000000" stroke-width="2" stroke-linecap="butt"
-										stroke-linejoin="arcs">
-                  <path d="M19 12H6M12 5l-7 7 7 7" />
-                </svg>
-								</label> <span>Masters</span>
-							</div>
-							<!--<ul>
-
-								 <li>
-                <label class="a-label__chevron" for="item-2-3">Item 2.3</label>
-                <input type="checkbox" id="item-2-3" name="item-2" class="m-menu__checkbox">
-                <div class="m-menu">
-                  <div class="m-menu__header">
-                    <label class="m-menu__toggle" for="item-2-3">
-                      <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-                        <path d="M19 12H6M12 5l-7 7 7 7"/>
-                      </svg>
-                    </label>
-                    <span>Item 2.3 </span>
-                  </div>
-                  <ul>
-                    <li><label>Item 2.3.1</label></li>
-                    <li><label>Item 2.3.2</label></li>
-                    <li><label>Item 2.3.3</label></li>
-                    <li><label>Item 2.3.4</label></li>
-                    <li><label>Item 2.3.5</label></li>
-                  </ul>                
-              </li> -->			
-              					<ul>
-
-					
-							
-
-								 <li style="list-style: none">
-                <label class="a-label__chevron" for="item-2-3">Country Master</label>
-                <input type="checkbox" id="item-2-3" name="item-2" class="m-menu__checkbox">
-                <div class="m-menu">
-                  <div class="m-menu__header">
-                    <label class="m-menu__toggle" for="item-2-3">
-                      <svg width="20" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-                        <path d="M19 12H6M12 5l-7 7 7 7"/>
-                      </svg>
-                    </label>
-                    <span>Country Master</span>
-                  </div>
-                  <ul>
-                    <li style="list-style: none"><label><a th:href="@{/state}">State Master</a></label></li>
-                    <li style="list-style: none"><label><a th:href="@{/region}">Region Master</a></label></li>
-                    <li style="list-style: none"><label><a th:href="@{/district}">District Master</a></label></li>
-                    <li style="list-style: none"><label><a th:href="@{/city}">City Master</a></label></li>
-                    <li style="list-style: none"><label><a th:href="@{/area}">Area Master</a></label></li>
-                  </ul>                
-              </li>
-             		
-           	<li style="list-style: none"><label><a
-										th:href="@{/user}">User Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/distributor}">Distributor Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/product}">Product Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/hqmaster}">HQ Master</a></label></li></ul>
-						</div></li>
-
-				</ul>
-								
-				<ul>
-					  <li style="list-style: none"><label><a
-										th:href="@{/user}">User Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/distributor}">Distributor Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/product}">Product Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/hqmaster}">HQ Master</a></label></li></ul>
-						</div></li> 
-				</ul>
-				
-			
-			<div class="mx-auto">
-				<header class="text-center text-white font-weight-bold">Gardenia</header>
-			</div>
-
-		</nav>
-
-	</div>
+<div class="btn1">
+  <span class="fa fa-bars"></span>
+</div>
+<nav class="sidebar">
+  <div class="text">
+    Side Menu
+  </div>
+  <ul>
+    <li class="active"><a href="#">Dashboard</a></li>
+    <li>
+      <a class="feat-btn">Masters
+        <span class="fa fa-caret-down first"></span>
+      </a>
+      <ul class="feat-show">
+        <li><a th:href="@{/country}">Country Master</a></li>
+        <li><a th:href="@{/state}">State Master</a></li>
+        <li><a th:href="@{/region}">Region Master</a></li>
+        <li><a th:href="@{/district}">District Master</a></li>
+        <li><a th:href="@{/city}">City Master</a></li>
+        <li><a th:href="@{/area}">Area Master</a></li>
+        <li><a th:href="@{/user}">User Master</a></li>
+        <li><a th:href="@{/distributor}">Distributor Master</a></li>
+        <li><a th:href="@{/product}">Product Master</a></li>
+        <li><a th:href="@{/hqmaster}">HQ Master</a></li>
+      </ul>
+    </li>
+    <!-- <li>
+      <a href="#" class="serv-btn">Services
+        <span class="fa fa-caret-down second"></span>
+      </a>
+      <ul class="serv-show">
+        <li><a href="#">App Design</a></li>
+        <li><a href="#">Web Design</a></li>
+      </ul>
+    </li>
+    <li><a href="#">Portfolio</a></li>
+    <li><a href="#">Overview</a></li>
+    <li><a href="#">Shortcuts</a></li>
+    <li><a href="#">Feedback</a></li> -->
+  </ul>
+</nav>
 	<div class="container">
 		<div class = "mt-5">
 		<div class="row">
@@ -373,5 +302,22 @@ function myFunction() {
 			</tbody>
 		</table>
 	</div>
+<script>
+$('.btn1').click(function(){
+  $(this).toggleClass("click");
+  $('.sidebar').toggleClass("show");
+});
+$('.feat-btn').click(function(){
+  $('nav ul .feat-show').toggleClass("show");
+  $('nav ul .first').toggleClass("rotate");
+});
+$('.serv-btn').click(function(){
+  $('nav ul .serv-show').toggleClass("show1");
+  $('nav ul .second').toggleClass("rotate");
+});
+$('nav ul li').click(function(){
+  $(this).addClass("active").siblings().removeClass("active");
+});
+</script>
 </body>
 </html>
