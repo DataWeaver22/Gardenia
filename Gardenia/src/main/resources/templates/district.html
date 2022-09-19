@@ -37,7 +37,7 @@ crossorigin="anonymous">
 }
 .btn1 span {
     color: #000;
-    font-size: 14px;
+    font-size: 18px;
     line-height: 31px;
 }
 .btn1.click span:before{
@@ -50,7 +50,7 @@ crossorigin="anonymous">
   left: -250px;
   background: #1b1b1b;
   transition: left 0.4s ease;
-  margin-top:-50px;
+  margin-top:550px;
   z-index:9999;
 }
 .sidebar.show{
@@ -65,6 +65,12 @@ crossorigin="anonymous">
   background: #e6e6e6;
   letter-spacing: 1px;
 }
+
+.text img{
+	width:100px;
+	height:100px;
+}
+
 nav ul{
   background: #e6e6e6;
   height: 100%;
@@ -194,6 +200,19 @@ h1{
 	font-size:18px;
 	
 }
+
+.navbar {
+    height: 100%; /* 100% Full-height */
+    width: 100%; /* 0 width - change this with JavaScript */
+    z-index: 999; /* Stay on top */
+    top: 0;
+    left: 0;
+    background-color: #e6e6e6; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    box-shadow: 5px 10px 8px #cccfcd;
+}
 </style>
 <script>
 function myFunction() {
@@ -216,12 +235,13 @@ function myFunction() {
 </script>
 </head>
 <body>
+<nav class="navbar">
 <div class="btn1">
   <span class="fa fa-bars"></span>
 </div>
-<nav class="sidebar">
+<div class="sidebar">
   <div class="text">
-    Side Menu
+    <img th:src="@{/images/logo.png}" class="img-responsive"/>
   </div>
   <ul>
     <li class="active"><a th:href="@{/}">Dashboard</a></li>
@@ -256,6 +276,7 @@ function myFunction() {
     <li><a href="#">Shortcuts</a></li>
     <li><a href="#">Feedback</a></li> -->
   </ul>
+</div>
 </nav>
 	<div class="container">
 		<div class = "mt-5">

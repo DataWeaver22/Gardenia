@@ -68,7 +68,7 @@
 }
 .btn1 span {
     color: #000;
-    font-size: 14px;
+    font-size: 18px;
     line-height: 31px;
 }
 .btn1.click span:before{
@@ -81,6 +81,7 @@
   left: -250px;
   background: #1b1b1b;
   transition: left 0.4s ease;
+  margin-top:550px;
   z-index:9999;
 }
 .sidebar.show{
@@ -95,6 +96,12 @@
   background: #e6e6e6;
   letter-spacing: 1px;
 }
+
+.text img{
+	width:100px;
+	height:100px;
+}
+
 nav ul{
   background: #e6e6e6;
   height: 100%;
@@ -389,30 +396,31 @@ function myFunc(){
 </script>
 </head>
 <body>
+<nav class="navbar">
 <div class="btn1">
   <span class="fa fa-bars"></span>
 </div>
-<nav class="sidebar">
+<div class="sidebar">
   <div class="text">
-    Side Menu
+    <img th:src="@{/images/logo.png}" class="img-responsive"/>
   </div>
   <ul>
     <li class="active"><a th:href="@{/}">Dashboard</a></li>
     <li>
-      <a href="#" class="feat-btn">Masters
+      <a class="feat-btn">Masters
         <span class="fa fa-caret-down first"></span>
       </a>
       <ul class="feat-show">
-        <li><a href="#">Country Master</a></li>
-        <li><a href="#">State Master</a></li>
-        <li><a href="#">Region Master</a></li>
-        <li><a href="#">District Master</a></li>
-        <li><a href="#">City Master</a></li>
-        <li><a href="#">Area Master</a></li>
-        <li><a href="#">User Master</a></li>
-        <li><a href="#">Distributor Master</a></li>
-        <li><a href="#">Product Master</a></li>
-        <li><a href="#">HQ Master</a></li>
+        <li><a th:href="@{/country}">Country Master</a></li>
+        <li><a th:href="@{/state}">State Master</a></li>
+        <li><a th:href="@{/region}">Region Master</a></li>
+        <li><a th:href="@{/district}">District Master</a></li>
+        <li><a th:href="@{/city}">City Master</a></li>
+        <li><a th:href="@{/area}">Area Master</a></li>
+        <li><a th:href="@{/user}">User Master</a></li>
+        <li><a th:href="@{/distributor}">Distributor Master</a></li>
+        <li><a th:href="@{/product}">Product Master</a></li>
+        <li><a th:href="@{/hqmaster}">HQ Master</a></li>
       </ul>
     </li>
     <!-- <li>
@@ -429,6 +437,7 @@ function myFunc(){
     <li><a href="#">Shortcuts</a></li>
     <li><a href="#">Feedback</a></li> -->
   </ul>
+</div>
 </nav>
 	<br>
 	<br>
