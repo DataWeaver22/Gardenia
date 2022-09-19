@@ -7,8 +7,11 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
 <style>
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+
+ @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 *{
   margin: 0;
   padding: 0;
@@ -149,12 +152,19 @@ nav ul li a span.rotate{
   text-align: center;
 }
 .content .header{
-  font-size: 45px;
+  font-size: 50px;
   font-weight: 600;
 }
 .content p{
   font-size: 30px;
   font-weight: 500;
+}
+
+.header:after{
+	content:attr(data-text);
+	color:green;
+	transform:translateX(-100%);
+	position:absolute;
 }
 </style>
 
@@ -203,7 +213,7 @@ nav ul li a span.rotate{
   </ul>
 </nav>
 <div class="content">
-  <div class="header">
+  <div class="header" data-text="Gardenia">
     Welcome To Gardenia
   </div>
   <!-- <p>

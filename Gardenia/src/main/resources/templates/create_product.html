@@ -8,6 +8,9 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
 	integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg=="
 	crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 
 <title>Product Master</title>
 <link rel="stylesheet"
@@ -78,7 +81,6 @@
   left: -250px;
   background: #1b1b1b;
   transition: left 0.4s ease;
-  margin-top:-50px;
   z-index:9999;
 }
 .sidebar.show{
@@ -351,7 +353,7 @@ var convertedIntoArray = [];
     Side Menu
   </div>
   <ul>
-    <li class="active"><a href="#">Dashboard</a></li>
+    <li class="active"><a th:href="@{/}">Dashboard</a></li>
     <li>
       <a class="feat-btn">Masters
         <span class="fa fa-caret-down first"></span>
@@ -388,7 +390,7 @@ var convertedIntoArray = [];
 		<div class="container">
 			<div class="row">
 				<div
-					class="col-lg-12 col-md-12 col-sm-12 mt-4 container justify-content-center card"
+					class="col-lg-12 col-md-12 col-sm-12 mt-5 container justify-content-center card"
 					th:object="${aproduct}">
 					<h1 class="text-center mt-4">Create New Product</h1>
 					<div class="card-body">

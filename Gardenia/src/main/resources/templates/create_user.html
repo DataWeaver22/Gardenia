@@ -17,7 +17,10 @@ crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
-<script type="text/javascript" th:src="@{/js/src/fileup.js}" ></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 *{
@@ -57,7 +60,6 @@ crossorigin="anonymous">
   left: -250px;
   background: #1b1b1b;
   transition: left 0.4s ease;
-  margin-top:-50px;
   z-index:9999;
 }
 .sidebar.show{
@@ -316,7 +318,7 @@ function myFunc(){
     Side Menu
   </div>
   <ul>
-    <li class="active"><a href="#">Dashboard</a></li>
+    <li class="active"><a th:href="@{/}">Dashboard</a></li>
     <li>
       <a class="feat-btn">Masters
         <span class="fa fa-caret-down first"></span>
@@ -353,7 +355,7 @@ function myFunc(){
 <form th:action="@{/user}" th:object="${user}" method="POST" enctype="multipart/form-data">
 <div class = "container">
 		<div class = "row">
-			<div class = "col-lg-12 col-md-12 col-sm-12 container justify-content-center card">
+			<div class = "col-lg-12 col-md-12 col-sm-12 mt-5 container justify-content-center card">
 				<h1 class = "text-center">Create New User</h1>
 				<div class="card-body">
 					<div class="row">

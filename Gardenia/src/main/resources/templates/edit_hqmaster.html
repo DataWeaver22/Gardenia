@@ -11,6 +11,9 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"
 	type="text/javascript"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
@@ -51,7 +54,6 @@
   left: -250px;
   background: #1b1b1b;
   transition: left 0.4s ease;
-  margin-top:-50px;
   z-index:9999;
 }
 .sidebar.show{
@@ -223,7 +225,7 @@ input[type=text] {
     Side Menu
   </div>
   <ul>
-    <li class="active"><a href="#">Dashboard</a></li>
+    <li class="active"><a th:href="@{/}">Dashboard</a></li>
     <li>
       <a class="feat-btn">Masters
         <span class="fa fa-caret-down first"></span>
@@ -259,7 +261,7 @@ input[type=text] {
 	<div class="container-fluid">
 		<div class="row">
 			<div
-				class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+				class="col-lg-6 col-md-6 col-sm-6 mt-5 container justify-content-center card">
 				<h1 class="text-center">HQ Master</h1>
 				<div class="card-body">
 					<form th:action="@{/hqmaster/{id} (id=${hqmaster.id})}"

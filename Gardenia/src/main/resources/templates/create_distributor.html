@@ -38,6 +38,10 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
 <script type="text/javascript" th:src="@{/js/src/fileup.js}"></script>
 <script src="js/zoom.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 *{
@@ -77,7 +81,6 @@
   left: -250px;
   background: #1b1b1b;
   transition: left 0.4s ease;
-  margin-top:-50px;
   z-index:9999;
 }
 .sidebar.show{
@@ -386,12 +389,15 @@ function myFunc(){
 </script>
 </head>
 <body>
+<div class="btn1">
+  <span class="fa fa-bars"></span>
+</div>
 <nav class="sidebar">
   <div class="text">
     Side Menu
   </div>
   <ul>
-    <li class="active"><a href="#">Dashboard</a></li>
+    <li class="active"><a th:href="@{/}">Dashboard</a></li>
     <li>
       <a href="#" class="feat-btn">Masters
         <span class="fa fa-caret-down first"></span>
