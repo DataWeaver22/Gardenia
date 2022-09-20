@@ -1,6 +1,4 @@
-
-
- @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 *{
   margin: 0;
   padding: 0;
@@ -8,24 +6,13 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
-.btn1{
-  position: absolute;
-  top: 15px;
-  left: 45px;
-  height: 30px;
-  width: 30px;
-  text-align: center;
-  background: #e6e6e6;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: left 0.4s ease;
-}
+
 .btn1.click{
   left: 248px;
 }
 .btn1 span {
     color: #000;
-    font-size: 14px;
+    font-size: 18px;
     line-height: 31px;
 }
 .btn1.click span:before{
@@ -37,8 +24,8 @@
   height: 100%;
   left: -250px;
   background: #1b1b1b;
-  transition: left 0.4s ease;
-  
+  transition: left 1s ease;
+  margin-top:-50px;
   z-index:9999;
 }
 .sidebar.show{
@@ -48,10 +35,15 @@
   color: black;
   font-size: 25px;
   font-weight: 600;
-  line-height: 110px;
+  line-height: 60px;
   text-align: center;
   background: #e6e6e6;
   letter-spacing: 1px;
+}
+
+.text img{
+	width:100px;
+	height:100px;
 }
 nav ul{
   background: #e6e6e6;
@@ -86,11 +78,7 @@ nav ul li a:hover{
   background: #4b9c52;
   color:white;
   background-position: 100% 0;
-    moz-transition: all .4s ease-in-out;
-    -o-transition: all .4s ease-in-out;
-    -webkit-transition: all .4s ease-in-out;
-    transition: all .4s ease-in-out;
-    text-decoration: none;
+  text-decoration:none;  
 }
 nav ul ul{
   position: static;
@@ -119,6 +107,7 @@ nav ul li.active ul li a{
 nav ul ul li a:hover{
   background: #068203!important;
   color:white!important;
+  text-decoration:none!important;
 }
 nav ul li a span{
   position: absolute;
@@ -126,22 +115,22 @@ nav ul li a span{
   right: 20px;
   transform: translateY(-50%);
   font-size: 22px;
-  transition: transform 0.4s;
+  transition: transform 1s;
 }
 nav ul li a span.rotate{
-  transform: translateY(-50%) rotate(-180deg);
+  transform: translateY('50%') rotate('180deg');
 }
 .content{
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate('-50%','50%');
   color: #202020;
   z-index: -1;
   text-align: center;
 }
 .content .header{
-  font-size: 45px;
+  font-size: 50px;
   font-weight: 600;
 }
 .content p{
@@ -149,3 +138,28 @@ nav ul li a span.rotate{
   font-weight: 500;
 }
 
+.navbar, .headbar {
+    height: 100%; /* 100% Full-height */
+    width: 100%; /* 0 width - change this with JavaScript */
+    z-index: 999; /* Stay on top */
+    top: 0;
+    left: 0;
+    background-color: #e6e6e6; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: '0.5s'; /* 0.5 second transition effect to slide in the sidenav */
+    box-shadow: 5px 10px 8px #cccfcd;
+}
+
+.btn1{
+  position: absolute;
+  top: 15px;
+  left: 45px;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  background: #e6e6e6;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: left 1s ease;
+}
