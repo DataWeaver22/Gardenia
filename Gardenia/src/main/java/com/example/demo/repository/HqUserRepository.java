@@ -1,6 +1,9 @@
 package com.example.demo.repository;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -30,4 +33,9 @@ public interface HqUserRepository extends JpaRepository<User, Long> {
 	
 	@Query("select a.id from Area a where a.area_name = ?1")
 	String findByArea(@Param("aName") String areaName);
+	
+	@Transactional
+	@Modifying
+	@Query("update User u set u.approval_status=:approved where u.id=:uID")
+	void updateByStatus(@Param("approved") String approved,@Param("uID") Long uID);
 }

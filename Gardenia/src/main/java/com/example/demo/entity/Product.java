@@ -73,6 +73,12 @@ public class Product{
 	@Column(name = "mrp", length = 20)
 	private String mrp;
 	
+	@Column(name = "approval_status", length = 20)
+	private String approval_status;
+	
+	@Column(name = "approval_action", length = 20)
+	private String approval_action;
+	
 	@OneToMany(mappedBy="product",targetEntity = ProductNew.class)
 	public List<ProductNew> productNew;
 
@@ -212,9 +218,25 @@ public class Product{
 		this.mrp = mrp;
 	}
 
+	public String getApproval_status() {
+		return approval_status;
+	}
+
+	public void setApproval_status(String approval_status) {
+		this.approval_status = approval_status;
+	}
+
+	public String getApproval_action() {
+		return approval_action;
+	}
+
+	public void setApproval_action(String approval_action) {
+		this.approval_action = approval_action;
+	}
+
 	public Product(Long id, String pname, String code, String brand, String category, String family, String variant,
 			String group_name, String uom, String ptd, String ptr, String status, String description, LocalDateTime create_date,
-			LocalDateTime inactive_date, String sales_diary, String mrp) {
+			LocalDateTime inactive_date, String sales_diary, String mrp, String approval_status, String approval_action) {
 		super();
 		this.id = id;
 		this.pname = pname;
@@ -233,6 +255,8 @@ public class Product{
 		this.inactive_date = inactive_date;
 		this.sales_diary = sales_diary;
 		this.mrp = mrp;
+		this.approval_status = approval_status;
+		this.approval_action = approval_action;
 	}
 	
 	public Product() {

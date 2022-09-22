@@ -8,13 +8,15 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
-<script src="node_modules/xel/xel.js" type="module"></script>
-<meta name="xel-theme" content="node_modules/xel/themes/adwaita.css">
-<meta name="xel-accent-color" content="blue">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>	
 <link href="" th:href="@{/css/style.css}" rel="stylesheet"/>
 <style>
 
@@ -162,128 +164,79 @@ select{
     width: 80px;
 }
 
+.inp{
+	padding:5px;
+	width:100%;
+}
+
 </style>
 <script>
-function myFunction() {
-  var input, filter, table, tr, td, cell, i, j;
-  filter = document.getElementById("searchInput").value.toLowerCase();
-  table = document.getElementById("userTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 1; i < tr.length; i++) {
-    tr[i].style.display = "none";
-    const tdArray = tr[i].getElementsByTagName("td");
-    for (var j = 0; j < tdArray.length; j++) {
-      const cellValue = tdArray[j];
-      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-        break;
-      }
-    }
-  }
-}
+$(document).ready(function () {
+    // Setup - add a text input to each footer cell
+    $('#userTable thead tr')
+        .clone(true)
+        .addClass('filters')
+        .appendTo('#userTable thead');
+ 
+    var table = $('#userTable').DataTable({
+        orderCellsTop: true,
+        fixedHeader: true,
+        initComplete: function () {
+            var api = this.api();
+ 
+            // For each column
+            api
+                .columns()
+                .eq(0)
+                .each(function (colIdx) {
+                    // Set the header cell to contain the input element
+                    var cell = $('.filters th').eq(
+                        $(api.column(colIdx).header()).index()
+                    );
+                    var title = $(cell).text();
+                    $(cell).html('<input type="text" class="inp" placeholder="' + title + '" />');
+ 
+                    // On every keypress in this input
+                    $(
+                        'input',
+                        $('.filters th').eq($(api.column(colIdx).header()).index())
+                    )
+                        .off('keyup change')
+                        .on('change', function (e) {
+                            // Get the search value
+                            $(this).attr('title', $(this).val());
+                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
+ 
+                            var cursorPosition = this.selectionStart;
+                            // Search the column for that value
+                            api
+                                .column(colIdx)
+                                .search(
+                                    this.value != ''
+                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                        : '',
+                                    this.value != '',
+                                    this.value == ''
+                                )
+                                .draw();
+                        })
+                        
+                        .on('keyup', function (e) {
+                            e.stopPropagation();
+ 
+                            $(this).trigger('change');
+                            $(this)
+                                .focus()[0]
+                                .setSelectionRange(cursorPosition, cursorPosition);
+                        });
+                });
+        },
+    });
+});
 
-function approve(){
-	document.getElementById("approve").style.backgroundColor = "#3e8e41";
-	document.getElementById("approve").style.color = "white";
-	document.getElementById("approve").style.outline = "none";
-	document.getElementById("reject").style.backgroundColor = "white";
-	document.getElementById("reject").style.color = "black";
-	document.getElementById("reject").style.outline = "none";
-	document.getElementById("pending").style.backgroundColor = "white";
-	document.getElementById("pending").style.color = "black";
-	document.getElementById("pending").style.outline = "none";
-	var input, filter, table, table1, tr, td, cell, i, j;
-  filter = document.getElementById("approve").value.toLowerCase();
-  console.log(document.getElementById("approve").value.toLowerCase());
-  table1 = document.getElementById("userTable");
-  document.getElementById("pendingTable").style.display = "none";
-  document.getElementById("userTable").style.display = "";
-  tr = table1.getElementsByTagName("tr");
-  for (i = 1; i < tr.length; i++) {
-    tr[i].style.display = "none";
-    const tdArray = tr[i].getElementsByTagName("td");
-    for (var j = 0; j < tdArray.length; j++) {
-      const cellValue = tdArray[j];
-      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-        break;
-      }
-      
-    }
-  }
-}
-
-function reject(){
-	document.getElementById("reject").style.backgroundColor = "#3e8e41";
-	document.getElementById("reject").style.color = "white";
-	document.getElementById("reject").style.outline = "none";
-	document.getElementById("approve").style.backgroundColor = "white";
-	document.getElementById("approve").style.color = "black";
-	document.getElementById("approve").style.outline = "none";
-	document.getElementById("pending").style.backgroundColor = "white";
-	document.getElementById("pending").style.color = "black";
-	document.getElementById("pending").style.outline = "none";
-	var input, filter, table, table1, tr, td, cell, i, j;
-  filter = document.getElementById("reject").value.toLowerCase();
-  console.log(document.getElementById("reject").value.toLowerCase());
-  table1 = document.getElementById("userTable");
-  document.getElementById("pendingTable").style.display = "none";
-  document.getElementById("userTable").style.display = "";
-  tr = table1.getElementsByTagName("tr");
-  for (i = 1; i < tr.length; i++) {
-    tr[i].style.display = "none";
-    const tdArray = tr[i].getElementsByTagName("td");
-    for (var j = 0; j < tdArray.length; j++) {
-      const cellValue = tdArray[j];
-      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-        break;
-      }
-      
-    }
-  }
-}
-
-function pending(){
-document.getElementById("pending").style.backgroundColor = "#3e8e41";
-	document.getElementById("pending").style.color = "white";
-	document.getElementById("pending").style.outline = "none";
-	document.getElementById("approve").style.backgroundColor = "white";
-	document.getElementById("approve").style.color = "black";
-	document.getElementById("approve").style.outline = "none";
-	document.getElementById("reject").style.backgroundColor = "white";
-	document.getElementById("reject").style.color = "black";
-	document.getElementById("reject").style.outline = "none";
-	var input, filter, table, table1, tr, td, cell, i, j;
-  filter = document.getElementById("pending").value.toLowerCase();
-  console.log(document.getElementById("pending").value.toLowerCase());
-  table = document.getElementById("pendingTable");
-   document.getElementById("userTable").style.display = "none";
-   document.getElementById("pendingTable").style.display = "";
-  tr = table.getElementsByTagName("tr");
-  for (i = 1; i < tr.length; i++) {
-    tr[i].style.display = "none";
-    const tdArray = tr[i].getElementsByTagName("td");
-    for (var j = 0; j < tdArray.length; j++) {
-      const cellValue = tdArray[j];
-      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-        break;
-      }
-      
-    }
-  }
-}
-
-function clickApprove(){
-	$(function() {
-    	$('#approve').click();
-	});
-	
-}
 </script>
 </head>
-<body onload="clickApprove()">
+<body>
 <nav class="headbar">
 <div class="btn1">
   <span class="fa fa-bars"></span>
@@ -333,31 +286,22 @@ function clickApprove(){
 				<div class="col-md-2">
 					<h1>Distributor List</h1>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					
-					<form>
-					<select>
-						<option>Code</option>
-						<option>Name</option>
-						<option>Type</option>
-						<option>Status</option>
-						<option>Region</option>
-						<option>State</option>
-					</select>
-						<input type="text" name="keyword" size="20" th:value="${keyword}"
-							id="searchInput" onkeyup="myFunction()" placeholder="Search..." />
-						<!-- &nbsp; <input type="submit" value="Search" oninput="myFunction()" />
-				&nbsp; <input type="button" value="Clear" id="btnClear"
-					onclick="clearSearch()" /> -->
-					</form>
 				</div>
-				<div class="col-md-3">
-					<div id="countriesDropdown" class="btn-group" >
-  						<button id="approve" onclick="approve()" value="approved">Approved</button>
-  						<button id="reject" onclick="reject()" value="rejected">Rejected</button>
-  						<button id="pending" onclick="pending()" value="pending">Pending</button>
+					<div class="col-3">
+						<div class="btn-group submitter-group float-right">
+							<div class="input-group-prepend">
+								<div class="input-group-text">Status</div>
+							</div>
+							<select class="form-control status-dropdown">
+								<option value="">All</option>
+								<option value="PCH">Pending Review</option>
+								<option value="Approved">Approved</option>
+								<option value="Rejected">Rejected</option>
+							</select>
+						</div>
 					</div>
-				</div>
 				
 				<div class="col-md-3">
 				<a th:href="@{/distributor/export/excel}"
@@ -406,9 +350,9 @@ function clickApprove(){
 			</thead>
 			<tbody>
 				<tr th:each="distributortable: ${distributortable}" class="main">
-					<td th:text="${distributortable.distributor_name}"></td>
-					<td th:text="${distributortable.distributor_code}"></td>
-					<td th:text="${distributortable.distributor_type}"></td>
+					<td th:text="${distributortable.distributor_name}" class="code"></td>
+					<td th:text="${distributortable.distributor_code}" class="code"></td>
+					<td th:text="${distributortable.distributor_type}" class="code"></td>
 					<!-- <td th:text="${distributortable.gstin}"></td>
 					<td th:text="${distributortable.pan}"></td>
 					<td th:text="${distributortable.contact}"></td>
@@ -428,7 +372,7 @@ function clickApprove(){
 					<td th:text="${distributortable.create_date}"></td>
 					<td th:text="${distributortable.inactive_date}"></td> -->
 					<!-- <td><img th:src="${distributortable.photosImagePath}" class="dir-img" /></td> -->
-					<td th:text="${distributortable.approval_status}" class="astatus" id="aStatus" onload="loadStatus()"></td>
+					<td th:text="${distributortable.approval_status}" class="astatus status" id="aStatus" onload="loadStatus()"></td>
 					
 					<!-- <td data-type="option" class="text-center action" id="action">
 						<span class="isDisabled">
@@ -444,15 +388,25 @@ function clickApprove(){
 						class="btn btn-success">Edit</a>
 					</td>
 				</tr>
+				
 			</tbody>
+			<!-- <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </tfoot> -->
 		</table>
-		<table class="table table-striped table-bordered" id="pendingTable">
+		<!-- <table class="table table-striped table-bordered" id="pendingTable">
 			<thead class="table-light">
 				<tr class="header">
 					<th>Name</th>
 					<th>Code</th>
 					<th>Type Of Distributor</th>
-					<!-- <th>GSTIN</th>
+					<th>GSTIN</th>
 					<th>PAN</th>
 					<th>Contact Person</th>
 					<th>Mobile</th>
@@ -469,12 +423,12 @@ function clickApprove(){
 					<th>Supplier Id</th>
 					<th>Status</th> 
 					<th>Create Date</th> 
-					<th>Inactive Date</th>  -->
+					<th>Inactive Date</th> 
 					<th>Documents</th>
 					<th>Approval Status</th>
 					<th class="action">Approval Actions</th>
-					<!-- <th>Serviced Status</th>
-					<th>Brand List</th> -->
+					<th>Serviced Status</th>
+					<th>Brand List</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -483,7 +437,7 @@ function clickApprove(){
 					<td th:text="${distributortable.distributor_name}"></td>
 					<td th:text="${distributortable.distributor_code}"></td>
 					<td th:text="${distributortable.distributor_type}"></td>
-					<!-- <td th:text="${distributortable.gstin}"></td>
+					<td th:text="${distributortable.gstin}"></td>
 					<td th:text="${distributortable.pan}"></td>
 					<td th:text="${distributortable.contact}"></td>
 					<td th:text="${distributortable.mobile}"></td>
@@ -500,8 +454,8 @@ function clickApprove(){
 					<td th:text="${distributortable.supp_code}"></td>
 					<td th:text="${distributortable.status}"></td>
 					<td th:text="${distributortable.create_date}"></td>
-					<td th:text="${distributortable.inactive_date}"></td> -->
-					<!-- <td><img th:src="${distributortable.photosImagePath}" class="dir-img" /></td> -->
+					<td th:text="${distributortable.inactive_date}"></td>
+					<td><img th:src="${distributortable.photosImagePath}" class="dir-img" /></td>
 					<td th:text="${distributortable.approval_status}" class="astatus" id="aStatus" onload="loadStatus()"></td>
 					
 					<td data-type="option" class="text-center action" id="action">
@@ -513,17 +467,17 @@ function clickApprove(){
 						<a th:href="@{/distributor/reject/{id}(id=${distributortable.id})}" class="btn btn-danger r" id="r"><i class="fa fa-times"></i></a>
 					</td>
 					
-					<!-- <td th:text="${distributortable.service_status}"></td>
-					<td th:text="${distributortable.brand_list}"></td> -->
+					<td th:text="${distributortable.service_status}"></td>
+					<td th:text="${distributortable.brand_list}"></td>
 					<td><a
 						th:href="@{/distributor/edit/{id}(id=${distributortable.id})}"
 						class="btn btn-success">Edit</a>
 					</td>
 				</tr>
 			</tbody>
-		</table>
+		</table> -->
 	</div>
-	
+
 <script>
 $('.btn1').click(function(){
   $(this).toggleClass("click");

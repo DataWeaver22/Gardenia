@@ -77,6 +77,12 @@ public class User {
 	@Column(name = "documents", length = 20)
 	private String documents;
 	
+	@Column(name = "approval_status", length=20)
+	private String approval_status;
+	
+	@Column(name = "approval_action", length=20)
+	private String approval_action;
+	
 	@OneToOne
     @JoinColumn(name="id")
     private State state;
@@ -253,9 +259,26 @@ public class User {
 		this.fullName = fullName;
 	}
 
+	public String getApproval_status() {
+		return approval_status;
+	}
+
+	public void setApproval_status(String approval_status) {
+		this.approval_status = approval_status;
+	}
+
+	public String getApproval_action() {
+		return approval_action;
+	}
+
+	public void setApproval_action(String approval_action) {
+		this.approval_action = approval_action;
+	}
+
 	public User(Long id,String login,String firstName, String lastName, String emp_code,
 			String team, String roles, String status, LocalDateTime create_date, LocalDateTime resign_date, String region_name,
-			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents,String area_id,String fullName) {
+			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents,String area_id,String fullName,
+			String approval_status, String approval_action) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -276,6 +299,8 @@ public class User {
 		this.documents = documents;
 		this.area_id=area_id;
 		this.fullName = fullName;
+		this.approval_status = approval_status;
+		this.approval_action = approval_action;
 	}
 	
 	public User() {

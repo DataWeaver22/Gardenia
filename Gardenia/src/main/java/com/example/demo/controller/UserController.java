@@ -162,6 +162,8 @@ public class UserController {
 		System.out.println(hname);
 		user.setHq_name(hname);
 		
+		user.setApproval_status("Pending");
+		
 		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         user.setDocuments(fileName);
          
@@ -311,6 +313,24 @@ public class UserController {
 	@GetMapping("/user/{id}")
 	public String deleteUser(@PathVariable Long id) {
 		userService.deleteUserById(id);
+		return "redirect:/user";
+	}
+	
+	@GetMapping("/user/approve/{id}")
+	public String approveUser(@PathVariable Long id) {
+		Long uID = id;
+		System.out.println(uID);
+		String approved = "Approved";
+		hqUserRepository.updateByStatus(approved,uID);
+		return "redirect:/user";
+	}
+	
+	@GetMapping("/user/reject/{id}")
+	public String rejectUser(@PathVariable Long id) {
+		Long uID = id;
+		System.out.println(uID);
+		String approved = "Rejected";
+		hqUserRepository.updateByStatus(approved,uID);
 		return "redirect:/user";
 	}
 }

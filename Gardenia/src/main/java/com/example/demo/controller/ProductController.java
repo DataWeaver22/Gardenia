@@ -29,6 +29,7 @@ import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductNew;
 import com.example.demo.entity.Region;
 import com.example.demo.repository.ProductNewRepository;
+import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.ProductImportService;
 import com.example.demo.service.ProductNewService;
 import com.example.demo.service.ProductService;
@@ -47,7 +48,11 @@ public class ProductController {
 	@Autowired
 	ProductNewService productNewService;
 	
+	@Autowired
 	ProductNewRepository productNewRepository;
+	
+	@Autowired
+	ProductRepository productRepository;
 	
 	private List<ProductNew> productNew;
 
@@ -100,6 +105,7 @@ public class ProductController {
 		product.setCreate_date(createDateTime);
 		model.addAttribute("productNew",productNew);
 		productService.saveProduct(product);
+		product.setApproval_status("Pending");
 		productNewService.saveProductNew(productNew);
 		return "redirect:/product";
 	}
@@ -176,6 +182,24 @@ public class ProductController {
 	@GetMapping("/product/{id}")
 	public String deleteProduct(@PathVariable Long id) {
 		productService.deleteProductById(id);
+		return "redirect:/product";
+	}
+	
+	@GetMapping("/product/approve/{id}")
+	public String approveProduct(@PathVariable Long id) {
+		Long pID = id;
+		System.out.println(pID);
+		String approved = "Approved";
+		productRepository.updateByStatus(approved,pID);
+		return "redirect:/product";
+	}
+	
+	@GetMapping("/product/reject/{id}")
+	public String rejectProduct(@PathVariable Long id) {
+		Long pID = id;
+		System.out.println(pID);
+		String approved = "Rejected";
+		productRepository.updateByStatus(approved,pID);
 		return "redirect:/product";
 	}
 	
