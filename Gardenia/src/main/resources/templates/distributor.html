@@ -13,10 +13,17 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+<link href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>	
+
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+<script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
 <link href="" th:href="@{/css/style.css}" rel="stylesheet"/>
 <style>
 
@@ -172,7 +179,7 @@ select{
 
 </style>
 <script>
-$(document).ready(function () {
+/*$(document).ready(function () {
     // Setup - add a text input to each footer cell
     $('#userTable thead tr')
         .clone(true)
@@ -233,7 +240,25 @@ $(document).ready(function () {
                 });
         },
     });
-});
+});*/
+
+$('#pendingTable').bootstrapTable({
+    
+    onCreatedControls () {
+
+      $('select.bootstrap-table-filter-control-type').each(function (index, i) {
+        i.setAttribute('multiple','multiple');
+        $(this).find('option[value=""]').remove();
+        $(this).multipleSelect('destroy').multipleSelect({
+          container: 'body',
+          filter: true,
+          selectAll:true
+
+        });
+  
+      })
+    }
+ })
 
 </script>
 </head>
@@ -297,9 +322,7 @@ $(document).ready(function () {
 							</div>
 							<select class="form-control status-dropdown">
 								<option value="">All</option>
-								<option value="PCH">Pending Review</option>
-								<option value="Approved">Approved</option>
-								<option value="Rejected">Rejected</option>
+								<option data-field="approval_action" data-filter-control="select">Pending</option>
 							</select>
 						</div>
 					</div>
@@ -317,13 +340,18 @@ $(document).ready(function () {
 		</div>
 
 
-		<table class="table table-striped table-bordered" id="userTable">
-			<thead class="table-light">
+		<table class="table table-striped table-bordered" id="userTable"
+  			   data-toggle="#pendingTable"
+  			   data-toolbar="#toolbar"
+  			   data-filter-control="true"
+               data-show-footer="false"
+   		       data-hide-unused-select-options="true">
+			<!-- <thead class="table-light">
 				<tr class="header">
 					<th>Name</th>
 					<th>Code</th>
 					<th>Type Of Distributor</th>
-					<!-- <th>GSTIN</th>
+					<th>GSTIN</th>
 					<th>PAN</th>
 					<th>Contact Person</th>
 					<th>Mobile</th>
@@ -340,15 +368,24 @@ $(document).ready(function () {
 					<th>Supplier Id</th>
 					<th>Status</th> 
 					<th>Create Date</th> 
-					<th>Inactive Date</th>  -->
-					<!-- <th>Documents</th> -->
+					<th>Inactive Date</th> 
+					<th>Documents</th>
 					<th>Approval Status</th>
-					<!-- <th class="action">Approval Actions</th>  -->
-					<!-- <th>Serviced Status</th>
-					<th>Brand List</th> -->
+					<th class="action">Approval Actions</th> 
+					<th>Serviced Status</th>
+					<th>Brand List</th>
 					<th>Actions</th>
 				</tr>
-			</thead>
+			</thead> -->
+			<thead>
+    <tr>
+      <th data-field="name" data-filter-control="search">Name<br><input type="search"></th>
+      <th data-field="city" data-filter-control="select">Code</th>
+      <th data-field="age" data-filter-control="select"></th>
+      <th data-field="approval_status" data-filter-control="select"></th> 
+      <th data-field="approval_action" data-filter-control="select"></th> 
+    </tr>
+  </thead>
 			<tbody>
 				<tr th:each="distributortable: ${distributortable}" class="main">
 					<td th:text="${distributortable.distributor_name}" class="code"></td>
@@ -401,13 +438,18 @@ $(document).ready(function () {
             </tr>
         </tfoot> -->
 		</table>
-		<!-- <table class="table table-striped table-bordered" id="pendingTable">
-			<thead class="table-light">
+		<table class="table table-striped table-bordered" id="pendingTable"
+			   data-toggle="table"
+  			   data-toolbar="#toolbar"
+  			   data-filter-control="true"
+               data-show-footer="false"
+   		       data-hide-unused-select-options="false">
+			<!--<thead class="table-light">
 				<tr class="header">
 					<th>Name</th>
 					<th>Code</th>
 					<th>Type Of Distributor</th>
-					<th>GSTIN</th>
+					 <th>GSTIN</th>
 					<th>PAN</th>
 					<th>Contact Person</th>
 					<th>Mobile</th>
@@ -425,20 +467,29 @@ $(document).ready(function () {
 					<th>Status</th> 
 					<th>Create Date</th> 
 					<th>Inactive Date</th> 
-					<th>Documents</th>
+					<th>Documents</th> 
 					<th>Approval Status</th>
 					<th class="action">Approval Actions</th>
-					<th>Serviced Status</th>
+					<!-- <th>Serviced Status</th>
 					<th>Brand List</th>
 					<th>Actions</th>
 				</tr>
-			</thead>
+			</thead> -->
+			<thead>
+    <tr>
+      <th data-field="name" data-filter-control="search">Name<br><input type="search"></th>
+      <th data-field="code" data-filter-control="search">Code<br><input type="search"></th>
+      <th data-field="type" data-filter-control="search">Type<br><input type="search"></th>
+      <th data-field="approval_status" data-filter-control="select"></th> 
+      <th data-field="approval_action" data-filter-control="select"></th> 
+    </tr>
+  </thead>
 			<tbody>
 				<tr th:each="distributortable: ${distributortable}" class="main">
 					<td th:text="${distributortable.distributor_name}"></td>
 					<td th:text="${distributortable.distributor_code}"></td>
 					<td th:text="${distributortable.distributor_type}"></td>
-					<td th:text="${distributortable.gstin}"></td>
+					<!-- <td th:text="${distributortable.gstin}"></td>
 					<td th:text="${distributortable.pan}"></td>
 					<td th:text="${distributortable.contact}"></td>
 					<td th:text="${distributortable.mobile}"></td>
@@ -456,7 +507,7 @@ $(document).ready(function () {
 					<td th:text="${distributortable.status}"></td>
 					<td th:text="${distributortable.create_date}"></td>
 					<td th:text="${distributortable.inactive_date}"></td>
-					<td><img th:src="${distributortable.photosImagePath}" class="dir-img" /></td>
+					<td><img th:src="${distributortable.photosImagePath}" class="dir-img" /></td> -->
 					<td th:text="${distributortable.approval_status}" class="astatus" id="aStatus" onload="loadStatus()"></td>
 					
 					<td data-type="option" class="text-center action" id="action">
@@ -468,18 +519,90 @@ $(document).ready(function () {
 						<a th:href="@{/distributor/reject/{id}(id=${distributortable.id})}" class="btn btn-danger r" id="r"><i class="fa fa-times"></i></a>
 					</td>
 					
-					<td th:text="${distributortable.service_status}"></td>
-					<td th:text="${distributortable.brand_list}"></td>
+					<!-- <td th:text="${distributortable.service_status}"></td>
+					<td th:text="${distributortable.brand_list}"></td> -->
 					<td><a
 						th:href="@{/distributor/edit/{id}(id=${distributortable.id})}"
 						class="btn btn-success">Edit</a>
 					</td>
 				</tr>
 			</tbody>
-		</table> -->
+		</table>
 	</div>
 
 <script>
+
+$('#userTable').bootstrapTable({
+    
+    onCreatedControls () {
+
+      $('select.bootstrap-table-filter-control-type').each(function (index, i) {
+        i.setAttribute('multiple','multiple');
+        $(this).find('option[value=""]').remove();
+        $("#pendingTable").show();
+        $(this).multipleSelect('destroy').multipleSelect({
+          container: 'body',
+          filter: true,
+          selectAll:true
+
+        });
+  		
+      })
+    }
+ })
+ 
+ 
+ 
+function myFunction() {
+  var input, filter, table, tr, td, cell, i, j;
+  filter = document.getElementById("countriesDropdown").value.toLowerCase();
+  table = document.getElementById("userTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 1; i < tr.length; i++) {
+    tr[i].style.display = "none";
+    const tdArray = tr[i].getElementsByTagName("td");
+    for (var j = 0; j < tdArray.length; j++) {
+      const cellValue = tdArray[j];
+      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+        break;
+      }
+    }
+  }
+} 
+ 
+ 
+function pending(){
+document.getElementById("pending").style.backgroundColor = "#3e8e41";
+	document.getElementById("pending").style.color = "white";
+	document.getElementById("pending").style.outline = "none";
+	document.getElementById("approve").style.backgroundColor = "white";
+	document.getElementById("approve").style.color = "black";
+	document.getElementById("approve").style.outline = "none";
+	document.getElementById("reject").style.backgroundColor = "white";
+	document.getElementById("reject").style.color = "black";
+	document.getElementById("reject").style.outline = "none";
+	var input, filter, table, table1, tr, td, cell, i, j;
+  filter = document.getElementById("pending").value.toLowerCase();
+  console.log(document.getElementById("pending").value.toLowerCase());
+  table = document.getElementById("pendingTable");
+   document.getElementById("userTable").style.display = "none";
+   document.getElementById("pendingTable").style.display = "";
+  tr = table.getElementsByTagName("tr");
+  for (i = 1; i < tr.length; i++) {
+    tr[i].style.display = "none";
+    const tdArray = tr[i].getElementsByTagName("td");
+    for (var j = 0; j < tdArray.length; j++) {
+      const cellValue = tdArray[j];
+      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+        break;
+      }
+      
+    }
+  }
+}
+
 $('.btn1').click(function(){
   $(this).toggleClass("click");
   $('.sidebar').toggleClass("show");
