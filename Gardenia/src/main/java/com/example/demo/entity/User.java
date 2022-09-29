@@ -83,6 +83,48 @@ public class User {
 	@Column(name = "approval_action", length=20)
 	private String approval_action;
 	
+	@Column(name = "title", length = 20)
+	private String title;
+	
+	@Column(name = "employee_name", length = 20)
+	private String employee_name;
+	
+	@Column(name = "marital_status", length = 20)
+	private String marital_status;
+	
+	@Column(name = "gender", length = 20)
+	private String gender;
+	
+	@Column(name = "birth_date", length = 20)
+	private String birth_date;
+	
+	@Column(name = "join_date", length = 20)
+	private String join_date;
+	
+	@Column(name = "grade", length = 20)
+	private String grade;
+	
+	@Column(name = "branch", length = 20)
+	private String branch;
+	
+	@Column(name = "department", length = 20)
+	private String department;
+	
+	@Column(name = "payment_mode", length = 20)
+	private String payment_mode;
+	
+	@Column(name = "email", length = 20)
+	private String email;
+	
+	@Column(name = "middle_name", length = 20)
+	private String middle_name;
+	
+	@Column(name = "process_start_date", length = 20)
+	private String process_start_date;
+	
+	@Column(name = "company_code", length = 20)
+	private String company_code;
+	
 	@OneToOne
     @JoinColumn(name="id")
     private State state;
@@ -275,10 +317,124 @@ public class User {
 		this.approval_action = approval_action;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getEmployee_name() {
+		return employee_name;
+	}
+
+	public void setEmployee_name(String employee_name) {
+		this.employee_name = employee_name;
+	}
+
+	public String getMarital_status() {
+		return marital_status;
+	}
+
+	public void setMarital_status(String marital_status) {
+		this.marital_status = marital_status;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getBirth_date() {
+		return birth_date;
+	}
+
+	public void setBirth_date(String birth_date) {
+		this.birth_date = birth_date;
+	}
+
+	public String getJoin_date() {
+		return join_date;
+	}
+
+	public void setJoin_date(String join_date) {
+		this.join_date = join_date;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public String getBranch() {
+		return branch;
+	}
+
+	public void setBranch(String branch) {
+		this.branch = branch;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public String getPayment_mode() {
+		return payment_mode;
+	}
+
+	public void setPayment_mode(String payment_mode) {
+		this.payment_mode = payment_mode;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getMiddle_name() {
+		return middle_name;
+	}
+
+	public void setMiddle_name(String middle_name) {
+		this.middle_name = middle_name;
+	}
+
+	public String getProcess_start_date() {
+		return process_start_date;
+	}
+
+	public void setProcess_start_date(String process_start_date) {
+		this.process_start_date = process_start_date;
+	}
+	
+	public String getCompany_code() {
+		return company_code;
+	}
+
+	public void setCompany_code(String company_code) {
+		this.company_code = company_code;
+	}
+
 	public User(Long id,String login,String firstName, String lastName, String emp_code,
 			String team, String roles, String status, LocalDateTime create_date, LocalDateTime resign_date, String region_name,
 			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents,String area_id,String fullName,
-			String approval_status, String approval_action) {
+			String approval_status, String approval_action,String title, String employee_name, String marital_status, String gender, String birth_date,
+			String join_date, String grade, String branch, String department, String payment_mode, String email,
+			String middle_name, String process_start_date, String company_code) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -301,8 +457,22 @@ public class User {
 		this.fullName = fullName;
 		this.approval_status = approval_status;
 		this.approval_action = approval_action;
+		this.title = title;
+		this.employee_name = employee_name;
+		this.marital_status = marital_status;
+		this.gender = gender;
+		this.birth_date = birth_date;
+		this.join_date = join_date;
+		this.grade = grade;
+		this.branch = branch;
+		this.department = department;
+		this.payment_mode = payment_mode;
+		this.email = email;
+		this.middle_name = middle_name;
+		this.process_start_date = process_start_date;
+		this.company_code = company_code;
 	}
-	
+
 	public User() {
 		// TODO Auto-generated constructor stub
 	}

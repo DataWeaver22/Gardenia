@@ -63,15 +63,20 @@ label {
 }
 
 input[type=text] {
-	font-size: 12px;
+	font-size: 10px;
 }
 
 input[type=email] {
-	font-size: 12px;
+	font-size: 10px;
+}
+
+input[type=date] {
+	font-size: 10px;
+	height: 28px;
 }
 
 #dropDownList {
-	font-size: 12px;
+	font-size: 10px;
 	height: auto;
 }
 
@@ -121,8 +126,9 @@ input[type=email] {
 }
 
 #thumbnail{
-width:70px;
-height:70px;
+	width: 50px;
+    height: 50px;
+    margin-top: 9px;
 }
 
 .file-upl{
@@ -150,13 +156,16 @@ $(document).ready(function(){
 	
 function myFunc(){
 	var firstName = $("#firstName").val();
+	var middleName = $("#middleName").val();
 	var lastName = $("#lastName").val();
-	if(firstName!= null && lastName != null){
-		$("#fullName").val(firstName + " " + lastName);
-	}else if(firstName!= null && lastName == null){
+	if(firstName!= null && lastName!= null && middleName!= null){
+		$("#fullName").val(firstName + " " + middleName + " " + lastName);
+	}else if(firstName!= null && middleName == null){
 		$("#fullName").val(firstName);
 	}else if(firstName== null && lastName != null){
 		$("#fullName").val(lastName);
+	}else if(lastName == null && middleName != null){
+		$("#fullName").val(middleName);
 	}else{
 		$("#fullName").val("");
 	}
@@ -215,7 +224,7 @@ function myFunc(){
 				<h1 class = "text-center">Create New User</h1>
 				<div class="card-body">
 					<div class="row">
-						<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+						<!-- <div class="col-lg-2 col-md-2 col-sm-3 form-group">
 							<label>Login</label>
 							<input
 							type="text"
@@ -224,8 +233,20 @@ function myFunc(){
 							class="form-control"
 							placeholder="Login"
 							/>
-						</div>
-						<div class="col-lg-3 col-md-3 col-sm-3 form-group">	
+						</div> -->
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Title</label>
+										<input
+										type="text"
+										name="title"
+										th:field="*{title}"
+										class="form-control"
+										placeholder="Enter Title"
+										/>
+								</div>
+							</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">	
 							<label>First Name</label>
 							<input
 							type="text"
@@ -237,7 +258,21 @@ function myFunc(){
 							placeholder="Enter First Name"
 							/>
 						</div>
-						<div class="col-lg-3 col-md-3 col-sm-3 form-group">	
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Middle Name</label>
+									<input
+									type="text"
+									id="middleName"
+									oninput="myFunc()"
+									name="branch"
+									th:field="*{branch}"
+									class="form-control"
+									placeholder="Enter Branch"
+									/>
+								</div>
+							</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">	
 							<label>Last Name</label>
 							<input
 							type="text"
@@ -248,17 +283,8 @@ function myFunc(){
 							class="form-control"
 							placeholder="Enter Last Name"
 							/>
-						</div>	
-						
-						<div class="col-lg-3 col-md-3 col-sm-3 form-group file-upl">
-							<div class="file-loading">
-        						<input type="file" name="image" accept="image/png, image/jpeg" id="fileImage" />
-      						</div>
 						</div>
-					</div>
-					
-					<div class="row">
-					<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 					
 							<div class="form-group">	
 							<label>Full Name</label>
@@ -272,34 +298,72 @@ function myFunc(){
 							/>
 						</div>
 						</div>
-					<div class="col-lg-3 col-md-3 col-sm-3 form-group">
-							<div class="form-group">
-							<label>Employee Code</label>
-							<input
-							type="text"
-							name="emp_code"
-							th:field="*{emp_code}"
-							class="form-control"
-							placeholder="Enter Employee Code"
-							/>
-						</div>
-						</div>
 						
-						
-						<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group file-upl">
+							<div class="file-loading">
+        						<input type="file" name="image" accept="image/png, image/jpeg" id="fileImage" />
+      						</div>
+						</div>
+					</div>
+					
+					<div class="row">
+					<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 						<div class="form-group">
-							<label>Team</label>
-							<input
-							type="text"
-							name="team"
-							th:field="*{team}"
-							class="form-control"
-							placeholder="Enter Team"
-							/>
+							<label>Gender</label>
+								<select class="form-control" id="dropDownList" name="gender">
+    								<option th:each="gender : ${T(com.example.demo.Enum.Gender).values()}" th:value="${gender}" th:text="${gender}"></option>
+								</select>
 						</div>
-						</div>
+					</div>
 						
-						<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Marital Status </label>
+									<select class="form-control" id="dropDownList" name="marital_status">
+    									<option th:each="marital_status : ${T(com.example.demo.Enum.MaritalStatus).values()}" th:value="${marital_status}" th:text="${marital_status}"></option>
+									</select>
+								</div>
+							</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Birth Date</label>
+										<input
+										type="date"
+										name="title"
+										th:field="*{birth_date}"
+										class="form-control"
+										placeholder="Enter Title"
+										/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 form-group">
+								<div class="form-group">
+									<label>Email</label>
+									<input
+									type="text"
+									name="email"
+									th:field="*{email}"
+									class="form-control"
+									placeholder="Enter Email"
+									/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Employee Code</label>
+										<input
+										type="text"
+										name="emp_code"
+										th:field="*{emp_code}"
+										class="form-control"
+										placeholder="Enter Employee Code"
+										/>
+								</div>
+							</div>
+						<!---->
+						
+						
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<p>
 									<img id="thumbnail" alt="Image Preview" />
 								</p>
@@ -307,7 +371,19 @@ function myFunc(){
 						</div>
 						
 						<div class="row">
-						<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+							<div class="form-group">
+								<label>Team</label>
+								<input
+								type="text"
+								name="team"
+								th:field="*{team}"
+								class="form-control"
+								placeholder="Enter Team"
+								/>
+							</div>
+						</div> 
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 							<label>Role</label>
 							<select class="form-control" id="dropDownList" name="roles">
@@ -317,15 +393,61 @@ function myFunc(){
 							</select>
 						</div>
 						</div>
-							<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
-									<label>Status</label>
-									<select class="form-control" id="dropDownList" name="status">
-    									<option th:each="status : ${T(com.example.demo.Enum.Status).values()}" th:value="${status}" th:text="${status}"></option>
-									</select>
+									<label>Grade</label>
+									<input
+									type="text"
+									name="grade"
+									th:field="*{grade}"
+									class="form-control"
+									placeholder="Enter Grade"
+									/>
 								</div>
 							</div>
-							<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Branch</label>
+									<input
+									type="text"
+									name="branch"
+									th:field="*{branch}"
+									class="form-control"
+									placeholder="Enter Branch"
+									/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Department</label>
+										<input
+										type="text"
+										name="department"
+										th:field="*{department}"
+										class="form-control"
+										placeholder="Enter Department"
+										/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<label>Payment Mode</label>
+									<select class="form-control" id="dropDownList" name="payment_mode">
+    									<option th:each="payment_mode : ${T(com.example.demo.Enum.PaymentMode).values()}" th:value="${payment_mode}" th:text="${payment_mode}"></option>
+									</select>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Company Code</label>
+										<input
+										type="text"
+										name="company_code"
+										th:field="*{company_code}"
+										class="form-control"
+										placeholder="Enter Company Code"
+										/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<label>Region </label>
 									<select class="form-control" id="dropDownList" name="region_id">
@@ -333,7 +455,7 @@ function myFunc(){
 									</select>
 								</div>
 							</div>
-							<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<label>State</label>
 									<select class="form-control" id="dropDownList" name="state_id">
@@ -341,11 +463,7 @@ function myFunc(){
 									</select>
 								</div>
 							</div>
-							
-						</div>
-						
-						<div class= "row">
-						<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+							<div class="col-lg-2 col-md-3 col-sm-3 form-group">
 								<div class="form-group">
 									<label>Area</label>
 									<select class="form-control" id="dropDownList" name="area_id">
@@ -353,7 +471,7 @@ function myFunc(){
 									</select>
 								</div>
 							</div>
-							<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+							<div class="col-lg-2 col-md-3 col-sm-3 form-group">
 								<div class="form-group">
 									<label>HQ Name </label>
 									<select class="form-control" id="dropDownList" name="hq_id">
@@ -361,6 +479,29 @@ function myFunc(){
 									</select>
 								</div>
 							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Process Start Date</label>
+										<input
+										type="date"
+										name="date"
+										th:field="*{process_start_date}"
+										class="form-control"
+										placeholder="Enter Date"
+										/>
+								</div>
+							</div>
+						</div>
+						
+						<div class= "row">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Status</label>
+									<select class="form-control" id="dropDownList" name="status">
+    									<option th:each="status : ${T(com.example.demo.Enum.Status).values()}" th:value="${status}" th:text="${status}"></option>
+									</select>
+								</div>
+							</div> 
 						</div>
 						
 						<div class="box-footer">
