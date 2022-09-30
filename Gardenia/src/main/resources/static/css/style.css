@@ -163,3 +163,62 @@ nav ul li a span.rotate{
   cursor: pointer;
   transition: left 1s ease;
 }
+
+.multi-button {
+  text-align-last: end;
+}
+
+
+.add-btn{
+  padding : 7px 7px 9px 7px;
+  width: 60px;
+  height: 60px;
+  color: gray;
+  border: 1px solid gray;
+  transition: 1s;
+  outline: none;
+  border-radius:5px;
+}
+
+.import-btn{
+  padding : 7px 7px 9px 7px;
+  width: 60px;
+  height: 60px;
+  color: gray;
+  border: 1px solid gray;
+  transition: 1s;
+  outline: none;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.export-btn{
+  padding : 7px 7px 9px 7px;
+  width: 60px;
+  height: 60px;
+  color: gray;
+  border: 1px solid gray;
+  transition: 1s;
+  outline: none;
+  margin-left: -5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.fa{
+	font-size:1em;
+	padding:2px;
+}
+
+.fa-times{
+	padding:1px!important;
+}
+
+.fa-check{
+	padding:1px!important;
+}
+
+.import-img{
+	width:20px;
+	height:20px;
+}
