@@ -28,6 +28,7 @@ import com.example.demo.entity.City;
 import com.example.demo.entity.DistNew;
 import com.example.demo.entity.Distributor;
 import com.example.demo.entity.DistributorCode;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
 import com.example.demo.entity.User;
@@ -38,6 +39,7 @@ import com.example.demo.service.AreaService;
 import com.example.demo.service.CityService;
 import com.example.demo.service.DistributorCodeService;
 import com.example.demo.service.DistributorService;
+import com.example.demo.service.ProductService;
 import com.example.demo.service.RegionService;
 import com.example.demo.service.StateService;
 
@@ -62,6 +64,9 @@ public class DistController {
 	
 	@Autowired
 	private DistRepository distRepository;
+	
+	@Autowired
+	private ProductService productService;
 	
 	@Autowired
 	private DistributorCodeRepository distributorCodeRepository;
@@ -119,6 +124,12 @@ public class DistController {
 		model.addAttribute("distributor",distributor);
 		model.addAttribute("city_code",city_code);
 		model.addAttribute("city_name",city_name);
+		
+		List<Product> br_code = productService.getAllProduct();
+		List<Product> brand = productService.getAllProduct();
+		model.addAttribute("distributor",distributor);
+		model.addAttribute("br_code",br_code);
+		model.addAttribute("brand",brand);
 		
 		List<String> status = new ArrayList<String>();
 		status.add("Active");

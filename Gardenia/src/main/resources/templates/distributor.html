@@ -15,7 +15,7 @@ crossorigin="anonymous">
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
-		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 
 <link href="" th:href="@{/css/style.css}" rel="stylesheet"/>
 <style>
@@ -604,77 +604,6 @@ function clickApprove(){
 	</div>
 
 <script>
-
-$('#userTable').bootstrapTable({
-    
-    onCreatedControls () {
-
-      $('select.bootstrap-table-filter-control-type').each(function (index, i) {
-        i.setAttribute('multiple','multiple');
-        $(this).find('option[value=""]').remove();
-        $("#pendingTable").show();
-        $(this).multipleSelect('destroy').multipleSelect({
-          container: 'body',
-          filter: true,
-          selectAll:true
-
-        });
-  		
-      })
-    }
- })
- 
- 
- 
-function myFunction() {
-  var input, filter, table, tr, td, cell, i, j;
-  filter = document.getElementById("countriesDropdown").value.toLowerCase();
-  table = document.getElementById("userTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 1; i < tr.length; i++) {
-    tr[i].style.display = "none";
-    const tdArray = tr[i].getElementsByTagName("td");
-    for (var j = 0; j < tdArray.length; j++) {
-      const cellValue = tdArray[j];
-      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-        break;
-      }
-    }
-  }
-} 
- 
- 
-function pending(){
-document.getElementById("pending").style.backgroundColor = "#3e8e41";
-	document.getElementById("pending").style.color = "white";
-	document.getElementById("pending").style.outline = "none";
-	document.getElementById("approve").style.backgroundColor = "white";
-	document.getElementById("approve").style.color = "black";
-	document.getElementById("approve").style.outline = "none";
-	document.getElementById("reject").style.backgroundColor = "white";
-	document.getElementById("reject").style.color = "black";
-	document.getElementById("reject").style.outline = "none";
-	var input, filter, table, table1, tr, td, cell, i, j;
-  filter = document.getElementById("pending").value.toLowerCase();
-  console.log(document.getElementById("pending").value.toLowerCase());
-  table = document.getElementById("pendingTable");
-   document.getElementById("userTable").style.display = "none";
-   document.getElementById("pendingTable").style.display = "";
-  tr = table.getElementsByTagName("tr");
-  for (i = 1; i < tr.length; i++) {
-    tr[i].style.display = "none";
-    const tdArray = tr[i].getElementsByTagName("td");
-    for (var j = 0; j < tdArray.length; j++) {
-      const cellValue = tdArray[j];
-      if (cellValue && cellValue.innerHTML.toLowerCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-        break;
-      }
-      
-    }
-  }
-}
 
 $('.btn1').click(function(){
   $(this).toggleClass("click");

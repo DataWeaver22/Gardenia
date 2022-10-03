@@ -34,6 +34,9 @@ public interface DistRepository extends JpaRepository<Distributor, Long>{
 	@Query("select cy.id from City cy where cy.city_name = ?1")
 	String findByCity(@Param("cyName") String cityName);
 	
+	@Query("select br.id from Product br where br.brand = ?1")
+	String findByBrand(@Param("brName") String brand);
+	
 	@Query("select u.id from User u where u.fullName = ?1")
 	String findByAssignedTSO(@Param("aTSOName") String aTSOID);
 	
