@@ -139,6 +139,9 @@ function myFunction() {
     <li><a href="#">Feedback</a></li> -->
   </ul>
 </div>
+<div class="btn-logout">
+  <a th:href="@{/logout}"><span class="fa fa-power-off"></span></a>
+</div>
 </nav>
 </header>
 	<div class="container">
@@ -203,6 +206,7 @@ $('.serv-btn').click(function(){
 $('nav ul li').click(function(){
   $(this).addClass("active").siblings().removeClass("active");
 });
+
 </script>
 </body>
 </html>

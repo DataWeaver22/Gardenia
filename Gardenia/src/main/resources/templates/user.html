@@ -355,8 +355,8 @@ function clickApprove(){
       <a class="feat-btn">Masters
         <span class="fa fa-caret-down first"></span>
       </a>
-      <ul class="feat-show">
-        <li><a th:href="@{/country}">Country Master</a></li>
+      <ul class="feat-show" sec:authorize="hasRole('USER')">
+        <li ><a th:href="@{/country}">Country Master</a></li>
         <li><a th:href="@{/state}">State Master</a></li>
         <li><a th:href="@{/region}">Region Master</a></li>
         <li><a th:href="@{/district}">District Master</a></li>
@@ -382,6 +382,9 @@ function clickApprove(){
     <li><a href="#">Shortcuts</a></li>
     <li><a href="#">Feedback</a></li> -->
   </ul>
+</div>
+<div class="btn-logout">
+  <a th:href="@{/logout}"><span class="fa fa-power-off"></span></a>
 </div>
 </nav>
 	<div class="container">

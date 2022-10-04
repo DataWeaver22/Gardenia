@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,8 @@ public class CountryController {
 	@GetMapping("/country")
 	public String listStudents(Model model){
 		model.addAttribute("country",countryService.getAllCountry());
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		System.out.print(auth.getAuthorities()); 
 		return "country";
 	}
 	

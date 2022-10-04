@@ -215,6 +215,9 @@ function myFunc(){
     <li><a href="#">Feedback</a></li> -->
   </ul>
 </div>
+<div class="btn-logout">
+  <a th:href="@{/logout}"><span class="fa fa-power-off"></span></a>
+</div>
 </nav>
 
 <form th:action="@{/user}" th:object="${user}" method="POST" enctype="multipart/form-data">
