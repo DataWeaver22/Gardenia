@@ -33,7 +33,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO Auto-generated method stub
 		http.authorizeRequests()
-		
 				.antMatchers("/login/**").permitAll()
 				.antMatchers("/country/**","/country/new/**","/country/edit/**").hasRole("MIS")
 				.antMatchers("/state/**","/state/new/**","/state/edit/**").hasRole("MIS")
@@ -46,10 +45,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 				.antMatchers("/distributor/new/**","/distributor/**","/distributor/edit/**").hasRole("MIS")
 				.antMatchers("/user/new/**","/user/edit/**").hasRole("USER")
 				.antMatchers("/user/**").hasAnyRole("MIS","USER")
-				.and().formLogin().loginPage("/login.html")
 				.and()
 				.sessionManagement()
-				.invalidSessionUrl("/login?invalid-session=true");
+				.invalidSessionUrl("/login?invalid-session=true")
+				.and().formLogin().loginPage("/login.html");
 		
 		
 		http.cors().and().csrf().disable();
