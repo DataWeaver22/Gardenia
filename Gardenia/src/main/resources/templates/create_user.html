@@ -188,16 +188,16 @@ function myFunc(){
         <span class="fa fa-caret-down first"></span>
       </a>
       <ul class="feat-show">
-        <li><a th:href="@{/country}">Country Master</a></li>
-        <li><a th:href="@{/state}">State Master</a></li>
-        <li><a th:href="@{/region}">Region Master</a></li>
-        <li><a th:href="@{/district}">District Master</a></li>
-        <li><a th:href="@{/city}">City Master</a></li>
-        <li><a th:href="@{/area}">Area Master</a></li>
-        <li><a th:href="@{/user}">User Master</a></li>
-        <li><a th:href="@{/distributor}">Distributor Master</a></li>
-        <li><a th:href="@{/product}">Product Master</a></li>
-        <li><a th:href="@{/hqmaster}">HQ Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/country}">Country Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/state}">State Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/region}">Region Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/district}">District Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/city}">City Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/area}">Area Master</a></li>
+        <li sec:authorize="hasAnyRole('USER')"><a th:href="@{/user}">User Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/distributor}">Distributor Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/product}">Product Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/hqmaster}">HQ Master</a></li>
       </ul>
     </li>
     <!-- <li>

@@ -355,17 +355,17 @@ function clickApprove(){
       <a class="feat-btn">Masters
         <span class="fa fa-caret-down first"></span>
       </a>
-      <ul class="feat-show" sec:authorize="hasRole('USER')">
-        <li ><a th:href="@{/country}">Country Master</a></li>
-        <li><a th:href="@{/state}">State Master</a></li>
-        <li><a th:href="@{/region}">Region Master</a></li>
-        <li><a th:href="@{/district}">District Master</a></li>
-        <li><a th:href="@{/city}">City Master</a></li>
-        <li><a th:href="@{/area}">Area Master</a></li>
-        <li><a th:href="@{/user}">User Master</a></li>
-        <li><a th:href="@{/distributor}">Distributor Master</a></li>
-        <li><a th:href="@{/product}">Product Master</a></li>
-        <li><a th:href="@{/hqmaster}">HQ Master</a></li>
+      <ul class="feat-show">
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/country}">Country Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/state}">State Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/region}">Region Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/district}">District Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/city}">City Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/area}">Area Master</a></li>
+        <li sec:authorize="hasAnyRole('MIS','USER')"><a th:href="@{/user}">User Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/distributor}">Distributor Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/product}">Product Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/hqmaster}">HQ Master</a></li>
       </ul>
     </li>
     <!-- <li>

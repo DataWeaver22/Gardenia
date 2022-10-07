@@ -13,6 +13,8 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
 	integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg=="
 	crossorigin="anonymous" />
+	
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" />
 <link
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link
@@ -22,7 +24,7 @@
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
 	rel="stylesheet">
 <link
-	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/piexif.min.js"></script>
@@ -41,12 +43,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
-<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+
 <link href="" th:href="@{/css/style.css}" rel="stylesheet"/>
 
 <style>
-
 
 thead th {
 	font-size: 9px;
@@ -205,6 +205,9 @@ $(document).ready(function(){
 	});
 
 </script>
+<script>
+$('select[multiple]').multiselect()
+</script>
 <script th:inline="javascript">
 /*<![CDATA[*/
 var theList = [[${region_name}]];
@@ -266,16 +269,16 @@ function myFunc(){
         <span class="fa fa-caret-down first"></span>
       </a>
       <ul class="feat-show">
-        <li><a th:href="@{/country}">Country Master</a></li>
-        <li><a th:href="@{/state}">State Master</a></li>
-        <li><a th:href="@{/region}">Region Master</a></li>
-        <li><a th:href="@{/district}">District Master</a></li>
-        <li><a th:href="@{/city}">City Master</a></li>
-        <li><a th:href="@{/area}">Area Master</a></li>
-        <li><a th:href="@{/user}">User Master</a></li>
-        <li><a th:href="@{/distributor}">Distributor Master</a></li>
-        <li><a th:href="@{/product}">Product Master</a></li>
-        <li><a th:href="@{/hqmaster}">HQ Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/country}">Country Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/state}">State Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/region}">Region Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/district}">District Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/city}">City Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/area}">Area Master</a></li>
+        <li sec:authorize="hasAnyRole('MIS','USER')"><a th:href="@{/user}">User Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/distributor}">Distributor Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/product}">Product Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/hqmaster}">HQ Master</a></li>
       </ul>
     </li>
     <!-- <li>
@@ -299,6 +302,7 @@ function myFunc(){
 </nav>
 	<br>
 	<br>
+
 
 <form th:action="@{/distributor}" method="POST" enctype="multipart/form-data">
 	<div class="container">
@@ -472,9 +476,7 @@ function myFunc(){
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Brand List</label>
-									 <select class="form-control chosen-select" multiple
-										id="dropDownList" name="brand_list">
-
+									 <select class="form-control" multiple="multiple" id="myMulti" name="brand_list">
 										<option th:each="brand : ${brand}"
 											th:value="${brand.id}"
 											th:text="${brand.brand}"></option>
@@ -556,8 +558,11 @@ $('nav ul li').click(function(){
   $(this).addClass("active").siblings().removeClass("active");
 });
 
-$(".chosen-select").chosen();
-
+var myDrop = new drop({
+    selector:  '#myMulti'
+});
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
 </body>
 </html>
