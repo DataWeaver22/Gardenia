@@ -129,6 +129,17 @@ public class UserController {
 	    options.add("Area Sales Executive");
 	    options.add("Area Sales Manager");
 	    options.add("Regional Sales Manager");
+	    
+	    //User List
+	    List<User> userList = userService.getAllUser();
+	    model.addAttribute("userList",userList);
+	    List<User> rsmList = hqUserRepository.findByRSM();
+	    model.addAttribute("rsmList",rsmList);
+	    List<User> asmList = hqUserRepository.findByASM();
+	    model.addAttribute("asmList",asmList);
+	    List<User> aseList = hqUserRepository.findByASE();
+	    model.addAttribute("aseList",aseList);
+	    
 	    model.addAttribute("options", options);
 		return "create_user";
 	}
@@ -162,6 +173,36 @@ public class UserController {
 		System.out.println(hname);
 		user.setHq_name(hname);
 		
+		if(user.getRoles() == "Area Sales Manager" || user.getRoles() == "Area Sales Executive" || user.getRoles() == "Territory Sales Officer") {
+			//RSM
+			if(user.getRsm_id() != null) {
+				String rsmID = user.getRsm_id();
+				System.out.println(rsmID);
+				String rsmName = hqUserRepository.findRSMByID(Long.parseLong(rsmID));
+				System.out.println(rsmName);
+				user.setRsm(rsmName);
+			}
+			if(user.getRoles() == "Area Sales Executive" || user.getRoles() == "Territory Sales Officer") {
+				//ASM
+				if(user.getAsm_id() != null) {
+					String asmID = user.getAsm_id();
+					System.out.println(asmID);
+					String asmName = hqUserRepository.findASMByID(Long.parseLong(asmID));
+					System.out.println(asmName);
+					user.setAsm(asmName);
+				}
+				if(user.getRoles() == "Territory Sales Officer") {
+					//ASE
+					if(user.getAse_id() != null) {
+						String aseID = user.getAse_id();
+						System.out.println(aseID);
+						String aseName = hqUserRepository.findASEByID(Long.parseLong(aseID));
+						System.out.println(aseName);
+						user.setAse(aseName);
+					}
+				}
+			}
+		}
 		user.setApproval_status("Pending");
 		
 		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
@@ -251,6 +292,35 @@ public class UserController {
 		User user6 = userService.getUser(id);
 		String images = user6.getPhotosImagePath();
 		model.addAttribute("images", images);
+		
+		//User List
+	    List<User> userList = userService.getAllUser();
+	    model.addAttribute("userList",userList);
+	    List<User> rsmList = hqUserRepository.findByRSM();
+	    model.addAttribute("rsmList",rsmList);
+	    List<User> asmList = hqUserRepository.findByASM();
+	    model.addAttribute("asmList",asmList);
+	    List<User> aseList = hqUserRepository.findByASE();
+	    model.addAttribute("aseList",aseList);
+		
+		String editRSMID = user2.getRsm_id();
+		model.addAttribute("editRSMID", editRSMID);
+		String editASMID = user2.getAsm_id();
+		model.addAttribute("editASMID", editASMID);
+		String editASEID = user2.getAse_id();
+		model.addAttribute("editASEID", editASEID);
+		
+		//Payment Mode
+		String userPaymentMode = user2.getPayment_mode();
+		model.addAttribute("userPaymentMode",userPaymentMode);
+		
+		//Marital Status
+		String userMaritalStatus = user2.getMarital_status();
+		model.addAttribute("userMaritalStatus",userMaritalStatus);
+		
+		//Gender
+		String userGender = user2.getGender();
+		model.addAttribute("userGender",userGender);
 		
 		model.addAttribute("user", userService.getUser(id));
 		return "edit_user";

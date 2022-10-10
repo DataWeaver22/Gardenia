@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
 <title>Distributor Master</title>
@@ -113,6 +114,53 @@ $(document).ready(function(){
 	}
 	});
 </script>
+<script>
+$('select[multiple]').multiselect()
+</script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+var theList = [[${region_name}]];
+var codeList= [[${regioncode1}]];
+var rCode = "";
+/*]]>*/
+function myFunc(){
+	
+	selectedOption = $("#regionDropdown").val();
+        for(var i = 0; i < theList.length; i++){
+		if(selectedOption == theList[i]["id"] ){
+		var regionCode = theList[i]["region_code"];
+			for(var j=0;j<codeList.length;j++){
+				if(regionCode == codeList[j]["region_code"]){
+					var codeNumber = '';
+					if(parseInt(codeList[j]["codeNumber"])+1 < 10)
+					{
+						codeNumber = "00"+(parseInt(codeList[j]["codeNumber"])+1);
+					}else if(parseInt(codeList[j]["codeNumber"])+1 >= 10 && parseInt(codeList[j]["codeNumber"])+1 < 100)
+					{
+						codeNumber = "0"+(parseInt(codeList[j]["codeNumber"])+1);
+					}else if(parseInt(codeList[j]["codeNumber"])+1 >=100)
+					{
+						codeNumber = parseInt(codeList[j]["codeNumber"])+1;
+					}
+					$("#distId").val(theList[i]["region_code"]+codeNumber);
+					$("#rCodeUpdateString").val(theList[i]["region_code"]);
+					$("#rCodeUpdateNum").val(codeNumber);
+					rCode = theList[i]["region_code"];
+					
+				}
+			}
+			
+			
+		}
+	}
+        
+	}
+	
+	function saveData(){
+		document.getElementById("rCodeUpdateString").value = rCode;
+		console.log(document.getElementById("rCodeUpdateString").value);
+	}
+</script>
 </head>
 <body>
 <nav class="headbar">
@@ -166,7 +214,7 @@ $(document).ready(function(){
 			<div class = "col-lg-12 col-md-12 col-sm-12 mt-5 container justify-content-center card">
 				<h1 class = "text-center">Update Distributor</h1>
 				<div class="card-body">
-					<form th:action="@{/distributor}" th:object="${distributor}" method="POST">
+					<form th:action="@{/distributor/{id} (id=${distributor.id})}" th:object="${distributor}" method="POST" enctype="multipart/form-data">
 					<div class="row">
 							<div class="col-lg-3 col-md-3 col-sm-3 form-group">
 								<label>Distributor Name</label> <input type="text"
@@ -179,6 +227,8 @@ $(document).ready(function(){
 								<label>Distributor Code</label> <input id="distId" type="text"
 									name="distributor_code" th:field="*{distributor_code}"
 									class="form-control" placeholder="Enter Distributor Code" />
+									<input id="rCodeUpdateString" name="rCodeUpdateString" type="hidden">
+									<input id="rCodeUpdateNum" name="rCodeUpdateNum" type="hidden">
 							</div>
 							<div class="col-lg-3 col-md-3 col-sm-3 form-group">
 								<label>Type Of Distributor</label> <input type="text" name="distributor_type"

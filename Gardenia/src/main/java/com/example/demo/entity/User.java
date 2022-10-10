@@ -125,6 +125,24 @@ public class User {
 	@Column(name = "company_code", length = 20)
 	private String company_code;
 	
+	@Column(name = "rsm_id", length = 20)
+	private String rsm_id;
+	
+	@Column(name = "rsm", length = 20)
+	private String rsm;
+	
+	@Column(name = "asm_id", length = 20)
+	private String asm_id;
+	
+	@Column(name = "asm", length = 20)
+	private String asm;
+	
+	@Column(name = "ase_id", length = 20)
+	private String ase_id;
+	
+	@Column(name = "ase", length = 20)
+	private String ase;
+	
 	@OneToOne
     @JoinColumn(name="id")
     private State state;
@@ -429,12 +447,92 @@ public class User {
 		this.company_code = company_code;
 	}
 
+	public String getRsm_id() {
+		return rsm_id;
+	}
+
+	public void setRsm_id(String rsm_id) {
+		this.rsm_id = rsm_id;
+	}
+
+	public String getRsm() {
+		return rsm;
+	}
+
+	public void setRsm(String rsm) {
+		this.rsm = rsm;
+	}
+
+	public String getAsm_id() {
+		return asm_id;
+	}
+
+	public void setAsm_id(String asm_id) {
+		this.asm_id = asm_id;
+	}
+
+	public String getAsm() {
+		return asm;
+	}
+
+	public void setAsm(String asm) {
+		this.asm = asm;
+	}
+
+	public String getAse_id() {
+		return ase_id;
+	}
+
+	public void setAse_id(String ase_id) {
+		this.ase_id = ase_id;
+	}
+
+	public String getAse() {
+		return ase;
+	}
+
+	public void setAse(String ase) {
+		this.ase = ase;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	public Region getRegion() {
+		return region;
+	}
+
+	public void setRegion(Region region) {
+		this.region = region;
+	}
+
+	public HqMaster getHqmaster() {
+		return hqmaster;
+	}
+
+	public void setHqmaster(HqMaster hqmaster) {
+		this.hqmaster = hqmaster;
+	}
+
+	public Area getArea() {
+		return area;
+	}
+
+	public void setArea(Area area) {
+		this.area = area;
+	}
+
 	public User(Long id,String login,String firstName, String lastName, String emp_code,
 			String team, String roles, String status, LocalDateTime create_date, LocalDateTime resign_date, String region_name,
 			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents,String area_id,String fullName,
 			String approval_status, String approval_action,String title, String employee_name, String marital_status, String gender, String birth_date,
 			String join_date, String grade, String branch, String department, String payment_mode, String email,
-			String middle_name, String process_start_date, String company_code) {
+			String middle_name, String process_start_date, String company_code,String rsm_id, String rsm, String asm_id, String asm, String ase_id, String ase) {
 		super();
 		this.id = id;
 		this.login = login;
@@ -471,6 +569,12 @@ public class User {
 		this.middle_name = middle_name;
 		this.process_start_date = process_start_date;
 		this.company_code = company_code;
+		this.rsm_id = rsm_id;
+		this.rsm = rsm;
+		this.asm_id = asm_id;
+		this.asm = asm;
+		this.ase_id = ase_id;
+		this.ase = ase;
 	}
 
 	public User() {

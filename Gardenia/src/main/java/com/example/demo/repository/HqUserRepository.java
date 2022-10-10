@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,6 +35,24 @@ public interface HqUserRepository extends JpaRepository<User, Long> {
 	
 	@Query("select a.id from Area a where a.area_name = ?1")
 	String findByArea(@Param("aName") String areaName);
+	
+	@Query("select u.fullName from User u where u.id = ?1")
+	String findRSMByID(@Param("rsmID") Long rsmID);
+	
+	@Query("select u.fullName from User u where u.id = ?1")
+	String findASMByID(@Param("asmID") Long asmID);
+	
+	@Query("select u.fullName from User u where u.id = ?1")
+	String findASEByID(@Param("aseID") Long aseID);
+	
+	@Query(value="select * from User u where u.roles = 'Regional Sales Manager'",nativeQuery=true)
+	List<User> findByRSM();
+	
+	@Query(value="select * from User u where u.roles = 'Area Sales Manager'",nativeQuery=true)
+	List<User> findByASM();
+	
+	@Query(value="select * from User u where u.roles = 'Area Sales Executive'",nativeQuery=true)
+	List<User> findByASE();
 	
 	@Transactional
 	@Modifying

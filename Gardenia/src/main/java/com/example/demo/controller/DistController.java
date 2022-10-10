@@ -258,16 +258,26 @@ public class DistController {
 		model.addAttribute("images", images);
 	    
 		model.addAttribute("distributor", distributorService.getDistributor(id));
+		
+		List<DistributorCode> region_code1 = distributorCodeService.getAllDistributorCode();
+	    model.addAttribute("regioncode1", region_code1);
+	    
 		return "edit_distributor";
 	}
 	
 	@PostMapping("/distributor/{id}")
 	public String updateUser(@PathVariable Long id,
-			@ModelAttribute("distributor") Distributor distributor,
-			Model model) {
+			@ModelAttribute("distributor") Distributor distributor,DistributorCode distributorCode,@RequestParam("image") MultipartFile multipartFile,
+			@RequestParam("rCodeUpdateString") String rCodeUpdateString, @RequestParam("rCodeUpdateNum") String rCodeUpdateNum,Model model)throws IOException {
 		
 		//Get Existing User
 		Distributor existingDistributor = distributorService.getDistributor(id);
+		
+		//Region Data Update
+		System.out.println("Region Code:" + rCodeUpdateString);
+		System.out.println("Code Number:" + rCodeUpdateNum);
+		
+		distributorCodeRepository.updateByRegionCode(rCodeUpdateNum, rCodeUpdateString);
 		
 		String sId = distributor.getState_id();
 		System.out.println(sId);
@@ -287,7 +297,13 @@ public class DistController {
 		System.out.println(ctyname);
 		distributor.setCity_name(ctyname);
 		
-		
+//		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+//        distributor.setDocuments(fileName);
+//         
+//        Distributor savedUser = distRepository.save(distributor);
+// 
+//        String uploadDir = "user-photos/" + savedUser.getId();
+//        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 		//Save User
 		distributorService.editDistributor(distributor);
 		return "redirect:/distributor";

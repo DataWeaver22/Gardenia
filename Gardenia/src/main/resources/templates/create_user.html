@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
 <title>User Master</title>
@@ -21,6 +22,7 @@ crossorigin="anonymous">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <link href="" th:href="@{/css/style.css}" rel="stylesheet"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <style>
 
 
@@ -76,6 +78,65 @@ input[type=date] {
 }
 
 #dropDownList {
+	font-size: 10px;
+	height: auto;
+}
+
+#genderList {
+	font-size: 10px;
+	height: auto;
+}
+
+#maritalStatusList {
+	font-size: 10px;
+	height: auto;
+}
+
+#paymentModeList {
+	font-size: 10px;
+	height: auto;
+}
+
+#regionList {
+	font-size: 10px;
+	height: auto;
+}
+
+#stateList {
+	font-size: 10px;
+	height: auto;
+}
+
+#areaList {
+	font-size: 10px;
+	height: auto;
+}
+
+#hqList {
+	font-size: 10px;
+	height: auto;
+}
+
+#statusList {
+	font-size: 10px;
+	height: auto;
+}
+
+#roleList {
+	font-size: 10px;
+	height: auto;
+}
+
+#rsm{
+	font-size: 10px;
+	height: auto;
+}
+
+#asm{
+	font-size: 10px;
+	height: auto;
+}
+#ase{
 	font-size: 10px;
 	height: auto;
 }
@@ -170,9 +231,66 @@ function myFunc(){
 		$("#fullName").val("");
 	}
 }
+
+function dynamicRole(){
+	var roleSelected = $('#roleList').val();
+	console.log(roleSelected);
+	if(roleSelected == 'Territory Sales Officer'){
+		$('#ase').show();
+		$('#asm').show();
+		$('#rsm').show();
+		$('#aseLabel').show();
+		$('#asmLabel').show();
+		$('#rsmLabel').show();
+	}else if(roleSelected == 'Area Sales Executive'){
+		$('#ase').hide();
+		$('#asm').show();
+		$('#rsm').show();
+		$('#aseLabel').hide();
+		$('#asmLabel').show();
+		$('#rsmLabel').show();
+	}else if(roleSelected == 'Area Sales Manager'){
+		$('#ase').hide();
+		$('#asm').hide();
+		$('#rsm').show();
+		$('#aseLabel').hide();
+		$('#asmLabel').hide();
+		$('#rsmLabel').show();
+	}else if(roleSelected == 'Regional Sales Manager'){
+		$('#ase').hide();
+		$('#asm').hide();
+		$('#rsm').hide();
+		$('#aseLabel').hide();
+		$('#asmLabel').hide();
+		$('#rsmLabel').hide();
+	}else{
+		$('#ase').hide();
+		$('#asm').hide();
+		$('#rsm').hide();
+		$('#aseLabel').hide();
+		$('#asmLabel').hide();
+		$('#rsmLabel').hide();
+	}
+}
+
+function currentDate(){
+	var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+
+	today = yyyy + '-' + mm + '-' + dd;
+	document.getElementById("birthDateID").value = today;
+	document.getElementById("processStartDateID").value = today;
+}
+
+function multipleFunctionOnStart(){
+	currentDate();
+	dynamicRole();
+}
 </script>
 </head>
-<body>
+<body onload="multipleFunctionOnStart()">
 <nav class="headbar">
 <div class="btn1">
   <span class="fa fa-bars"></span>
@@ -268,8 +386,8 @@ function myFunc(){
 									type="text"
 									id="middleName"
 									oninput="myFunc()"
-									name="branch"
-									th:field="*{branch}"
+									name="middle_name"
+									th:field="*{middle_name}"
 									class="form-control"
 									placeholder="Enter Branch"
 									/>
@@ -313,7 +431,7 @@ function myFunc(){
 					<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 						<div class="form-group">
 							<label>Gender</label>
-								<select class="form-control" id="dropDownList" name="gender">
+								<select class="form-control" id="genderList" name="gender">
     								<option th:each="gender : ${T(com.example.demo.Enum.Gender).values()}" th:value="${gender}" th:text="${gender}"></option>
 								</select>
 						</div>
@@ -322,7 +440,7 @@ function myFunc(){
 						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<label>Marital Status </label>
-									<select class="form-control" id="dropDownList" name="marital_status">
+									<select class="form-control" id="maritalStatusList" name="marital_status">
     									<option th:each="marital_status : ${T(com.example.demo.Enum.MaritalStatus).values()}" th:value="${marital_status}" th:text="${marital_status}"></option>
 									</select>
 								</div>
@@ -331,6 +449,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>Birth Date</label>
 										<input
+										id="birthDateID"
 										type="date"
 										name="title"
 										th:field="*{birth_date}"
@@ -386,16 +505,19 @@ function myFunc(){
 								/>
 							</div>
 						</div> 
+						
 						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
-							<label>Role</label>
-							<select class="form-control" id="dropDownList" name="roles">
-    						
-    						<option th:each="option : ${options}" th:value="${option}"
-											th:text="${option}"></option>
-							</select>
-						</div>
-						</div>
+									<label>Company Code</label>
+										<input
+										type="text"
+										name="company_code"
+										th:field="*{company_code}"
+										class="form-control"
+										placeholder="Enter Company Code"
+										/>
+								</div>
+							</div>
 							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<label>Grade</label>
@@ -434,26 +556,16 @@ function myFunc(){
 							</div>
 							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<label>Payment Mode</label>
-									<select class="form-control" id="dropDownList" name="payment_mode">
+									<select class="form-control" id="paymentModeList" name="payment_mode">
     									<option th:each="payment_mode : ${T(com.example.demo.Enum.PaymentMode).values()}" th:value="${payment_mode}" th:text="${payment_mode}"></option>
 									</select>
 							</div>
-							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
-								<div class="form-group">
-									<label>Company Code</label>
-										<input
-										type="text"
-										name="company_code"
-										th:field="*{company_code}"
-										class="form-control"
-										placeholder="Enter Company Code"
-										/>
-								</div>
-							</div>
+							
+							
 							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<label>Region </label>
-									<select class="form-control" id="dropDownList" name="region_id">
+									<select class="form-control" id="regionList" name="region_id">
     									<option th:each="region_name : ${region_name}" th:value="${region_name.id}" th:text="${region_name.region_name}"></option>
 									</select>
 								</div>
@@ -461,7 +573,7 @@ function myFunc(){
 							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<label>State</label>
-									<select class="form-control" id="dropDownList" name="state_id">
+									<select class="form-control" id="stateList" name="state_id">
     									<option th:each="state_name : ${state_name}" th:value="${state_name.id}" th:text="${state_name.state_name}"></option>
 									</select>
 								</div>
@@ -469,7 +581,7 @@ function myFunc(){
 							<div class="col-lg-2 col-md-3 col-sm-3 form-group">
 								<div class="form-group">
 									<label>Area</label>
-									<select class="form-control" id="dropDownList" name="area_id">
+									<select class="form-control" id="areaList" name="area_id">
     									<option th:each="area_name : ${area_name}" th:value="${area_name.id}" th:text="${area_name.area_name}"></option>
 									</select>
 								</div>
@@ -477,7 +589,7 @@ function myFunc(){
 							<div class="col-lg-2 col-md-3 col-sm-3 form-group">
 								<div class="form-group">
 									<label>HQ Name </label>
-									<select class="form-control" id="dropDownList" name="hq_id">
+									<select class="form-control" id="hqList" name="hq_id">
     									<option th:each="hq_name : ${hq_name}" th:value="${hq_name.id}" th:text="${hq_name.hq_name}"></option>
 									</select>
 								</div>
@@ -486,6 +598,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>Process Start Date</label>
 										<input
+										id="processStartDateID"
 										type="date"
 										name="date"
 										th:field="*{process_start_date}"
@@ -494,17 +607,49 @@ function myFunc(){
 										/>
 								</div>
 							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Status</label>
+									<select class="form-control" id="statusList" name="status">
+    									<option th:each="status : ${T(com.example.demo.Enum.Status).values()}" th:value="${status}" th:text="${status}"></option>
+									</select>
+								</div>
+							</div> 
 						</div>
 						
 						<div class= "row">
 							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
-									<label>Status</label>
-									<select class="form-control" id="dropDownList" name="status">
-    									<option th:each="status : ${T(com.example.demo.Enum.Status).values()}" th:value="${status}" th:text="${status}"></option>
+									<label>Role</label> 
+									<select class="form-control" id="roleList" name="roles" onchange='dynamicRole()'>
+		    							<option th:each="option : ${options}" th:value="${option}" th:text="${option}"></option>
 									</select>
 								</div>
-							</div> 
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label id='rsmLabel'>RSM</label>
+									<select class="form-control" id="rsm" name="rsm_id">
+		    							<option th:each="rsmList : ${rsmList}" th:value="${rsmList.id}" th:text="${rsmList.fullName}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label id='asmLabel'>ASM</label>
+									<select class="form-control" id="asm" name="asm_id">
+		    							<option th:each="asmList : ${asmList}" th:value="${asmList.id}" th:text="${asmList.fullName}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label id='aseLabel'>ASE</label>
+									<select class="form-control" id="ase" name="ase_id">
+		    							<option th:each="aseList : ${aseList}" th:value="${aseList.id}" th:text="${aseList.fullName}"></option>
+									</select>
+								</div>
+							</div>
 						</div>
 						
 						<div class="box-footer">
