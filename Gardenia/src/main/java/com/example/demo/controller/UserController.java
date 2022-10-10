@@ -375,6 +375,36 @@ public class UserController {
 		String images = user6.getPhotosImagePath();
 		model.addAttribute("images", images);
 		
+		if(user.getRoles() == "Area Sales Manager" || user.getRoles() == "Area Sales Executive" || user.getRoles() == "Territory Sales Officer") {
+			//RSM
+			if(user.getRsm_id() != null) {
+				String rsmID = user.getRsm_id();
+				System.out.println(rsmID);
+				String rsmName = hqUserRepository.findRSMByID(Long.parseLong(rsmID));
+				System.out.println(rsmName);
+				user.setRsm(rsmName);
+			}
+			if(user.getRoles() == "Area Sales Executive" || user.getRoles() == "Territory Sales Officer") {
+				//ASM
+				if(user.getAsm_id() != null) {
+					String asmID = user.getAsm_id();
+					System.out.println(asmID);
+					String asmName = hqUserRepository.findASMByID(Long.parseLong(asmID));
+					System.out.println(asmName);
+					user.setAsm(asmName);
+				}
+				if(user.getRoles() == "Territory Sales Officer") {
+					//ASE
+					if(user.getAse_id() != null) {
+						String aseID = user.getAse_id();
+						System.out.println(aseID);
+						String aseName = hqUserRepository.findASEByID(Long.parseLong(aseID));
+						System.out.println(aseName);
+						user.setAse(aseName);
+					}
+				}
+			}
+		}
 		//Save User
 		userService.editUser(user);
 		return "redirect:/user";
