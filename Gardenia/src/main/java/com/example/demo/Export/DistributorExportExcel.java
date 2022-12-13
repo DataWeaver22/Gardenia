@@ -1,5 +1,7 @@
 package com.example.demo.Export;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -10,128 +12,91 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.example.demo.entity.Distributor;
+import com.example.demo.entity.Product;
 
 public class DistributorExportExcel {
-	private XSSFWorkbook workbook;
-    private XSSFSheet sheet;
-    private List<Distributor> listUsers;
-     
-    public DistributorExportExcel(List<Distributor> listUsers) {
-        this.listUsers = listUsers;
-        workbook = new XSSFWorkbook();
-        sheet = workbook.createSheet("Distributor");
-    }
- 
- 
-    private void writeHeaderLine() {
-        
-         
-        Row row = sheet.createRow(0);
-         
-        CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeight(16);
-        style.setFont(font);
-         
-        createCell(row, 0, "ID", style);      
-        createCell(row, 1, "Name", style);   
-        createCell(row, 2, "Code", style);
-        createCell(row, 3, "Type of Distributor", style);
-        createCell(row, 4, "GSTIN", style);      
-        createCell(row, 5, "PAN", style);   
-        createCell(row, 6, "Contact Person ", style);
-        createCell(row, 7, "Mobile", style);
-        createCell(row, 8, "Phone", style);      
-        createCell(row, 9, "Email", style);   
-        createCell(row, 10, "Address", style);
-        createCell(row, 11, "Region Name", style);
-        createCell(row, 12, "Region Id", style);      
-        createCell(row, 13, "State Name", style);   
-        createCell(row, 14, "State Id", style);
-        createCell(row, 15, "City Name", style);
-        createCell(row, 16, "City Id", style);
-        createCell(row, 17, "Supplier Name", style);
-        createCell(row, 18, "Supplier Id", style);
-        createCell(row, 19, "Status", style);
-        createCell(row, 20, "Create Date", style);
-        createCell(row, 21, "Inactive Date", style);
-        createCell(row, 22, "Serviced Status", style);
-        createCell(row, 23, "Brand List", style);
-    }
-     
-    private void createCell(Row row, int columnCount, Object value, CellStyle style) {
-        sheet.autoSizeColumn(columnCount);
-        Cell cell = row.createCell(columnCount);
-        if (value instanceof Integer) {
-            cell.setCellValue((Integer) value);
-        } else if (value instanceof Boolean) {
-            cell.setCellValue((Boolean) value);
-        } else if (value instanceof Long) {
-            cell.setCellValue((Long) value);
-        }else if (value instanceof Long) {
-            cell.setCellValue((Date) value);
-        }
-        else {
-            cell.setCellValue((String) value);
-        }
-        cell.setCellStyle(style);
-    }
-     
-    private void writeDataLines() {
-        int rowCount = 1;
- 
-        CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setFontHeight(14);
-        style.setFont(font);
-                 
-        for (Distributor user : listUsers) {
-            Row row = sheet.createRow(rowCount++);
-            int columnCount = 0;
-             
-            createCell(row, columnCount++, user.getId(), style);
-            createCell(row, columnCount++, user.getDistributor_name(), style);
-            createCell(row, columnCount++, user.getDistributor_code(), style);
-            createCell(row, columnCount++, user.getDistributor_type(), style);
-            createCell(row, columnCount++, user.getGstin(), style);
-            createCell(row, columnCount++, user.getPan(), style);
-            createCell(row, columnCount++, user.getContact(), style);
-            createCell(row, columnCount++, user.getMobile(), style);
-            createCell(row, columnCount++, user.getPhone(), style);
-            createCell(row, columnCount++, user.getEmail(), style);
-            createCell(row, columnCount++, user.getAddress(), style);
-            createCell(row, columnCount++, user.getRegion_name(), style);
-            createCell(row, columnCount++, user.getRegion_id(), style);
-            createCell(row, columnCount++, user.getState_name(), style);
-            createCell(row, columnCount++, user.getState_id(), style);
-            createCell(row, columnCount++, user.getCity_name(), style);
-            createCell(row, columnCount++, user.getCity_id(), style);
-            createCell(row, columnCount++, user.getSupp_name(), style);
-            createCell(row, columnCount++, user.getSupp_code(), style);
-            createCell(row, columnCount++, user.getStatus(), style);
-            createCell(row, columnCount++, user.getCreate_date(), style);
-            createCell(row, columnCount++, user.getInactive_date(), style);
-            createCell(row, columnCount++, user.getService_status(), style);
-            createCell(row, columnCount++, user.getBrand_list(), style);
-            
-         }
-    }
-     
-    public void export(HttpServletResponse response) throws IOException {
-        writeHeaderLine();
-        writeDataLines();
-         
-        ServletOutputStream outputStream = response.getOutputStream();
-        workbook.write(outputStream);
-        workbook.close();
-         
-        outputStream.close();
-         
-    }
+	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	static String[] HEADERs = { "Id", "Distributor Name", "Code", "Type of Distributor", "GSTIN", "PAN",
+			"Contact Person", "Mobile", "Phone", "Email", "Address", "Supp Name", "Supp Code", "Assigned TSO ID",
+			"Assigned TSO", "Status", "Service Status", "Approved Status", "Region ID", "Region Name", "State ID",
+			"State Name", "City ID", "City Name" };
+	static String SHEET = "Distributors";
+
+	public static ByteArrayInputStream distributorToExcel(List<Distributor> distributors) {
+
+		try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+			Sheet sheet = workbook.createSheet(SHEET);
+
+			// Header
+			Row headerRow = sheet.createRow(0);
+
+			for (int col = 0; col < HEADERs.length; col++) {
+				Cell cell = headerRow.createCell(col);
+				cell.setCellValue(HEADERs[col]);
+			}
+
+			int rowIdx = 1;
+			for (Distributor distributor : distributors) {
+				Row row = sheet.createRow(rowIdx++);
+
+				row.createCell(0).setCellValue(distributor.getId());
+				row.createCell(1).setCellValue(distributor.getDistributorName());
+				row.createCell(2).setCellValue(distributor.getDistributorCode());
+				row.createCell(3).setCellValue(distributor.getDistributorType());
+				row.createCell(4).setCellValue(distributor.getGstin());
+				row.createCell(5).setCellValue(distributor.getPan());
+				row.createCell(6).setCellValue(distributor.getContact());
+				row.createCell(7).setCellValue(distributor.getMobile());
+				row.createCell(8).setCellValue(distributor.getPhone());
+				row.createCell(9).setCellValue(distributor.getEmail());
+				row.createCell(10).setCellValue(distributor.getAddress());
+				row.createCell(11).setCellValue(distributor.getSuppName());
+				row.createCell(12).setCellValue(distributor.getSuppCode());
+				if (distributor.getUser() == null) {
+					row.createCell(13).setCellValue("");
+					row.createCell(14).setCellValue("");
+				} else {
+					row.createCell(13).setCellValue(distributor.getUser().getId());
+					row.createCell(14).setCellValue(distributor.getUser().getFullName());
+				}
+				row.createCell(15).setCellValue(distributor.getStatus());
+				row.createCell(16).setCellValue(distributor.getServiceStatus());
+				row.createCell(17).setCellValue(distributor.getApprovalStatus());
+				if (distributor.getRegion() == null) {
+					row.createCell(18).setCellValue("");
+					row.createCell(19).setCellValue("");
+				} else {
+					row.createCell(18).setCellValue(distributor.getRegion().getId());
+					row.createCell(19).setCellValue(distributor.getRegion().getRegionName());
+				}
+				if (distributor.getState() == null) {
+					row.createCell(20).setCellValue("");
+					row.createCell(21).setCellValue("");
+				} else {
+					row.createCell(20).setCellValue(distributor.getState().getId());
+					row.createCell(21).setCellValue(distributor.getState().getStateName());
+				}
+				if (distributor.getCity() == null) {
+					row.createCell(22).setCellValue("");
+					row.createCell(23).setCellValue("");
+				} else {
+					row.createCell(22).setCellValue(distributor.getCity().getId());
+					row.createCell(23).setCellValue(distributor.getCity().getCityName());
+				}
+
+			}
+
+			workbook.write(out);
+			return new ByteArrayInputStream(out.toByteArray());
+		} catch (IOException e) {
+			throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
+		}
+	}
 }

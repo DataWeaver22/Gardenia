@@ -1,5 +1,6 @@
 package com.example.demo.Import;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,90 +8,109 @@ import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.entity.Country;
 import com.example.demo.entity.State;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.StateRepository;
+import com.example.demo.service.BrandService;
+import com.example.demo.service.CountryService;
 
 @Component
 public class StateHelper {
-	
+
 	private static StateRepository stateRepository;
-	
+
+	private static CountryService countryService;
+
 	@Autowired
-	public StateHelper(StateRepository stateRepository) {
+	public StateHelper(StateRepository stateRepository, CountryService countryService) {
 		super();
 		StateHelper.stateRepository = stateRepository;
+		StateHelper.countryService = countryService;
 	}
-	//check if file type is excel or not
-	public static boolean checkExcelFormat(MultipartFile file) {
-		
-		String contentTypeString = file.getContentType();
-		if(contentTypeString.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-			return true;
-		}else {
+
+	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	static String[] HEADERs = { "State Code", "State Name", "Country Name" };
+	static String SHEET = "Sheet1";
+
+	public static boolean hasExcelFormat(MultipartFile file) {
+
+		if (!TYPE.equals(file.getContentType())) {
 			return false;
 		}
+		return true;
 	}
-	
-	//convert excel to list of states
-	public static List<State> convertToStates(InputStream iStream){
-		List<State> list = new ArrayList<>();
-		
+
+	public static List<State> excelToStates(InputStream is) {
 		try {
-			XSSFWorkbook workbook = new XSSFWorkbook(iStream);
-			XSSFSheet sheet = workbook.getSheet("Sheet1");
+			XSSFWorkbook workbook = new XSSFWorkbook(is);
+
+			XSSFSheet sheet = workbook.getSheet(SHEET);
+			Iterator<Row> rows = sheet.iterator();
+
+			List<State> states = new ArrayList<State>();
+
 			int rowNumber = 0;
-			Iterator<Row> iterator = sheet.iterator();
-			
-			while (iterator.hasNext()) {
-				Row row = iterator.next();
-				
-				if(rowNumber == 0) {
+			while (rows.hasNext()) {
+				Row currentRow = rows.next();
+
+				// skip header
+				if (rowNumber == 0) {
 					rowNumber++;
 					continue;
 				}
-				
-				Iterator<Cell> cells = row.iterator();
-				
-				int cid=0;
+
+				Iterator<Cell> cellsInRow = currentRow.iterator();
+
 				State state = new State();
-				
-				while(cells.hasNext()) {
-					Cell cell = cells.next();
-					
-					switch (cid){
-					case 0: 
-						state.setState_code(cell.getStringCellValue());
+
+				int cellIdx = 0;
+				while (cellsInRow.hasNext()) {
+					Cell currentCell = cellsInRow.next();
+
+					switch (cellIdx) {
+					case 0:
+						state.setStateCode(currentCell.getStringCellValue());
 						break;
+
 					case 1:
-						state.setState_name(cell.getStringCellValue());
+						state.setStateName(currentCell.getStringCellValue());
 						break;
+
 					case 2:
-						state.setCountry_name(cell.getStringCellValue());
-						String cName = cell.getStringCellValue();
-						String cId = stateRepository.findByCountry(cName);
-						state.setCountry_code(cId);
+						if (currentCell.getStringCellValue() != null) {
+							String cName = currentCell.getStringCellValue();
+							Long cId = stateRepository.findByCountry(cName);
+							Country country = countryService.getCountryById(cId);
+							state.setCountry(country);
+						}
 						break;
+
 					default:
 						break;
 					}
-					cid++;
+
+					cellIdx++;
 				}
-				list.add(state);
-				
+
+				states.add(state);
+				System.out.println(states.size());
 			}
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+
+			workbook.close();
+
+			return states;
+		} catch (IOException e) {
+			throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
 		}
-		return list;
 	}
 
-	
 }

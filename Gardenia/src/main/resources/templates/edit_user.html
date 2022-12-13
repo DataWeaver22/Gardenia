@@ -348,7 +348,6 @@ function currentDate(){
 }
 
 function multipleFunctionOnStart(){
-	currentDate();
 	dynamicRole();
 }
 </script>
@@ -400,7 +399,7 @@ function multipleFunctionOnStart(){
   <a th:href="@{/logout}"><span class="fa fa-power-off"></span></a>
 </div>
 </nav>
-<form th:action="@{/user/{id} (id=${user.id})}" th:object="${user}" method="POST">
+<form th:action="@{/user/{id} (id=${user.id})}" th:object="${user}" method="POST" enctype="multipart/form-data">
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 mt-5 container justify-content-center card">
@@ -432,19 +431,19 @@ function multipleFunctionOnStart(){
 							/>
 						</div>
 						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
-								<div class="form-group">
-									<label>Middle Name</label>
-									<input
-									type="text"
-									id="middleName"
-									oninput="myFunc()"
-									name="middle_name"
-									th:field="*{middle_name}"
-									class="form-control"
-									placeholder="Enter Branch"
-									/>
-								</div>
+							<div class="form-group">
+								<label>Middle Name</label>
+								<input
+								type="text"
+								id="middleName"
+								oninput="myFunc()"
+								name="middle_name"
+								th:field="*{middle_name}"
+								class="form-control"
+								placeholder="Enter Branch"
+								/>
 							</div>
+						</div>
 						<div class="col-lg-2 col-md-2 col-sm-3 form-group">	
 							<label>Last Name</label>
 							<input
@@ -485,6 +484,7 @@ function multipleFunctionOnStart(){
 						<div class="form-group">
 							<label>Gender</label>
 								<select class="form-control" id="genderList" name="gender">
+									<option value="" selected disabled hidden>Select Gender</option>
     								<option th:each="gender : ${T(com.example.demo.Enum.Gender).values()}" 
     								th:selected="${gender.name()} eq ${userGender}?true:false" th:value="${gender}" th:text="${gender}"></option>
 								</select>
@@ -495,6 +495,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>Marital Status </label>
 									<select class="form-control" id="maritalStatusList" name="marital_status">
+										<option value="" selected disabled hidden>Select Marital Status</option>
     									<option th:each="marital_status : ${T(com.example.demo.Enum.MaritalStatus).values()}"
     									th:selected="${marital_status.name()} eq ${userMaritalStatus}?true:false" th:value="${marital_status}" th:text="${marital_status}"></option>
 									</select>
@@ -541,7 +542,7 @@ function multipleFunctionOnStart(){
 							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<p>
-										<img th:src="@{${images + ''}}" class="dir-img" id="image1"/>
+										<img th:src="@{${images}}" class="dir-img" id="image1"/>
 										<span id="thumbnail" onclick="closeWin()">X</span>
 										<p>
 											<img id="img-preview" alt="Image Preview"/>
@@ -616,6 +617,7 @@ function multipleFunctionOnStart(){
 							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<label>Payment Mode</label>
 									<select class="form-control" id="paymentModeList" name="payment_mode">
+										<option value="" selected disabled hidden>Select Payment</option>
     									<option th:each="payment_mode : ${T(com.example.demo.Enum.PaymentMode).values()}" 
     									th:selected="${payment_mode.name()} eq ${userPaymentMode}?true:false" th:value="${payment_mode}" th:text="${payment_mode}"></option>
 									</select>
@@ -626,6 +628,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>Region</label>  <select class="form-control"
 										id="regionList" name="region_id">
+										<option value="" selected disabled hidden>Select Region</option>
 										<option th:each="region_name : ${region_name}"
 											th:value="${region_name.id}"
 											th:selected="${region_name.id} eq ${region_code_ID}?true:false"
@@ -637,7 +640,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>State</label> <select class="form-control"
 										id="stateList" name="state_id">
-
+										<option value="" selected disabled hidden>Select State</option>
 										<option th:each="state_name : ${state_name}"
 											th:value="${state_name.id}"
 											th:selected="${state_name.id} eq ${state_code_ID}?true:false"
@@ -649,7 +652,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>Area</label>  <select class="form-control"
 										id="areaList" name="area_id">
-
+										<option value="" selected disabled hidden>Select Area</option>
 										<option th:each="area_name : ${area_name}"
 											th:value="${area_name.id}"
 											th:selected="${area_name.id} eq ${area_code_ID}?true:false"
@@ -661,7 +664,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>HQ Name</label> <select class="form-control"
 										id="hqList" name="hq_id">
-
+										<option value="" selected disabled hidden>Select HQ</option>
 										<option th:each="hq_name : ${hq_name}"
 											th:value="${hq_name.id}"
 											th:selected="${hq_name.id} eq ${hq_code_ID}?true:false"
@@ -693,15 +696,12 @@ function multipleFunctionOnStart(){
 									</select>
 							</div>
 						</div>
-
-							
-							</div>
-
+						</div>
 						<div class="row">
 							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<label>Role</label><select class="form-control" id="roleList" name="roles" onchange="dyncamicRole()">
-    						
+    								<option value="" selected disabled hidden>Select Role</option>
     								<option th:each="option : ${options}"
     										th:selected="${option} eq ${userRoles}?true:false"
     										th:value="${option}"
@@ -713,6 +713,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label id='rsmLabel'>RSM</label>
 									<select class="form-control" id="rsm" name="rsm_id">
+										<option value="" selected disabled hidden>Select RSM</option>
 		    							<option th:each="rsmList : ${rsmList}" th:selected="${rsmList.id} eq ${editRSMID}?true:false" th:value="${rsmList.id}" th:text="${rsmList.fullName}"></option>
 									</select>
 								</div>
@@ -721,6 +722,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label id='asmLabel'>ASM</label>
 									<select class="form-control" id="asm" name="asm_id">
+										<option value="" selected disabled hidden>Select ASM</option>
 		    							<option th:each="asmList : ${asmList}" th:selected="${asmList.id} eq ${editASMID}?true:false" th:value="${asmList.id}" th:text="${asmList.fullName}"></option>
 									</select>
 								</div>
@@ -729,12 +731,13 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label id='aseLabel'>ASE</label>
 									<select class="form-control" id="ase" name="ase_id">
+										<option value="" selected disabled hidden>Select ASE</option>
 		    							<option th:each="aseList : ${aseList}" th:selected="${aseList.id} eq ${editASEID}?true:false" th:value="${aseList.id}" th:text="${aseList.fullName}"></option>
 									</select>
 								</div>
 							</div>
 						</div>
-
+						
 						<div class="box-footer">
 							<button type="submit" class="btn btn-success">Update</button>
 						</div>

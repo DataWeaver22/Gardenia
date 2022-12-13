@@ -20,7 +20,7 @@ import com.example.demo.repository.HqRepository;
 @Component
 public class HqMasterImportHelper {
 
-private static HqRepository hqRepository;
+	private static HqRepository hqRepository;
 	
 	@Autowired
 	public HqMasterImportHelper(HqRepository hqRepository) {
@@ -28,14 +28,15 @@ private static HqRepository hqRepository;
 		HqMasterImportHelper.hqRepository = hqRepository;
 	}
 	//check if file type is excel or not
-	public static boolean checkExcelFormat(MultipartFile file) {
-		
-		String contentTypeString = file.getContentType();
-		if(contentTypeString.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-			return true;
-		}else {
+	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+	public static boolean hasExcelFormat(MultipartFile file) {
+
+		if (!TYPE.equals(file.getContentType())) {
 			return false;
 		}
+
+		return true;
 	}
 	
 	//convert excel to list of states
@@ -66,13 +67,13 @@ private static HqRepository hqRepository;
 					
 					switch (cid){
 					case 0: 
-						hqMaster.setHq_code(cell.getStringCellValue());
+						hqMaster.setHqCode(cell.getStringCellValue());
 						break;
 					case 1:
-						hqMaster.setHq_name(cell.getStringCellValue());
+						hqMaster.setHqName(cell.getStringCellValue());
 						break;
 					case 2:
-						hqMaster.setHq_designation(cell.getStringCellValue());
+						hqMaster.setHqDesignation(cell.getStringCellValue());
 						break;
 					default:
 						break;

@@ -6,40 +6,31 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="region")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Region {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false, length = 20)
 	private Long Id;
 	
-	@Column(name = "region_code", nullable = false, length = 20)
-    private String region_code;
+	@Column(name = "regionCode", nullable = false, length = 20)
+    private String regionCode;
 
-	@Column(name = "region_name", nullable = false, length = 20)
-    private String region_name;
+	@Column(name = "regionName", nullable = false, length = 20)
+    private String regionName;
 	
-	@Column(name = "state_name", nullable = false, length = 20)
-    private String state_name;
-	
-	@Column(name = "state_code", nullable = false, length = 20)
-    private String state_code;
-	
-	@OneToOne
-    @JoinColumn(name="id")
-    private State state;
-	
-	@OneToOne(mappedBy = "region")
-    private District district;
-	
-	@OneToOne(mappedBy = "region")
-	private User user;
-	
-	@OneToOne(mappedBy = "region")
-    private DistributorCode distributorCode;
+	@ManyToOne
+    @JoinColumn(name = "stateId")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	State state;
 	
 	public Long getId() {
 		return Id;
@@ -49,44 +40,37 @@ public class Region {
 		Id = id;
 	}
 
-	public String getRegion_code() {
-		return region_code;
+	public String getRegionCode() {
+		return regionCode;
 	}
 
-	public void setRegion_code(String region_code) {
-		this.region_code = region_code;
+	public void setRegionCode(String regionCode) {
+		this.regionCode = regionCode;
 	}
 
-	public String getRegion_name() {
-		return region_name;
+	public String getRegionName() {
+		return regionName;
 	}
 
-	public void setRegion_name(String region_name) {
-		this.region_name = region_name;
-	}
-
-	public String getState_code() {
-		return state_code;
-	}
-
-	public void setState_code(String state_code) {
-		this.state_code = state_code;
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
 	}
 	
-	public String getState_name() {
-		return state_name;
+	
+
+	public State getState() {
+		return state;
 	}
 
-	public void setState_name(String state_name) {
-		this.state_name = state_name;
+	public void setState(State state) {
+		this.state = state;
 	}
 
-	public Region(String region_code, String region_name, String state_name, String state_code) {
+	public Region(String regionCode, String regionName, State state) {
 		super();
-		this.region_code = region_code;
-		this.region_name = region_name;
-		this.state_name = state_name;
-		this.state_code = state_code;
+		this.regionCode = regionCode;
+		this.regionName = regionName;
+		this.state = state;
 	}
 
 	public Region() {

@@ -37,10 +37,6 @@ public class DistNew {
 	
 	@Column(name = "dist_id")
 	private String dist_id;
-	
-	@ManyToOne(targetEntity = Distributor.class)
-    @JoinColumn(name="id", insertable = false, updatable = false)
-	private Distributor distributor;
 
 	public Long getId() {
 		return id;

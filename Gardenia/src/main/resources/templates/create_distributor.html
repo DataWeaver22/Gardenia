@@ -15,7 +15,6 @@
 	integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg=="
 	crossorigin="anonymous" />
 	
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" />
 <link
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link
@@ -43,7 +42,12 @@
 <script src="js/zoom.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+<!-- MultiSelect Dropdown -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
 
 <link href="" th:href="@{/css/style.css}" rel="stylesheet"/>
 
@@ -100,12 +104,22 @@ input[type=email] {
 	height: auto;
 }
 
+#assignTSOList {
+	font-size: 12px;
+	height: auto;
+}
+
 #testSelect {
 	font-size: 12px;
 	height: auto;
 }
 
 #regionDropdown{
+	font-size: 12px;
+	height: auto;
+}
+
+#choices-multiple-remove-button{
 	font-size: 12px;
 	height: auto;
 }
@@ -160,6 +174,11 @@ margin-top:33px;
 font-size:smaller;
 }
 
+.mt-100{
+	margin-top: 100px
+}
+
+
 </style>
 <script>
 function create_tr(table_id) {
@@ -204,7 +223,14 @@ $(document).ready(function(){
 		reader.readAsDataURL(file);
 	}
 	});
-
+$(document).ready(function(){
+    
+    var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
+       removeItemButton: true,
+     }); 
+    
+    
+});
 </script>
 <script>
 $('select[multiple]').multiselect()
@@ -410,7 +436,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>Region </label> <select class="form-control"
 										id="regionDropdown" name="region_id" oninput="myFunc()">
-
+										<option value="" selected disabled hidden>Select Region</option>
 										<option th:each="region_name : ${region_name}"
 											th:value="${region_name.id}"
 											th:text="${region_name.region_name}"></option>
@@ -421,7 +447,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>State</label> <select class="form-control"
 										id="dropDownList" name="state_id">
-
+										<option value="" selected disabled hidden>Select State</option>
 										<option th:each="state_name : ${state_name}"
 											th:value="${state_name.id}"
 											th:text="${state_name.state_name}"></option>
@@ -432,7 +458,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>City</label> <select class="form-control"
 										id="dropDownList" name="city_id">
-
+										<option value="" selected disabled hidden>Select City</option>
 										<option th:each="city_name : ${city_name}"
 											th:value="${city_name.id}" th:text="${city_name.city_name}"></option>
 									</select>
@@ -467,7 +493,8 @@ function myFunc(){
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Serviced Status </label> <select class="form-control"
-										id="dropDownList" name="options">
+										id="dropDownList" name="service_status">
+										<option value="" selected disabled hidden>Select Service Status</option>
 										<option
 											th:each="options : ${T(com.example.demo.Enum.Service).values()}"
 											th:value="${options}" th:text="${options}"></option>
@@ -476,26 +503,27 @@ function myFunc(){
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>Brand List</label>
-									 <select class="form-control" multiple="multiple" id="myMulti" name="brand_list">
-										<option th:each="brand : ${brand}"
-											th:value="${brand.id}"
-											th:text="${brand.brand}"></option>
+									<label>Assigned TSO</label>
+									<select class="form-control" id="assignTSOList" name="assign_tso_id">
+										<option value="" selected disabled hidden>Select TSO</option>
+    									<option th:each="users : ${users}" th:value="${users.id}" th:text="${users.fullName}"></option>
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-3">
-								<div class="form-group">
-									<label>Assigned TSO</label> <input type="text"
-										name="supp_code" th:field="*{assign_tso}" class="form-control"
-										placeholder="Enter Assigned TSO" />
-								</div>
+									<label>Brand List</label>
+									 <select id="choices-multiple-remove-button" name="selectedValues" placeholder="Select Brands" multiple>
+										<option th:each="brand : ${brand}"
+											th:value="${brand.id}"
+											th:text="${brand.brand}"></option>
+									</select>
 							</div>
 						</div>
+						
 						<div class="box-footer">
-							<button type="submit" class="btn btn-success">
+							<button type="submit" class="btn btn-success" onClick="setData()">
 								Submit
 							</button>
 						</div> 
@@ -562,8 +590,26 @@ $('nav ul li').click(function(){
 var myDrop = new drop({
     selector:  '#myMulti'
 });
+
+function setData(){
+
+    var selectedValues= [];
+    $('#choices-multiple-remove-button').each(function(i, selected) {
+    	
+        selectedValues[i] = $('#choices-multiple-remove-button').val();
+    }); 
+    console.log(selectedValues);
+	
+    /* $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: {'selectedValues':selectedValues.toString()},
+        url: '/distributor'
+    }); */
+}
+	
+
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+
 </body>
 </html>

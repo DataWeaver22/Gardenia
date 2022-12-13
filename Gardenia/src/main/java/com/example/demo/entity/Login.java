@@ -1,19 +1,26 @@
 package com.example.demo.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  
 @Entity
 @Table(name="login")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Login {
-@Id
+	@Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+	@Column(name = "username")
     private String username;
+	@Column(name = "password")
     private String password;
+	@Column(name = "role")
     private String role;
     
 public Login()

@@ -1,96 +1,188 @@
 package com.example.demo.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
+import org.apache.commons.lang3.ObjectUtils.Null;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Export.CountryExportExcel;
-import com.example.demo.Export.DistributorExportExcel;
+import com.example.demo.Export.Service.ExportService;
+import com.example.demo.Import.CountryImportHelper;
+import com.example.demo.Import.StateHelper;
+import com.example.demo.Import.Service.ImportResponseMessage;
+import com.example.demo.Import.Service.ImportService;
 import com.example.demo.entity.Country;
-import com.example.demo.entity.Distributor;
+import com.example.demo.entity.State;
+import com.example.demo.repository.CountryRepository;
 import com.example.demo.service.CountryService;
 
-
-@Controller
+@RestController
+@RequestMapping("/country")
 public class CountryController {
+
+	@Autowired
 	private CountryService countryService;
+
+	@Autowired
+	CountryRepository countryRepository;
+
+	@Autowired
+	ExportService exportService;
 
 	public CountryController(CountryService countryService) {
 		super();
 		this.countryService = countryService;
 	}
-	
-	@GetMapping("/country")
-	public String listStudents(Model model){
-		model.addAttribute("country",countryService.getAllCountry());
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.out.print(auth.getAuthorities()); 
-		return "country";
+
+	@Autowired
+	ImportService importService;
+
+	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PostMapping("/upload/import")
+	public ResponseEntity<ImportResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+		String message = "";
+
+		if (CountryImportHelper.hasExcelFormat(file)) {
+			try {
+				importService.saveCountry(file);
+
+				message = "Uploaded the file successfully: " + file.getOriginalFilename();
+				return ResponseEntity.status(HttpStatus.OK).body(new ImportResponseMessage(message));
+			} catch (Exception e) {
+				message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ImportResponseMessage(message));
+			}
+		}
+
+		message = "Please upload an excel file!";
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ImportResponseMessage(message));
 	}
-	
-	@GetMapping("/country/new")
-	public String CreateNewForm(Model model){
-		//Create student object to hold student form data
-		Country country = new Country();
-		model.addAttribute("country",country);
-		return "create_country";
+
+	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@GetMapping
+	public ResponseEntity<Map<String, Object>> listStudents(@RequestParam(defaultValue = "1") Integer page,
+			@RequestParam(defaultValue = "id") String sortBy, @RequestParam(defaultValue = "25") Integer pageSize,
+			@RequestParam(defaultValue = "DESC") String DIR) {
+		try {
+			List<Country> countries = new ArrayList<Country>();
+			PageRequest pageRequest;
+			Pageable paging;
+			System.out.println(DIR.equals("DESC"));
+			if (DIR.equals("DESC")) {
+				System.out.println("DESC");
+				pageRequest = PageRequest.of(page - 1, pageSize, Sort.Direction.DESC, sortBy);
+				paging = pageRequest;
+
+			} else {
+				System.out.println("ASC");
+				pageRequest = PageRequest.of(page - 1, pageSize, Sort.Direction.ASC, sortBy);
+				paging = pageRequest;
+			}
+
+			Page<Country> pageCountry;
+			pageCountry = countryRepository.findAll(paging);
+			countries = pageCountry.getContent();
+			Map<String, Object> pageContent = new HashMap<>();
+			pageContent.put("currentPage", page);
+			pageContent.put("pageSize", pageCountry.getSize());
+			pageContent.put("totalPages", pageCountry.getTotalPages());
+			pageContent.put("totalElements", pageCountry.getTotalElements());
+			pageContent.put("sortDirection", DIR);
+			Map<String, Object> response = new HashMap<>();
+			response.put("data", countries);
+			response.put("pagination", pageContent);
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
-	
-	@GetMapping("/country/export/excel")
-    public void exportToExcel(HttpServletResponse response) throws IOException {
-        response.setContentType("application/octet-stream");
-		/* DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); 
-        String currentDateTime = dateFormatter.format(new Date());*/
-         
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=country.xlsx";
-        response.setHeader(headerKey, headerValue);
-         
-        List<Country> listUsers = countryService.getAllCountry();
-         
-        CountryExportExcel excelExporter = new CountryExportExcel(listUsers);
-         
-        excelExporter.export(response);    
-    }  
-	
-	@PostMapping("/country")
-	public String saveCountry(@ModelAttribute("country") Country country) {
-		countryService.saveCountry(country);
-		return "redirect:/country";
+
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_USER','ROLE_RSM')")
+	@GetMapping("/dropdown")
+	public List<Map<String, Object>> dropDownValues(Model model) {
+		// Create student object to hold student form data
+		List<Country> countries = countryService.getAllCountry();
+		List<Map<String, Object>> countryList = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < countries.size(); i++) {
+			Map<String, Object> pageContent = new HashMap<>();
+			pageContent.put("label", countries.get(i).getCountryName());
+			pageContent.put("value", countries.get(i).getId());
+			countryList.add(pageContent);
+		}
+		return countryList;
 	}
-	
-	@GetMapping("/country/edit/{id}")
-	public String editCountry(@PathVariable Long id, Model model) {
-		model.addAttribute("country", countryService.getCountryById(id));
-		return "edit_country";
+
+	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@GetMapping("/export/excel")
+	public ResponseEntity<Resource> getFile() {
+		LocalDateTime localDateTime = LocalDateTime.now();
+		LocalDate downloadDate = localDateTime.toLocalDate();
+		String filename = "Countries_" + downloadDate + ".xlsx";
+		InputStreamResource file = new InputStreamResource(exportService.countryArrayInputStream());
+
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+				.contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(file);
 	}
-	
-	@PostMapping("/country/{id}")
-	public String updateCountry(@PathVariable Long id,
-			@ModelAttribute("country") Country country,
-			Model model) {
-		
-		//Get Existing Student
+
+	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PostMapping
+	Country saveCountry(@RequestBody Country country) {
+
+		return countryService.saveCountry(country);
+	}
+
+	@PutMapping("/{id}")
+	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	Country updateCountry(@PathVariable Long id, @RequestBody Country country, Model model) {
+
+		// Get Existing Student
 		Country existingCountry = countryService.getCountryById(id);
-		existingCountry.setCountry_code(country.getCountry_code());
-		existingCountry.setCountry_name(country.getCountry_name());
-		
-		//Save Student
-		countryService.editCountry(existingCountry);
-		return "redirect:/country";
+		existingCountry.setCountryCode(country.getCountryCode());
+		existingCountry.setCountryName(country.getCountryName());
+
+		// Save Student
+
+		return countryService.editCountry(existingCountry);
 	}
-	
-	@GetMapping("/country/{id}")
+
+	@GetMapping("/{id}")
 	public String deleteCountry(@PathVariable Long id) {
 		countryService.deleteCountryById(id);
 		return "redirect:/country";

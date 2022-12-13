@@ -8,25 +8,26 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "hqmaster")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class HqMaster {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false, length = 20)
 	private Long id;
 	
-	@Column(name="hq_code", nullable = false, length = 20)
-	private String hq_code;
+	@Column(name="hqCode", nullable = false,columnDefinition = "TEXT")
+	private String hqCode;
 	
-	@Column(name = "hq_name", nullable = false, length = 20)
-	private String hq_name;
+	@Column(name = "hqName", nullable = false,columnDefinition = "TEXT")
+	private String hqName;
 	
-	@Column(name = "hq_designation", nullable = false, length = 20)
-	private String hq_designation;
-	
-	@OneToOne(mappedBy = "hqmaster")
-	private User user;
+	@Column(name = "hqDesignation", nullable = false,columnDefinition = "TEXT")
+	private String hqDesignation;
 
 	public Long getId() {
 		return id;
@@ -36,35 +37,35 @@ public class HqMaster {
 		this.id = id;
 	}
 
-	public String getHq_code() {
-		return hq_code;
+	public String getHqCode() {
+		return hqCode;
 	}
 
-	public void setHq_code(String hq_code) {
-		this.hq_code = hq_code;
+	public void setHqCode(String hqCode) {
+		this.hqCode = hqCode;
 	}
 
-	public String getHq_name() {
-		return hq_name;
+	public String getHqName() {
+		return hqName;
 	}
 
-	public void setHq_name(String hq_name) {
-		this.hq_name = hq_name;
+	public void setHqName(String hqName) {
+		this.hqName = hqName;
 	}
 
-	public String getHq_designation() {
-		return hq_designation;
+	public String getHqDesignation() {
+		return hqDesignation;
 	}
 
-	public void setHq_designation(String hq_designation) {
-		this.hq_designation = hq_designation;
+	public void setHqDesignation(String hqDesignation) {
+		this.hqDesignation = hqDesignation;
 	}
 
-	public HqMaster(String hq_code, String hq_name, String hq_designation) {
+	public HqMaster(String hqCode, String hqName, String hqDesignation) {
 		super();
-		this.hq_code = hq_code;
-		this.hq_name = hq_name;
-		this.hq_designation = hq_designation;
+		this.hqCode = hqCode;
+		this.hqName = hqName;
+		this.hqDesignation = hqDesignation;
 	}
 
 	public HqMaster() {

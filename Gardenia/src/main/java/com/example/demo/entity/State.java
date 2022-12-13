@@ -18,37 +18,26 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "state")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class State {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false, length = 20)
 	private Long Id;
 	
-	@Column(name = "state_code", length = 20)
-    private String state_code;
+	@Column(name = "stateCode", columnDefinition = "Text")
+    private String stateCode;
 
-	@Column(name = "state_name", length = 20)
-    private String state_name;
-	
-	
-	@Column(name = "country_name", length = 20)
-	private String country_name;
-	  
-	@Column(name = "country_code", length = 20)
-	private String country_code;
+	@Column(name = "stateName", columnDefinition = "Text")
+    private String stateName;
 	 
-	
-	@OneToOne
-    @JoinColumn(name="id")
-    private Country country;
-	
-	@OneToOne(mappedBy = "state")
-    private Region region;
-	
-	@OneToOne(mappedBy = "state")
-	private User user;
+	@ManyToOne
+    @JoinColumn(name = "countryId")
+	Country country;
 	
 	public Long getId() {
 		return Id;
@@ -58,49 +47,34 @@ public class State {
 		Id = id;
 	}
 
-	public String getState_code() {
-		return state_code;
+	public String getStateCode() {
+		return stateCode;
 	}
 
-	public void setState_code(String state_code) {
-		this.state_code = state_code;
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
 	}
 
-	public String getState_name() {
-		return state_name;
+	public String getStateName() {
+		return stateName;
 	}
 
-	public void setState_name(String state_name) {
-		this.state_name = state_name;
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
 	}
-
-	
-	
-	  public String getCountry_code() { return country_code; }
-	  
-	  public void setCountry_code(String country_code) { 
-	  this.country_code = country_code; 
-	  }
 	 
-	  
-	  public String getCountry_name() { return country_name; }
-	  
-	  public void setCountry_name(String country_name) { this.country_name =
-	  country_name; }
-	 
-	public State(String state_code, String state_name, String country_name, String country_code) {
-		super();
-		this.state_code = state_code;
-		this.state_name = state_name;
-		this.country_name = country_name; 
-		this.country_code = country_code;
-	}
-
 	public Country getCountry() {
 		return country;
 	}
 
 	public void setCountry(Country country) {
+		this.country = country;
+	}
+
+	public State(String stateCode, String stateName, Country country) {
+		super();
+		this.stateCode = stateCode;
+		this.stateName = stateName;
 		this.country = country;
 	}
 

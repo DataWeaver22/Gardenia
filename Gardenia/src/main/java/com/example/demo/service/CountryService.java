@@ -15,5 +15,9 @@ public interface CountryService {
 	Country editCountry(Country country);
 	
 	void deleteCountryById(Long id);
+	
+//	Country createCountry(Country country);
+//	
+//	Country getAllCountries(int pageNo, int pageSize, String sortBy, String sortDir);
 
 }

@@ -14,9 +14,6 @@ import com.example.demo.service.StateService;
 @Service
 public class StateServiceImpl implements StateService{
 	private StateRepository stateRepository;
-	
-	@Autowired
-	private CountryRepository countryRepository;
 
 	public StateServiceImpl(StateRepository stateRepository) {
 		super();

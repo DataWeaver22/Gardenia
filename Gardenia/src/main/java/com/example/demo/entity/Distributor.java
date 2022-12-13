@@ -1,116 +1,166 @@
 package com.example.demo.entity;
 
-import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "distributortable")
-public class Distributor {
+@Table(name = "distributorTable")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Distributor{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 		
-	@Column(name = "distributor_name", nullable = false, length = 20)
-	private String distributor_name;
+	@Column(name = "distributorName", columnDefinition = "Text")
+	private String distributorName;
 	
-	@Column(name = "distributor_code", nullable = false, length = 20)
-	private String distributor_code;
+	@Column(name = "distributorCode", columnDefinition = "Text")
+	private String distributorCode;
 	
-	@Column(name = "distributor_type", nullable = false, length = 20)
-	private String distributor_type;
+	@Column(name = "distributorType", columnDefinition = "Text")
+	private String distributorType;
 	
-	@Column(name = "gstin", length = 20)
+	@Column(name = "gstin",columnDefinition = "Text")
 	private String gstin;
 	
-	@Column(name = "pan",  length = 20)
+	@Column(name = "pan",  columnDefinition = "Text")
 	private String pan;
 	
-	@Column(name = "contact", length = 20)
+	@Column(name = "contact", columnDefinition = "Text")
 	private String contact;
 	
-	@Column(name = "mobile", length = 20)
+	@Column(name = "mobile", columnDefinition = "Text")
 	private String mobile;
 	
-	@Column(name = "phone", length = 20)
+	@Column(name = "phone", columnDefinition = "Text")
 	private String phone;
 	
-	@Column(name = "email", length = 20)
+	@Column(name = "email", columnDefinition = "Text")
 	private String email;
 	
-	@Column(name = "address", length = 20)
+	@Column(name = "address", columnDefinition = "Text")
 	private String address;
 	
-	@Column(name = "region_name", length = 20)
-	private String region_name;
+	@Column(name = "suppName", columnDefinition = "Text")
+	private String suppName;
 	
-	@Column(name = "region_id", length = 20)
-	private String region_id;
+	@Column(name = "suppCode", columnDefinition = "Text")
+	private String suppCode;
 	
-	@Column(name = "state_name", length = 20)
-	private String state_name;
-	
-	@Column(name = "state_id", length = 20)
-	private String state_id;
-	
-	@Column(name = "city_name", length = 20)
-	private String city_name;
-	
-	@Column(name = "city_id", length = 20)
-	private String city_id;
-	
-	@Column(name = "supp_name", length = 20)
-	private String supp_name;
-	
-	@Column(name = "supp_code", length = 20)
-	private String supp_code;
-	
-	@Column(name = "status", length = 20)
+	@Column(name = "status", columnDefinition = "Text")
 	private String status;
 	
-	@Column(name = "create_date", length = 20)
+	@Column(name = "create_date")
 	private LocalDateTime create_date;
 	
-	@Column(name = "inactive_date", length = 20)
+	@Column(name = "inactive_date")
 	private LocalDateTime inactive_date;
 	
-	@Column(name = "documents", length = 64)
-	private String documents;
+	@Column(name = "updatedDateTime")
+	private LocalDateTime updatedDateTime;
 	
-	@OneToMany(mappedBy="distributor",targetEntity = DistNew.class)
-	public List<DistNew> distNew;
+	@Column(name = "serviceStatus", columnDefinition = "Text")
+	private String serviceStatus;
 	
-	private String fileName;
+	@Column(name = "approvalStatus", columnDefinition = "Text")
+	private String approvalStatus;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "regionId")
+	Region region;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stateId")
+	State state;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cityId")
+	City city;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "districtId")
+	District district;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assignTsoId")
+	User user;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gstFileId")
+	FileDB gstFile;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "panFileId")
+	FileDB panFile;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "companyCertificateFileId")
+	FileDB companyCertificateFile;
+	
+	@Transient
+	private List<Map<String, Object>> brandList;
+	
+	@Transient
+	private String regionId;
+	
+	@Transient
+	private String stateId;
+	
+	@Transient
+	private String districtId;
+	
+	@Transient
+	private String cityId;
+	
+	@Transient
+	private String userId;
+	
+	public List<Map<String, Object>> getBrandList() {
+		return brandList;
+	}
+	
+	public String getUserId() {
+		return userId;
+	}
 
-    private String fileType;
+	public String getRegionId() {
+		return regionId;
+	}
 	
-	@Column(name = "service_status", length = 20)
-	private String service_status;
+	public String getStateId() {
+		return stateId;
+	}
 	
-	@Column(name = "brand_list", length = 20)
-	private String brand_list;
+	public String getDistrictId() {
+		return districtId;
+	}
 	
-	@Column(name = "assign_tso", length = 20)
-	private String assign_tso;
+	public String getCityId() {
+		return cityId;
+	}
 	
-	@Column(name = "assign_tso_id", length = 20)
-	private String assign_tso_id;
+	public District getDistrict() {
+		return district;
+	}
 	
-	@Column(name = "approval_status", length = 45)
-	private String approval_status;
+	public void setDistrict(District district) {
+		this.district = district;
+	}
 	
-	@Column(name = "approval_action", length = 45)
-	private String approval_action;
-
 	public Long getId() {
 		return id;
 	}
@@ -119,28 +169,28 @@ public class Distributor {
 		this.id = id;
 	}
 
-	public String getDistributor_name() {
-		return distributor_name;
+	public String getDistributorName() {
+		return distributorName;
 	}
 
-	public void setDistributor_name(String distributor_name) {
-		this.distributor_name = distributor_name;
+	public void setDistributorName(String distributorName) {
+		this.distributorName = distributorName;
 	}
 
-	public String getDistributor_code() {
-		return distributor_code;
+	public String getDistributorCode() {
+		return distributorCode;
 	}
 
-	public void setDistributor_code(String distributor_code) {
-		this.distributor_code = distributor_code;
+	public void setDistributorCode(String distributorCode) {
+		this.distributorCode = distributorCode;
 	}
 
-	public String getDistributor_type() {
-		return distributor_type;
+	public String getDistributorType() {
+		return distributorType;
 	}
 
-	public void setDistributor_type(String distributor_type) {
-		this.distributor_type = distributor_type;
+	public void setDistributorType(String distributorType) {
+		this.distributorType = distributorType;
 	}
 
 	public String getGstin() {
@@ -199,68 +249,20 @@ public class Distributor {
 		this.address = address;
 	}
 
-	public String getRegion_name() {
-		return region_name;
+	public String getSuppName() {
+		return suppName;
 	}
 
-	public void setRegion_name(String region_name) {
-		this.region_name = region_name;
+	public void setSuppName(String suppName) {
+		this.suppName = suppName;
 	}
 
-	public String getRegion_id() {
-		return region_id;
+	public String getSuppCode() {
+		return suppCode;
 	}
 
-	public void setRegion_id(String region_id) {
-		this.region_id = region_id;
-	}
-
-	public String getState_name() {
-		return state_name;
-	}
-
-	public void setState_name(String state_name) {
-		this.state_name = state_name;
-	}
-
-	public String getState_id() {
-		return state_id;
-	}
-
-	public void setState_id(String state_id) {
-		this.state_id = state_id;
-	}
-
-	public String getCity_name() {
-		return city_name;
-	}
-
-	public void setCity_name(String city_name) {
-		this.city_name = city_name;
-	}
-
-	public String getCity_id() {
-		return city_id;
-	}
-
-	public void setCity_id(String city_id) {
-		this.city_id = city_id;
-	}
-
-	public String getSupp_name() {
-		return supp_name;
-	}
-
-	public void setSupp_name(String supp_name) {
-		this.supp_name = supp_name;
-	}
-
-	public String getSupp_code() {
-		return supp_code;
-	}
-
-	public void setSupp_code(String supp_code) {
-		this.supp_code = supp_code;
+	public void setSuppCode(String suppCode) {
+		this.suppCode = suppCode;
 	}
 
 	public String getStatus() {
@@ -287,89 +289,97 @@ public class Distributor {
 		this.inactive_date = inactive_date;
 	}
 
-	public String getDocuments() {
-		return documents;
+	public String getServiceStatus() {
+		return serviceStatus;
 	}
 
-	public void setDocuments(String documents) {
-		this.documents = documents;
-	}
-
-	public String getService_status() {
-		return service_status;
-	}
-
-	public void setService_status(String service_status) {
-		this.service_status = service_status;
-	}
-
-	public String getBrand_list() {
-		return brand_list;
-	}
-
-	public void setBrand_list(String brand_list) {
-		this.brand_list = brand_list;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public String getFileType() {
-		return fileType;
-	}
-
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
-	}
-
-	public String getAssign_tso() {
-		return assign_tso;
-	}
-
-	public void setAssign_tso(String assign_tso) {
-		this.assign_tso = assign_tso;
-	}
-
-	public String getAssign_tso_id() {
-		return assign_tso_id;
+	public void setServiceStatus(String serviceStatus) {
+		this.serviceStatus = serviceStatus;
 	}
 	
-	public void setAssign_tso_id(String assign_tso_id) {
-		this.assign_tso_id = assign_tso_id;
+	public String getApprovalStatus() {
+		return approvalStatus;
 	}
+
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
+
 	
-	public String getApproval_status() {
-		return approval_status;
+	public Region getRegion() {
+		return region;
 	}
 
-	public void setApproval_status(String approval_status) {
-		this.approval_status = approval_status;
+	public void setRegion(Region region) {
+		this.region = region;
 	}
 
-	public String getApproval_action() {
-		return approval_action;
+	public State getState() {
+		return state;
 	}
 
-	public void setApproval_action(String approval_action) {
-		this.approval_action = approval_action;
+	public void setState(State state) {
+		this.state = state;
 	}
 
-	public Distributor(Long id, String distributor_name, String distributor_code, String distributor_type, String gstin,
-			String pan, String contact, String mobile, String phone, String email, String address, String region_name,
-			String region_id, String state_name, String state_id, String city_name, String city_id, String supp_name,
-			String supp_code, String status, LocalDateTime create_date, LocalDateTime inactive_date,
-			String service_status, String brand_list, String assign_tso,String assign_tso_id, String approval_status,
-			String approval_action) {
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public LocalDateTime getUpdatedDateTime() {
+		return updatedDateTime;
+	}
+
+	public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
+		this.updatedDateTime = updatedDateTime;
+	}
+
+	public FileDB getGstFile() {
+		return gstFile;
+	}
+
+	public void setGstFile(FileDB gstFile) {
+		this.gstFile = gstFile;
+	}
+
+	public FileDB getPanFile() {
+		return panFile;
+	}
+
+	public void setPanFile(FileDB panFile) {
+		this.panFile = panFile;
+	}
+
+	public FileDB getCompanyCertificateFile() {
+		return companyCertificateFile;
+	}
+
+	public void setCompanyCertificateFile(FileDB companyCertificateFile) {
+		this.companyCertificateFile = companyCertificateFile;
+	}
+
+	public Distributor(Long id, String distributorName, String distributorCode, String distributorType, String gstin,
+			String pan, String contact, String mobile, String phone, String email, String address, String suppName,
+			String suppCode, String status, LocalDateTime create_date, LocalDateTime inactive_date,LocalDateTime updatedDateTime,
+			String serviceStatus, String approvalStatus,Region region,State state,City city,User user,FileDB gstFile,FileDB panFile,
+			FileDB companyCertificateFile,District district) {
 		super();
 		this.id = id;
-		this.distributor_name = distributor_name;
-		this.distributor_code = distributor_code;
-		this.distributor_type = distributor_type;
+		this.distributorName = distributorName;
+		this.distributorCode = distributorCode;
+		this.distributorType = distributorType;
 		this.gstin = gstin;
 		this.pan = pan;
 		this.contact = contact;
@@ -377,40 +387,27 @@ public class Distributor {
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
-		this.region_name = region_name;
-		this.region_id = region_id;
-		this.state_name = state_name;
-		this.state_id = state_id;
-		this.city_name = city_name;
-		this.city_id = city_id;
-		this.supp_name = supp_name;
-		this.supp_code = supp_code;
+		this.suppName = suppName;
+		this.suppCode = suppCode;
 		this.status = status;
 		this.create_date = create_date;
 		this.inactive_date = inactive_date;
-		this.service_status = service_status;
-		this.brand_list = brand_list;
-		this.assign_tso = assign_tso;
-		this.assign_tso_id = assign_tso_id;
-		this.approval_status = approval_status;
-		this.approval_action = approval_action;
+		this.serviceStatus = serviceStatus;
+		this.approvalStatus = approvalStatus;
+		this.region = region;
+		this.state = state;
+		this.city = city;
+		this.user = user;
+		this.updatedDateTime = updatedDateTime;
+		this.gstFile = gstFile;
+		this.panFile = panFile;
+		this.companyCertificateFile = companyCertificateFile;
+		this.district = district;
 	}
 	
 	public Distributor() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	/*
-	 * public Distributor(String fileName, String fileType, String documents) {
-	 * this.fileName = fileName; this.fileType = fileType; this.documents =
-	 * documents; }
-	 */
-	@Transient
-    public String getPhotosImagePath() {
-        if (documents == null || id == null) return null;
-         
-        return "/user-photos/" + id + "/" + documents;
-    }
 
 }
 

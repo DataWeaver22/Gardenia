@@ -13,123 +13,167 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.entity.City;
 import com.example.demo.entity.Distributor;
+import com.example.demo.entity.District;
+import com.example.demo.entity.Region;
+import com.example.demo.entity.State;
+import com.example.demo.entity.User;
 import com.example.demo.repository.DistRepository;
-
+import com.example.demo.service.CityService;
+import com.example.demo.service.DistrictService;
+import com.example.demo.service.RegionService;
+import com.example.demo.service.StateService;
+import com.example.demo.service.UserService;
 
 @Component
 public class DistributorImportHelper {
 
-private static DistRepository distRepository;
-	
+	private static DistRepository distRepository;
+	private static RegionService regionService;
+	private static StateService stateService;
+	private static DistrictService districtService;
+	private static CityService cityService;
+	private static UserService userService;
+
 	@Autowired
 	public DistributorImportHelper(DistRepository distRepository) {
 		super();
 		DistributorImportHelper.distRepository = distRepository;
 	}
-	//check if file type is excel or not
-	public static boolean checkExcelFormat(MultipartFile file) {
-		
-		String contentTypeString = file.getContentType();
-		if(contentTypeString.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-			return true;
-		}else {
+
+	// check if file type is excel or not
+	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	static String[] HEADERs = { "Distributor Code", "Distributor Name", "Distributor Type", "Address", "State Name",
+			"Region Name", "District Name", "City Name", "Assign TSO Name", "Contact Name", "Email", "GSTIN", "PAN",
+			"Phone", "Mobile", "Service Status", "Supp Code", "Supp Name", "Status" };
+	static String SHEET = "Sheet1";
+
+	public static boolean hasExcelFormat(MultipartFile file) {
+
+		if (!TYPE.equals(file.getContentType())) {
 			return false;
 		}
+
+		return true;
 	}
-	
-	//convert excel to list of states
-	public static List<Distributor> convertToDistributors(InputStream iStream){
+
+	// convert excel to list of states
+	public static List<Distributor> convertToDistributors(InputStream iStream) {
 		List<Distributor> list = new ArrayList<>();
-		
+
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook(iStream);
 			XSSFSheet sheet = workbook.getSheet("Sheet1");
 			int rowNumber = 0;
 			Iterator<Row> iterator = sheet.iterator();
-			
+
 			while (iterator.hasNext()) {
 				Row row = iterator.next();
-				
-				if(rowNumber == 0) {
+
+				if (rowNumber == 0) {
 					rowNumber++;
 					continue;
 				}
-				
+
 				Iterator<Cell> cells = row.iterator();
-				
-				int cid=0;
+
+				int cid = 0;
 				Distributor distributor = new Distributor();
-				
-				while(cells.hasNext()) {
+
+				while (cells.hasNext()) {
 					Cell cell = cells.next();
-					
-					switch (cid){
-					case 0: 
-						distributor.setDistributor_name(cell.getStringCellValue());
+
+					switch (cid) {
+					case 0:
+						distributor.setDistributorCode(cell.getStringCellValue());
 						break;
 					case 1:
-						distributor.setDistributor_code(cell.getStringCellValue());
+						distributor.setDistributorName(cell.getStringCellValue());
 						break;
 					case 2:
-						distributor.setDistributor_type(cell.getStringCellValue());
+						distributor.setDistributorType(cell.getStringCellValue());
 						break;
-					case 3: 
-						distributor.setGstin(cell.getStringCellValue());
-						break;
-					case 4:
-						distributor.setPan(cell.getStringCellValue());
-						break;
-					case 5:
-						distributor.setContact(cell.getStringCellValue());
-						break;
-					case 6: 
-						distributor.setMobile(cell.getStringCellValue());
-						break;
-					case 7:
-						distributor.setPhone(cell.getStringCellValue());
-						break;
-					case 8:
-						distributor.setEmail(cell.getStringCellValue());
-						break;
-					case 9: 
+					case 3:
 						distributor.setAddress(cell.getStringCellValue());
 						break;
+					case 4:
+						if(cell.getStringCellValue()!=null) {
+							String sName = cell.getStringCellValue();
+							Long sId = distRepository.findByState(sName);
+							State state = stateService.getStateById(sId);
+							distributor.setState(state);
+						}
+						break;
+					case 5:
+						if(cell.getStringCellValue()!=null) {
+							String rName = cell.getStringCellValue();
+							Long rId = distRepository.findByRegion(rName);
+							Region region = regionService.getRegionById(rId);
+							distributor.setRegion(region);
+						}
+						break;
+					case 6:
+						if(cell.getStringCellValue()!=null) {
+							String dName = cell.getStringCellValue();
+							Long dId = distRepository.findByDistrict(dName);
+							District district = districtService.getDistrictById(dId);
+							distributor.setDistrict(district);
+						}
+						break;
+					case 7:
+						if(cell.getStringCellValue()!=null) {
+							String cName = cell.getStringCellValue();
+							Long cId = distRepository.findByCity(cName);
+							City city = cityService.getCityById(cId);
+							distributor.setCity(city);
+						}
+						break;
+					case 8:
+						if(cell.getStringCellValue()!=null) {
+							String sName = cell.getStringCellValue();
+							Long sId = distRepository.findByState(sName);
+							State state = stateService.getStateById(sId);
+							distributor.setState(state);
+						}
+						break;
+					case 9:
+						if(cell.getStringCellValue()!=null) {
+							String empCode = cell.getStringCellValue();
+							Long uId = distRepository.findByEmpCode(empCode);
+							User user = userService.getUser(uId);
+							distributor.setUser(user);
+						}
+						break;
 					case 10:
-						distributor.setRegion_name(cell.getStringCellValue());
-						String rName = cell.getStringCellValue();
-						String rId = distRepository.findByRegion(rName);
-						distributor.setRegion_id(rId);
+						distributor.setContact(cell.getStringCellValue());
 						break;
 					case 11:
-						distributor.setState_name(cell.getStringCellValue());
-						String sName = cell.getStringCellValue();
-						String sId = distRepository.findByState(sName);
-						distributor.setState_id(sId);
+						distributor.setEmail(cell.getStringCellValue());
 						break;
 					case 12:
-						distributor.setCity_name(cell.getStringCellValue());
-						String cyName = cell.getStringCellValue();
-						String cId = distRepository.findByCity(cyName);
-						distributor.setCity_id(cId);
+						distributor.setGstin(cell.getStringCellValue());
 						break;
 					case 13:
-						distributor.setAssign_tso(cell.getStringCellValue());
-						String aTSOName = cell.getStringCellValue();
-						String aTSOId = distRepository.findByCity(aTSOName);
-						distributor.setAssign_tso_id(aTSOId);
+						distributor.setPan(cell.getStringCellValue());
 						break;
-					case 14: 
-						distributor.setSupp_name(cell.getStringCellValue());
+					case 14:
+						distributor.setPhone(cell.getStringCellValue());
 						break;
 					case 15:
-						distributor.setSupp_code(cell.getStringCellValue());
+						distributor.setMobile(cell.getStringCellValue());
 						break;
 					case 16:
-						distributor.setStatus(cell.getStringCellValue());
+						distributor.setServiceStatus(cell.getStringCellValue());
 						break;
-					case 17: 
-						distributor.setService_status(cell.getStringCellValue());
+					case 17:
+						distributor.setSuppCode(cell.getStringCellValue());
+						break;
+					case 18:
+						distributor.setSuppName(cell.getStringCellValue());
+						break;
+					case 19:
+						distributor.setStatus(cell.getStringCellValue());
 						break;
 					default:
 						break;
@@ -137,9 +181,9 @@ private static DistRepository distRepository;
 					cid++;
 				}
 				list.add(distributor);
-				
+
 			}
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

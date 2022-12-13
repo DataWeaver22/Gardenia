@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.demo.entity.HqMaster;
 
 public interface HqRepository extends JpaRepository<HqMaster, Long>, JpaSpecificationExecutor<HqMaster>{
-	@Query("SELECT p FROM HqMaster p WHERE CONCAT(p.hq_name, ' ', p.hq_designation) LIKE %?1%")
+	@Query("SELECT p FROM HqMaster p WHERE CONCAT(p.hqName, ' ', p.hqDesignation) LIKE %?1%")
 	public List<HqMaster> search(String keyword);
 }
 

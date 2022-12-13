@@ -6,42 +6,30 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "area")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Area {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long Id;
 	
-	@Column(name = "area_code", nullable = false, length = 20)
-    private String area_code;
+	@Column(name = "areaCode", columnDefinition = "Text")
+    private String areaCode;
 	
-	@Column(name = "area_name", nullable = false, length = 20)
-    private String area_name;
+	@Column(name = "areaName", columnDefinition = "Text")
+    private String areaName;
 	
-	@Column(name = "city_name", nullable = false, length = 20)
-    private String city_name;
-	
-	@Column(name = "city_code", nullable = false, length = 20)
-    private String city_code;
-	
-	public String getCity_code() {
-		return city_code;
-	}
-
-	public void setCity_code(String city_code) {
-		this.city_code = city_code;
-	}
-
-	@OneToOne
-    @JoinColumn(name="id")
-    private City city;
-	
-	@OneToOne(mappedBy = "area")
-	private User user;
+	@ManyToOne
+    @JoinColumn(name = "cityId")
+	City city;
 
 	public Long getId() {
 		return Id;
@@ -51,35 +39,37 @@ public class Area {
 		Id = id;
 	}
 
-	public String getArea_code() {
-		return area_code;
+	public String getAreaCode() {
+		return areaCode;
 	}
 
-	public void setArea_code(String area_code) {
-		this.area_code = area_code;
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
 	}
 
-	public String getArea_name() {
-		return area_name;
+	public String getAreaName() {
+		return areaName;
 	}
 
-	public void setArea_name(String area_name) {
-		this.area_name = area_name;
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
 	}
 
-	public String getCity_name() {
-		return city_name;
-	}
-
-	public void setCity_name(String city_name) {
-		this.city_name = city_name;
-	}
 	
-	public Area(String area_code, String area_name, String city_name) {
+	
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	public Area(String areaCode, String areaName, City city) {
 		super();
-		this.area_code = area_code;
-		this.area_name = area_name;
-		this.city_name = city_name;
+		this.areaCode = areaCode;
+		this.areaName = areaName;
+		this.city = city;
 	}
 
 	public Area() {

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,68 +15,76 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.Area;
+import com.example.demo.entity.City;
 import com.example.demo.repository.AreaRepository;
-
+import com.example.demo.service.CityService;
 
 @Component
 public class AreaImportHelper {
 
-private static AreaRepository areaRepository;
-	
+	private static AreaRepository areaRepository;
+
+	private static CityService cityService;
+
 	@Autowired
-	public AreaImportHelper(AreaRepository areaRepository) {
+	public AreaImportHelper(AreaRepository areaRepository, CityService cityService) {
 		super();
 		AreaImportHelper.areaRepository = areaRepository;
+		AreaImportHelper.cityService = cityService;
 	}
-	//check if file type is excel or not
-	public static boolean checkExcelFormat(MultipartFile file) {
-		
-		String contentTypeString = file.getContentType();
-		if(contentTypeString.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-			return true;
-		}else {
+
+	// check if file type is excel or not
+	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+	public static boolean hasExcelFormat(MultipartFile file) {
+
+		if (!TYPE.equals(file.getContentType())) {
 			return false;
 		}
+
+		return true;
 	}
-	
-	//convert excel to list of states
-	public static List<Area> convertToAreas(InputStream iStream){
+
+	// convert excel to list of states
+	public static List<Area> convertToAreas(InputStream iStream) {
 		List<Area> list = new ArrayList<>();
-		
+
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook(iStream);
 			XSSFSheet sheet = workbook.getSheet("Sheet1");
 			int rowNumber = 0;
 			Iterator<Row> iterator = sheet.iterator();
-			
+
 			while (iterator.hasNext()) {
 				Row row = iterator.next();
-				
-				if(rowNumber == 0) {
+
+				if (rowNumber == 0) {
 					rowNumber++;
 					continue;
 				}
-				
+
 				Iterator<Cell> cells = row.iterator();
-				
-				int cid=0;
+
+				int cid = 0;
 				Area area = new Area();
-				
-				while(cells.hasNext()) {
+
+				while (cells.hasNext()) {
 					Cell cell = cells.next();
-					
-					switch (cid){
-					case 0: 
-						area.setArea_code(cell.getStringCellValue());
+
+					switch (cid) {
+					case 0:
+						area.setAreaCode(cell.getStringCellValue());
 						break;
 					case 1:
-						area.setArea_name(cell.getStringCellValue());
+						area.setAreaName(cell.getStringCellValue());
 						break;
 					case 2:
-						area.setCity_name(cell.getStringCellValue());
-						String cName = cell.getStringCellValue();
-						String cId = areaRepository.findByCity(cName);
-						area.setCity_code(cId);
+						if (cell.getCellType() != CellType.BLANK) {
+							String cName = cell.getStringCellValue();
+							Long cId = areaRepository.findByCity(cName);
+							City city = cityService.getCityById(cId);
+							area.setCity(city);
+						}
 						break;
 					default:
 						break;
@@ -83,9 +92,9 @@ private static AreaRepository areaRepository;
 					cid++;
 				}
 				list.add(area);
-				
+
 			}
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

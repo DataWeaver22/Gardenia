@@ -91,20 +91,9 @@ public class UserExportExcel {
             createCell(row, columnCount++, user.getId(), style);
             createCell(row, columnCount++, user.getFirstName(), style);
             createCell(row, columnCount++, user.getLastName(), style);
-            createCell(row, columnCount++, user.getEmp_code(), style);
             createCell(row, columnCount++, user.getTeam(), style);
-            createCell(row, columnCount++, user.getRoles(), style);
+            createCell(row, columnCount++, user.getRole(), style);
             createCell(row, columnCount++, user.getStatus(), style);
-            createCell(row, columnCount++, user.getCreate_date(), style);
-            createCell(row, columnCount++, user.getResign_date(), style);
-            createCell(row, columnCount++, user.getRegion_name(), style);
-            createCell(row, columnCount++, user.getRegion_id(), style);
-            createCell(row, columnCount++, user.getState_name(), style);
-            createCell(row, columnCount++, user.getState_id(), style);
-            createCell(row, columnCount++, user.getArea_name(), style);
-            createCell(row, columnCount++, user.getArea_id(), style);
-            createCell(row, columnCount++, user.getHq_name(), style);
-            createCell(row, columnCount++, user.getHq_id(), style);
          }
     }
      

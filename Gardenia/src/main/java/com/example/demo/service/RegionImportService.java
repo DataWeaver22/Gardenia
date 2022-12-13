@@ -21,6 +21,7 @@ public class RegionImportService {
 		try {
 			List<Region> regions = RegionImportHelper.convertToRegions(file.getInputStream());
 			this.regionRepository.saveAll(regions);
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

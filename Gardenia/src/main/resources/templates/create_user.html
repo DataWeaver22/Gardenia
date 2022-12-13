@@ -432,6 +432,7 @@ function multipleFunctionOnStart(){
 						<div class="form-group">
 							<label>Gender</label>
 								<select class="form-control" id="genderList" name="gender">
+									<option value="" selected disabled hidden>Select Gender</option>
     								<option th:each="gender : ${T(com.example.demo.Enum.Gender).values()}" th:value="${gender}" th:text="${gender}"></option>
 								</select>
 						</div>
@@ -441,6 +442,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>Marital Status </label>
 									<select class="form-control" id="maritalStatusList" name="marital_status">
+										<option value="" selected disabled hidden>Select Marital Status</option>
     									<option th:each="marital_status : ${T(com.example.demo.Enum.MaritalStatus).values()}" th:value="${marital_status}" th:text="${marital_status}"></option>
 									</select>
 								</div>
@@ -557,6 +559,7 @@ function multipleFunctionOnStart(){
 							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<label>Payment Mode</label>
 									<select class="form-control" id="paymentModeList" name="payment_mode">
+										<option value="" selected disabled hidden>Select Payment</option>
     									<option th:each="payment_mode : ${T(com.example.demo.Enum.PaymentMode).values()}" th:value="${payment_mode}" th:text="${payment_mode}"></option>
 									</select>
 							</div>
@@ -566,6 +569,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>Region </label>
 									<select class="form-control" id="regionList" name="region_id">
+										<option value="" selected disabled hidden>Select Region</option>
     									<option th:each="region_name : ${region_name}" th:value="${region_name.id}" th:text="${region_name.region_name}"></option>
 									</select>
 								</div>
@@ -574,6 +578,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>State</label>
 									<select class="form-control" id="stateList" name="state_id">
+										<option value="" selected disabled hidden>Select State</option>
     									<option th:each="state_name : ${state_name}" th:value="${state_name.id}" th:text="${state_name.state_name}"></option>
 									</select>
 								</div>
@@ -582,6 +587,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>Area</label>
 									<select class="form-control" id="areaList" name="area_id">
+										<option value="" selected disabled hidden>Select Area</option>
     									<option th:each="area_name : ${area_name}" th:value="${area_name.id}" th:text="${area_name.area_name}"></option>
 									</select>
 								</div>
@@ -590,6 +596,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>HQ Name </label>
 									<select class="form-control" id="hqList" name="hq_id">
+										<option value="" selected disabled hidden>Select HQ</option>
     									<option th:each="hq_name : ${hq_name}" th:value="${hq_name.id}" th:text="${hq_name.hq_name}"></option>
 									</select>
 								</div>
@@ -622,6 +629,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label>Role</label> 
 									<select class="form-control" id="roleList" name="roles" onchange='dynamicRole()'>
+										<option value="" selected disabled hidden>Select Role</option>
 		    							<option th:each="option : ${options}" th:value="${option}" th:text="${option}"></option>
 									</select>
 								</div>
@@ -630,6 +638,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label id='rsmLabel'>RSM</label>
 									<select class="form-control" id="rsm" name="rsm_id">
+										<option value="" selected disabled hidden>Select RSM</option>
 		    							<option th:each="rsmList : ${rsmList}" th:value="${rsmList.id}" th:text="${rsmList.fullName}"></option>
 									</select>
 								</div>
@@ -638,6 +647,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label id='asmLabel'>ASM</label>
 									<select class="form-control" id="asm" name="asm_id">
+										<option value="" selected disabled hidden>Select ASM</option>
 		    							<option th:each="asmList : ${asmList}" th:value="${asmList.id}" th:text="${asmList.fullName}"></option>
 									</select>
 								</div>
@@ -646,6 +656,7 @@ function multipleFunctionOnStart(){
 								<div class="form-group">
 									<label id='aseLabel'>ASE</label>
 									<select class="form-control" id="ase" name="ase_id">
+										<option value="" selected disabled hidden>Select ASE</option>
 		    							<option th:each="aseList : ${aseList}" th:value="${aseList.id}" th:text="${aseList.fullName}"></option>
 									</select>
 								</div>

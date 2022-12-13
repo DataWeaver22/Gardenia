@@ -1,163 +1,199 @@
 package com.example.demo.entity;
 
-import java.beans.Transient;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "user")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class User {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-		
-	@Column(name = "login",length = 20)
-	private String login;
-	
-	@Column(name = "firstName",length = 20)
-	private String firstName;
-	
-	@Column(name = "lastName",length = 20)
-	private String lastName;
-	
-	@Column(name = "fullName",length = 20)
-	private String fullName;
-	
-	@Column(name = "emp_code", length = 20)
-	private String emp_code;
-	
-	@Column(name = "team", length = 20)
-	private String team;
-	
-	@Column(name = "roles", length = 20)
-	private String roles;
-	
-	@Column(name = "status", length = 20)
-	private String status;
-	
-	@Column(name = "create_date", length = 20)
-	private LocalDateTime create_date;
-	
-	@Column(name = "resign_date", length = 20)
-	private LocalDateTime resign_date;
-	
-	@Column(name = "region_name", length = 20)
-	private String region_name;
 
-	@Column(name = "region_id", length = 20)
-	private String region_id;
-	
-	@Column(name = "state_name", length = 20)
-	private String state_name;
-	
-	@Column(name = "state_id", length = 20)
-	private String state_id;
-	
-	@Column(name = "area_name",length = 20)
-	private String area_name;
-	
-	@Column(name = "area_id", length = 20)
-	private String area_id;
-	
-	@Column(name = "hq_name", length = 20)
-	private String hq_name;
-	
-	@Column(name = "hq_id", length = 20)
-	private String hq_id;
-	
-	@Column(name = "documents", length = 20)
-	private String documents;
-	
-	@Column(name = "approval_status", length=20)
-	private String approval_status;
-	
-	@Column(name = "approval_action", length=20)
-	private String approval_action;
-	
-	@Column(name = "title", length = 20)
+	@Column(name = "title", columnDefinition = "Text")
 	private String title;
+
+	@Column(name = "login", columnDefinition = "Text")
+	private String login;
+
+	@Column(name = "firstName", columnDefinition = "Text")
+	private String firstName;
+
+	@Column(name = "lastName", columnDefinition = "Text")
+	private String lastName;
+
+	@Column(name = "fullName", columnDefinition = "Text")
+	private String fullName;
+
+	@Column(name = "empCode", columnDefinition = "Text")
+	private String empCode;
+
+	@Column(name = "team", columnDefinition = "Text")
+	private String team;
+
+	@Column(name = "role", columnDefinition = "Text")
+	private String role;
+
+	@Column(name = "status", columnDefinition = "Text")
+	private String status;
+
+	@Column(name = "createDate")
+	private LocalDateTime createDate;
+
+	@Column(name = "resignDate")
+	private LocalDateTime resignDate;
 	
-	@Column(name = "employee_name", length = 20)
-	private String employee_name;
+	@Column(name = "inactiveDate")
+	private LocalDateTime inactiveDate;
 	
-	@Column(name = "marital_status", length = 20)
-	private String marital_status;
-	
-	@Column(name = "gender", length = 20)
+	@Column(name = "updatedDateTime")
+	private LocalDateTime updatedDateTime;
+
+	@Column(name = "approvalStatus", columnDefinition = "Text")
+	private String approvalStatus;
+
+	@Column(name = "maritalStatus", columnDefinition = "Text")
+	private String maritalStatus;
+
+	@Column(name = "gender", columnDefinition = "Text")
 	private String gender;
-	
-	@Column(name = "birth_date", length = 20)
-	private String birth_date;
-	
-	@Column(name = "join_date", length = 20)
-	private String join_date;
-	
-	@Column(name = "grade", length = 20)
+
+	@Column(name = "birthDate")
+	private LocalDate birthDate;
+
+	@Column(name = "joinDate")
+	private LocalDate joinDate;
+
+	@Column(name = "grade", columnDefinition = "Text")
 	private String grade;
-	
-	@Column(name = "branch", length = 20)
+
+	@Column(name = "branch", columnDefinition = "Text")
 	private String branch;
-	
-	@Column(name = "department", length = 20)
+
+	@Column(name = "department", columnDefinition = "Text")
 	private String department;
-	
-	@Column(name = "payment_mode", length = 20)
-	private String payment_mode;
-	
-	@Column(name = "email", length = 20)
+
+	@Column(name = "paymentMode", columnDefinition = "Text")
+	private String paymentMode;
+
+	@Column(name = "email", columnDefinition = "Text")
 	private String email;
+
+	@Column(name = "middleName", columnDefinition = "Text")
+	private String middleName;
+
+	@Column(name = "processStartDate")
+	private LocalDate processStartDate;
+
+	@Column(name = "companyCode", columnDefinition = "Text")
+	private String companyCode;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "regionId")
+	Region region;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "stateId")
+	State state;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cityId")
+	City city;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "districtId")
+	District district;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "areaId")
+	Area area;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rsmId")
+	User rsm;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "asmId")
+	User asm;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "aseId")
+	User ase;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "hqId")
+	HqMaster hqMaster;
 	
-	@Column(name = "middle_name", length = 20)
-	private String middle_name;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "aadharFile")
+	UserFileDB aadharFile;
 	
-	@Column(name = "process_start_date", length = 20)
-	private String process_start_date;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "panFile")
+	UserFileDB panFile;
 	
-	@Column(name = "company_code", length = 20)
-	private String company_code;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "resumeFile")
+	UserFileDB resumeFile;
 	
-	@Column(name = "rsm_id", length = 20)
-	private String rsm_id;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "paySlipFile")
+	UserFileDB paySlipFile;
 	
-	@Column(name = "rsm", length = 20)
-	private String rsm;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bankStatementFile")
+	UserFileDB bankStatementFile;
 	
-	@Column(name = "asm_id", length = 20)
-	private String asm_id;
+	@Transient
+	private String regionId;
 	
-	@Column(name = "asm", length = 20)
-	private String asm;
+	@Transient
+	private String stateId;
 	
-	@Column(name = "ase_id", length = 20)
-	private String ase_id;
+	@Transient
+	private String districtId;
 	
-	@Column(name = "ase", length = 20)
-	private String ase;
+	@Transient
+	private String cityId;
 	
-	@OneToOne
-    @JoinColumn(name="id")
-    private State state;
+	@Transient
+	private String areaId;
 	
-	@OneToOne
-    @JoinColumn(name="id")
-    private Region region;
+	@Transient
+	private String rsmId;
 	
-	@OneToOne
-    @JoinColumn(name="id")
-    private HqMaster hqmaster;
+	@Transient
+	private String asmId;
 	
-	@OneToOne
-    @JoinColumn(name="id")
-    private Area area;
+	@Transient
+	private String aseId;
+	
+	@Transient
+	private String hqId;
+	
+	@Transient
+	private List<Map<String, Object>> userTargetDetailsList;
+	
+	public List<Map<String, Object>> getUserTargetDetailsList() {
+		return userTargetDetailsList;
+	}
 
 	public Long getId() {
 		return id;
@@ -174,7 +210,7 @@ public class User {
 	public void setLogin(String login) {
 		this.login = login;
 	}
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -191,12 +227,12 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String getEmp_code() {
-		return emp_code;
+	public String getEmpCode() {
+		return empCode;
 	}
 
-	public void setEmp_code(String emp_code) {
-		this.emp_code = emp_code;
+	public void setEmpCode(String empCode) {
+		this.empCode = empCode;
 	}
 
 	public String getTeam() {
@@ -207,12 +243,12 @@ public class User {
 		this.team = team;
 	}
 
-	public String getRoles() {
-		return roles;
+	public String getRole() {
+		return role;
 	}
 
-	public void setRoles(String roles) {
-		this.roles = roles;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getStatus() {
@@ -223,116 +259,36 @@ public class User {
 		this.status = status;
 	}
 
-	public LocalDateTime getCreate_date() {
-		return create_date;
+	public LocalDateTime getCreateDate() {
+		return createDate;
 	}
 
-	public void setCreate_date(LocalDateTime create_date) {
-		this.create_date = create_date;
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
 	}
 
-	public LocalDateTime getResign_date() {
-		return resign_date;
+	public LocalDateTime getResignDate() {
+		return resignDate;
 	}
 
-	public void setResign_date(LocalDateTime resign_date) {
-		this.resign_date = resign_date;
+	public void setResignDate(LocalDateTime resignDate) {
+		this.resignDate = resignDate;
 	}
 
-	public String getRegion_name() {
-		return region_name;
-	}
-
-	public void setRegion_name(String region_name) {
-		this.region_name = region_name;
-	}
-
-	public String getRegion_id() {
-		return region_id;
-	}
-
-	public void setRegion_id(String region_id) {
-		this.region_id = region_id;
-	}
-
-	public String getState_name() {
-		return state_name;
-	}
-
-	public void setState_name(String state_name) {
-		this.state_name = state_name;
-	}
-
-	public String getState_id() {
-		return state_id;
-	}
-
-	public void setState_id(String state_id) {
-		this.state_id = state_id;
-	}
-
-	public String getHq_name() {
-		return hq_name;
-	}
-
-	public void setHq_name(String hq_name) {
-		this.hq_name = hq_name;
-	}
-
-	public String getHq_id() {
-		return hq_id;
-	}
-
-	public void setHq_id(String hq_id) {
-		this.hq_id = hq_id;
-	}
-
-	public String getDocuments() {
-		return documents;
-	}
-
-	public void setDocuments(String documents) {
-		this.documents = documents;
-	}
-	
-	public String getArea_name() {
-		return area_name;
-	}
-
-	public void setArea_name(String area_name) {
-		this.area_name = area_name;
-	}
-
-	public String getArea_id() {
-		return area_id;
-	}
-
-	public void setArea_id(String area_id) {
-		this.area_id = area_id;
-	}
-	
 	public String getFullName() {
 		return fullName;
 	}
-	
+
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
 
-	public String getApproval_status() {
-		return approval_status;
+	public String getApprovalStatus() {
+		return approvalStatus;
 	}
 
-	public void setApproval_status(String approval_status) {
-		this.approval_status = approval_status;
-	}
-
-	public String getApproval_action() {
-		return approval_action;
-	}
-
-	public void setApproval_action(String approval_action) {
-		this.approval_action = approval_action;
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
 	}
 
 	public String getTitle() {
@@ -343,20 +299,12 @@ public class User {
 		this.title = title;
 	}
 
-	public String getEmployee_name() {
-		return employee_name;
+	public String getMaritalStatus() {
+		return maritalStatus;
 	}
 
-	public void setEmployee_name(String employee_name) {
-		this.employee_name = employee_name;
-	}
-
-	public String getMarital_status() {
-		return marital_status;
-	}
-
-	public void setMarital_status(String marital_status) {
-		this.marital_status = marital_status;
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
 	}
 
 	public String getGender() {
@@ -367,20 +315,20 @@ public class User {
 		this.gender = gender;
 	}
 
-	public String getBirth_date() {
-		return birth_date;
+	public LocalDate getBirthDate() {
+		return birthDate;
 	}
 
-	public void setBirth_date(String birth_date) {
-		this.birth_date = birth_date;
+	public void setBirth_date(LocalDate birthDate) {
+		this.birthDate = birthDate;
 	}
 
-	public String getJoin_date() {
-		return join_date;
+	public LocalDate getJoinDate() {
+		return joinDate;
 	}
 
-	public void setJoin_date(String join_date) {
-		this.join_date = join_date;
+	public void setJoinDate(LocalDate joinDate) {
+		this.joinDate = joinDate;
 	}
 
 	public String getGrade() {
@@ -407,12 +355,12 @@ public class User {
 		this.department = department;
 	}
 
-	public String getPayment_mode() {
-		return payment_mode;
+	public String getPaymentMode() {
+		return paymentMode;
 	}
 
-	public void setPayment_mode(String payment_mode) {
-		this.payment_mode = payment_mode;
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
 
 	public String getEmail() {
@@ -423,84 +371,28 @@ public class User {
 		this.email = email;
 	}
 
-	public String getMiddle_name() {
-		return middle_name;
+	public String getMiddleName() {
+		return middleName;
 	}
 
-	public void setMiddle_name(String middle_name) {
-		this.middle_name = middle_name;
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
 
-	public String getProcess_start_date() {
-		return process_start_date;
+	public LocalDate getProcessStartDate() {
+		return processStartDate;
 	}
 
-	public void setProcess_start_date(String process_start_date) {
-		this.process_start_date = process_start_date;
-	}
-	
-	public String getCompany_code() {
-		return company_code;
+	public void setProcessStartDate(LocalDate processStartDate) {
+		this.processStartDate = processStartDate;
 	}
 
-	public void setCompany_code(String company_code) {
-		this.company_code = company_code;
+	public String getCompanyCode() {
+		return companyCode;
 	}
 
-	public String getRsm_id() {
-		return rsm_id;
-	}
-
-	public void setRsm_id(String rsm_id) {
-		this.rsm_id = rsm_id;
-	}
-
-	public String getRsm() {
-		return rsm;
-	}
-
-	public void setRsm(String rsm) {
-		this.rsm = rsm;
-	}
-
-	public String getAsm_id() {
-		return asm_id;
-	}
-
-	public void setAsm_id(String asm_id) {
-		this.asm_id = asm_id;
-	}
-
-	public String getAsm() {
-		return asm;
-	}
-
-	public void setAsm(String asm) {
-		this.asm = asm;
-	}
-
-	public String getAse_id() {
-		return ase_id;
-	}
-
-	public void setAse_id(String ase_id) {
-		this.ase_id = ase_id;
-	}
-
-	public String getAse() {
-		return ase;
-	}
-
-	public void setAse(String ase) {
-		this.ase = ase;
-	}
-
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
+	public void setCompanyCode(String companyCode) {
+		this.companyCode = companyCode;
 	}
 
 	public Region getRegion() {
@@ -511,12 +403,28 @@ public class User {
 		this.region = region;
 	}
 
-	public HqMaster getHqmaster() {
-		return hqmaster;
+	public State getState() {
+		return state;
 	}
 
-	public void setHqmaster(HqMaster hqmaster) {
-		this.hqmaster = hqmaster;
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	public District getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(District district) {
+		this.district = district;
 	}
 
 	public Area getArea() {
@@ -527,65 +435,205 @@ public class User {
 		this.area = area;
 	}
 
-	public User(Long id,String login,String firstName, String lastName, String emp_code,
-			String team, String roles, String status, LocalDateTime create_date, LocalDateTime resign_date, String region_name,
-			String region_id, String state_name, String state_id, String hq_name, String hq_id, String documents,String area_id,String fullName,
-			String approval_status, String approval_action,String title, String employee_name, String marital_status, String gender, String birth_date,
-			String join_date, String grade, String branch, String department, String payment_mode, String email,
-			String middle_name, String process_start_date, String company_code,String rsm_id, String rsm, String asm_id, String asm, String ase_id, String ase) {
+	public User getRsm() {
+		return rsm;
+	}
+
+	public void setRsm(User rsm) {
+		this.rsm = rsm;
+	}
+
+	public User getAsm() {
+		return asm;
+	}
+
+	public void setAsm(User asm) {
+		this.asm = asm;
+	}
+
+	public User getAse() {
+		return ase;
+	}
+
+	public void setAse(User ase) {
+		this.ase = ase;
+	}
+
+	public HqMaster getHqMaster() {
+		return hqMaster;
+	}
+
+	public void setHqMaster(HqMaster hqMaster) {
+		this.hqMaster = hqMaster;
+	}
+
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	public LocalDateTime getInactiveDate() {
+		return inactiveDate;
+	}
+
+	public void setInactiveDate(LocalDateTime inactiveDate) {
+		this.inactiveDate = inactiveDate;
+	}
+
+	public LocalDateTime getUpdatedDateTime() {
+		return updatedDateTime;
+	}
+
+	public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
+		this.updatedDateTime = updatedDateTime;
+	}
+
+	public UserFileDB getAadharFile() {
+		return aadharFile;
+	}
+
+	public void setAadharFile(UserFileDB aadharFile) {
+		this.aadharFile = aadharFile;
+	}
+
+	public UserFileDB getPanFile() {
+		return panFile;
+	}
+
+	public void setPanFile(UserFileDB panFile) {
+		this.panFile = panFile;
+	}
+
+	public UserFileDB getResumeFile() {
+		return resumeFile;
+	}
+
+	public void setResumeFile(UserFileDB resumeFile) {
+		this.resumeFile = resumeFile;
+	}
+
+	public UserFileDB getPaySlipFile() {
+		return paySlipFile;
+	}
+
+	public void setPaySlipFile(UserFileDB paySlipFile) {
+		this.paySlipFile = paySlipFile;
+	}
+
+	public UserFileDB getBankStatementFile() {
+		return bankStatementFile;
+	}
+
+	public void setBankStatementFile(UserFileDB bankStatementFile) {
+		this.bankStatementFile = bankStatementFile;
+	}
+
+	public String getRegionId() {
+		return regionId;
+	}
+	
+	public String getStateId() {
+		return stateId;
+	}
+	
+	public String getDistrictId() {
+		return districtId;
+	}
+	
+	public String getCityId() {
+		return cityId;
+	}
+	
+	public String getAreaId() {
+		return areaId;
+	}
+	
+	public String getHqId() {
+		return hqId;
+	}
+	
+	public String getRsmId() {
+		return rsmId;
+	}
+	
+	public String getAsmId() {
+		return asmId;
+	}
+	
+	public String getAseId() {
+		return aseId;
+	}
+	
+	public User(Long id, String login, String firstName, String lastName, String empCode, String team, String role,
+			String status, LocalDateTime createDate, LocalDateTime resignDate, String fullName, String approvalStatus,
+			String title, String maritalStatus, String gender, LocalDate birthDate, LocalDate joinDate, String grade,
+			String branch, String department, String paymentMode, String email, String middleName,
+			LocalDate processStartDate, String companyCode, Region region, State state, District district, City city,
+			Area area, HqMaster hqMaster, User rsm, User asm, User ase,LocalDateTime inactiveDateTime,LocalDateTime updatedDateTime,
+			UserFileDB aadharFile,UserFileDB panFile,UserFileDB resumeFile,UserFileDB paySlipFile,UserFileDB bankStatementFile) {
 		super();
 		this.id = id;
 		this.login = login;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.emp_code = emp_code;
+		this.empCode = empCode;
 		this.team = team;
-		this.roles = roles;
+		this.role = role;
 		this.status = status;
-		this.create_date = create_date;
-		this.resign_date = resign_date;
-		this.region_name = region_name;
-		this.region_id = region_id;
-		this.state_name = state_name;
-		this.state_id = state_id;
-		this.hq_name = hq_name;
-		this.hq_id = hq_id;
-		this.documents = documents;
-		this.area_id=area_id;
+		this.createDate = createDate;
+		this.resignDate = resignDate;
 		this.fullName = fullName;
-		this.approval_status = approval_status;
-		this.approval_action = approval_action;
+		this.approvalStatus = approvalStatus;
 		this.title = title;
-		this.employee_name = employee_name;
-		this.marital_status = marital_status;
+		this.maritalStatus = maritalStatus;
 		this.gender = gender;
-		this.birth_date = birth_date;
-		this.join_date = join_date;
+		this.birthDate = birthDate;
+		this.joinDate = joinDate;
 		this.grade = grade;
 		this.branch = branch;
 		this.department = department;
-		this.payment_mode = payment_mode;
+		this.paymentMode = paymentMode;
 		this.email = email;
-		this.middle_name = middle_name;
-		this.process_start_date = process_start_date;
-		this.company_code = company_code;
-		this.rsm_id = rsm_id;
+		this.middleName = middleName;
+		this.processStartDate = processStartDate;
+		this.companyCode = companyCode;
+		this.region = region;
+		this.state = state;
+		this.district = district;
+		this.city = city;
+		this.area = area;
+		this.hqMaster = hqMaster;
 		this.rsm = rsm;
-		this.asm_id = asm_id;
 		this.asm = asm;
-		this.ase_id = ase_id;
 		this.ase = ase;
+		this.inactiveDate = inactiveDateTime;
+		this.updatedDateTime = updatedDateTime;
+		this.aadharFile = aadharFile;
+		this.panFile = panFile;
+		this.resumeFile = resumeFile;
+		this.paySlipFile = paySlipFile;
+		this.bankStatementFile = bankStatementFile;
 	}
 
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	@Transient
-    public String getPhotosImagePath() {
-        if (documents == null || id == null) return null;
-         
-        return "/user-photos/" + id + "/" + documents;
-    }
-		
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", title=" + title + ", login=" + login + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", fullName=" + fullName + ", empCode=" + empCode + ", team=" + team + ", role=" + role
+				+ ", status=" + status + ", createDate=" + createDate + ", resignDate=" + resignDate + ", inactiveDate="
+				+ inactiveDate + ", updatedDateTime=" + updatedDateTime + ", approvalStatus=" + approvalStatus
+				+ ", maritalStatus=" + maritalStatus + ", gender=" + gender + ", birthDate=" + birthDate + ", joinDate="
+				+ joinDate + ", grade=" + grade + ", branch=" + branch + ", department=" + department + ", paymentMode="
+				+ paymentMode + ", email=" + email + ", middleName=" + middleName + ", processStartDate="
+				+ processStartDate + ", companyCode=" + companyCode + ", region=" + region + ", state=" + state
+				+ ", city=" + city + ", district=" + district + ", area=" + area + ", rsm=" + rsm + ", asm=" + asm
+				+ ", ase=" + ase + ", hqMaster=" + hqMaster + ", aadharFile=" + aadharFile + ", panFile=" + panFile
+				+ ", resumeFile=" + resumeFile + ", paySlipFile=" + paySlipFile + ", bankStatementFile="
+				+ bankStatementFile + ", regionId=" + regionId + ", stateId=" + stateId + ", districtId=" + districtId
+				+ ", cityId=" + cityId + ", areaId=" + areaId + ", rsmId=" + rsmId + ", asmId=" + asmId + ", aseId="
+				+ aseId + ", hqId=" + hqId + ", userTargetDetailsList=" + userTargetDetailsList + "]";
+	}
+
 }

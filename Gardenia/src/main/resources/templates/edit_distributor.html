@@ -312,7 +312,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>Region </label> <select class="form-control"
 										id="regionDropdown" name="region_id" oninput="myFunc()">
-
+										<option value="" selected disabled hidden>Select Region</option>
 										<option th:each="region_name : ${region_name}"
 											th:value="${region_name.id}"
 											th:selected="${region_name.id} eq ${region_code_ID}?true:false"
@@ -324,7 +324,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>State</label> <select class="form-control"
 										id="dropDownList" name="state_id">
-
+										<option value="" selected disabled hidden>Select State</option>
 										<option th:each="state_name : ${state_name}"
 											th:value="${state_name.id}"
 											th:selected="${state_name.id} eq ${state_code_ID}?true:false"
@@ -336,7 +336,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>City</label> <select class="form-control"
 										id="dropDownList" name="city_id">
-
+										<option value="" selected disabled hidden>Select City</option>
 										<option th:each="city_name : ${city_name}"
 											th:selected="${city_name.id} eq ${city_code_ID}?true:false"
 											th:value="${city_name.id}" th:text="${city_name.city_name}"></option>
@@ -373,6 +373,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>Serviced Status </label> <select class="form-control"
 										id="dropDownList" name="options">
+										<option value="" selected disabled hidden>Select Service Status</option>
 										<option
 											th:each="options : ${T(com.example.demo.Enum.Service).values()}"
 											th:value="${options}" th:text="${options}"></option>
@@ -381,19 +382,23 @@ function myFunc(){
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>Brand List</label> <input type="text" name="brand_list"
-										th:field="*{brand_list}" class="form-control"
-										placeholder="Enter Brand List" />
+									<label>Assigned TSO</label>
+									<select class="form-control" id="assignTSOList" name="assign_tso_id">
+										<option value="" selected disabled hidden>Select TSO</option>
+    									<option th:each="users : ${users}" th:selected="${users.id} eq ${user_ID}?true:false" th:value="${users.id}" th:text="${users.fullName}"></option>
+									</select>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-3">
-								<div class="form-group">
-									<label>Assigned TSO</label> <input type="text"
-										name="supp_code" th:field="*{assign_tso}" class="form-control"
-										placeholder="Enter Assigned TSO" />
-								</div>
+									<label>Brand List</label>
+									 <select id="choices-multiple-remove-button" name="selectedValues" placeholder="Select Brands" multiple>
+										<option th:each="brand : ${brand}"
+											th:selected="${brand.id} eq {selectedValues}?true:false"
+											th:value="${brand.id}"
+											th:text="${brand.brand}"></option>
+									</select>
 							</div>
 						</div>
 						

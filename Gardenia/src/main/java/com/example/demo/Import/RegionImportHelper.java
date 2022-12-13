@@ -14,77 +14,94 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.Region;
+import com.example.demo.entity.State;
 import com.example.demo.repository.RegionRepository;
+import com.example.demo.service.StateService;
 
 @Component
 public class RegionImportHelper {
 
-private static RegionRepository regionRepository;
-	
+	private static RegionRepository regionRepository;
+
+	private static StateService stateService;
+
 	@Autowired
-	public RegionImportHelper(RegionRepository regionRepository) {
+	public RegionImportHelper(RegionRepository regionRepository, StateService stateService) {
 		super();
 		RegionImportHelper.regionRepository = regionRepository;
+		RegionImportHelper.stateService = stateService;
 	}
-	//check if file type is excel or not
-	public static boolean checkExcelFormat(MultipartFile file) {
-		
-		String contentTypeString = file.getContentType();
-		if(contentTypeString.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-			return true;
-		}else {
+
+	// check if file type is excel or not
+	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+	public static boolean hasExcelFormat(MultipartFile file) {
+
+		if (!TYPE.equals(file.getContentType())) {
 			return false;
 		}
+
+		return true;
 	}
-	
-	//convert excel to list of states
-	public static List<Region> convertToRegions(InputStream iStream){
+
+	// convert excel to list of states
+	public static List<Region> convertToRegions(InputStream iStream) {
 		List<Region> list = new ArrayList<>();
-		
+
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook(iStream);
 			XSSFSheet sheet = workbook.getSheet("Sheet1");
 			int rowNumber = 0;
 			Iterator<Row> iterator = sheet.iterator();
-			
+
 			while (iterator.hasNext()) {
 				Row row = iterator.next();
-				
-				if(rowNumber == 0) {
+
+				if (rowNumber == 0) {
 					rowNumber++;
 					continue;
 				}
-				
+
 				Iterator<Cell> cells = row.iterator();
-				
-				int cid=0;
+
+				int cid = 0;
 				Region region = new Region();
-				
-				while(cells.hasNext()) {
+
+				while (cells.hasNext()) {
 					Cell cell = cells.next();
-					
-					switch (cid){
-					case 0: 
-						region.setRegion_code(cell.getStringCellValue());
+
+					switch (cid) {
+					case 0:
+						region.setRegionCode(cell.getStringCellValue());
 						break;
 					case 1:
-						region.setRegion_name(cell.getStringCellValue());
+						region.setRegionName(cell.getStringCellValue());
 						break;
 					case 2:
-						region.setState_name(cell.getStringCellValue());
-						String sName = cell.getStringCellValue();
-						String cId = regionRepository.findByState(sName);
-						region.setState_code(cId);
+						if (cell.getStringCellValue() != null) {
+							String sName = cell.getStringCellValue();
+							Long sId = regionRepository.findByState(sName);
+							State state = stateService.getStateById(sId);
+							region.setState(state);
+						}
 						break;
 					default:
 						break;
 					}
 					cid++;
+					
+//					regionCodeString = body.get("regionCode").toString();
+//					String codeNumberInteger = "000";
+//					distributorCode.setCodeNumber(codeNumberInteger);
+//					distributorCode.setRegionCode(regionCodeString);
+//					distributorCode.setRegion(region);
+////					System.out.println(distributorCode);
+//					distributorCodeService.saveDistributorCode(distributorCode);
 				}
 				list.add(region);
-				
+
 			}
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

@@ -6,34 +6,31 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "city")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class City {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long Id;
 	
-	@Column(name = "city_code", length = 20)
-    private String city_code;
+	@Column(name = "cityCode", columnDefinition = "Text")
+    private String cityCode;
 	
-	@Column(name = "city_name", nullable = false, length = 20)
-    private String city_name;
+	@Column(name = "cityName", columnDefinition = "Text")
+    private String cityName;
 	
-	@Column(name = "district_name", nullable = false, length = 20)
-    private String district_name;
-	
-	@Column(name = "district_code", nullable = false, length = 20)
-    private String district_code;
-	
-	@OneToOne
-    @JoinColumn(name="id")
-    private District district;
-	
-	@OneToOne(mappedBy = "city")
-	private Area area;
+	@ManyToOne
+    @JoinColumn(name = "districtId")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	District district;
 
 	public Long getId() {
 		return Id;
@@ -43,44 +40,36 @@ public class City {
 		Id = id;
 	}
 
-	public String getCity_code() {
-		return city_code;
+	public String getCityCode() {
+		return cityCode;
 	}
 
-	public void setCity_code(String city_code) {
-		this.city_code = city_code;
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
 	}
 
-	public String getCity_name() {
-		return city_name;
+	public String getCityName() {
+		return cityName;
 	}
 
-	public void setCity_name(String city_name) {
-		this.city_name = city_name;
-	}
-
-	public String getDistrict_name() {
-		return district_name;
-	}
-
-	public void setDistrict_name(String district_name) {
-		this.district_name = district_name;
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
 	}
 	
-	public String getDistrict_code() {
-		return district_code;
+
+	public District getDistrict() {
+		return district;
 	}
 
-	public void setDistrict_code(String district_code) {
-		this.district_code = district_code;
+	public void setDistrict(District district) {
+		this.district = district;
 	}
 
-	public City(String city_code, String city_name, String district_name, String district_code) {
+	public City(String cityCode, String cityName, District district) {
 		super();
-		this.city_code = city_code;
-		this.city_name = city_name;
-		this.district_name = district_name;
-		this.district_code = district_code;
+		this.cityCode = cityCode;
+		this.cityName = cityName;
+		this.district = district;
 	}
 
 	public City() {

@@ -2,21 +2,25 @@ package com.example.demo.repository;
  
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.Country;
 import com.example.demo.entity.State;
 
 @Repository
 public interface StateRepository extends JpaRepository<State, Long> {
-	@Query("select c.country_name from Country c where c.id = ?1")
+	@Query("select c.countryName from Country c where c.id = ?1")
 	String findByCountryName(@Param("cId") Long cName);
 	
-	@Query("select c.id from Country c where c.country_name = ?1")
-	String findByCountry(@Param("cName") String counName);
+	@Query("select c.id from Country c where c.countryName = ?1")
+	Long findByCountry(@Param("cName") String counName);
+	
+	@Query("select s from State s where s.country.id=?1")
+	List<State> filterByCountry(@Param("countryId")Optional<Long> countryId);
 	
 }
