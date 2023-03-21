@@ -6,13 +6,14 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailSenderService {
+public class EmailSenderService{
 
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -27,7 +28,7 @@ public class EmailSenderService {
 		
 		FileSystemResource fileSystemResource = new FileSystemResource(new File(attachment));
 		
-		mimeMessageHelper.addAttachment(fileSystemResource.getFilename(), fileSystemResource);
+		mimeMessageHelper.addAttachment("Test",fileSystemResource);
 		javaMailSender.send(mimeMessage);
 		
 		System.out.println("Mail sent successfully");

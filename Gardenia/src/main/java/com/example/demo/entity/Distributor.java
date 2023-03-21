@@ -52,8 +52,11 @@ public class Distributor{
 	@Column(name = "email", columnDefinition = "Text")
 	private String email;
 	
-	@Column(name = "address", columnDefinition = "Text")
-	private String address;
+	@Column(name = "billingAddress", columnDefinition = "Text")
+	private String billingAddress;
+	
+	@Column(name = "deliveryAddress", columnDefinition = "Text")
+	private String deliveryAddress;
 	
 	@Column(name = "suppName", columnDefinition = "Text")
 	private String suppName;
@@ -63,6 +66,9 @@ public class Distributor{
 	
 	@Column(name = "status", columnDefinition = "Text")
 	private String status;
+	
+	@Column(name = "pinCode", columnDefinition = "Text")
+	private String pinCode;
 	
 	@Column(name = "create_date")
 	private LocalDateTime create_date;
@@ -78,6 +84,9 @@ public class Distributor{
 	
 	@Column(name = "approvalStatus", columnDefinition = "Text")
 	private String approvalStatus;
+	
+	@Column(name = "rejectReason", columnDefinition = "Text")
+	private String rejectReason;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regionId")
@@ -96,8 +105,8 @@ public class Distributor{
 	District district;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assignTsoId")
-	User user;
+    @JoinColumn(name = "hqId")
+	HqMaster hqMaster;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gstFileId")
@@ -108,11 +117,18 @@ public class Distributor{
 	FileDB panFile;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "companyCertificateFileId")
-	FileDB companyCertificateFile;
+    @JoinColumn(name = "scannedCopyFileId")
+	FileDB scannedCopyFile;
 	
 	@Transient
 	private List<Map<String, Object>> brandList;
+	
+	@Transient
+	private List<Map<String, Object>> currentBusinessAssociation;
+	
+	public List<Map<String, Object>> getCurrentBusinessAssociation() {
+		return currentBusinessAssociation;
+	}
 	
 	@Transient
 	private String regionId;
@@ -127,14 +143,14 @@ public class Distributor{
 	private String cityId;
 	
 	@Transient
-	private String userId;
+	private String hqId;
 	
 	public List<Map<String, Object>> getBrandList() {
 		return brandList;
 	}
 	
-	public String getUserId() {
-		return userId;
+	public String getHqId() {
+		return hqId;
 	}
 
 	public String getRegionId() {
@@ -241,12 +257,20 @@ public class Distributor{
 		this.email = email;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getBillingAddress() {
+		return billingAddress;
 	}
-
-	public void setAddress(String address) {
-		this.address = address;
+	
+	public void setBillingAddress(String billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+	
+	public String getDeliveryAddress() {
+		return deliveryAddress;
+	}
+	
+	public void setDeliveryAddress(String deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
 	}
 
 	public String getSuppName() {
@@ -330,12 +354,12 @@ public class Distributor{
 		this.city = city;
 	}
 
-	public User getUser() {
-		return user;
+	public HqMaster getHqMaster() {
+		return hqMaster;
 	}
-
-	public void setUser(User user) {
-		this.user = user;
+	
+	public void setHqMaster(HqMaster hqMaster) {
+		this.hqMaster = hqMaster;
 	}
 
 	public LocalDateTime getUpdatedDateTime() {
@@ -362,19 +386,35 @@ public class Distributor{
 		this.panFile = panFile;
 	}
 
-	public FileDB getCompanyCertificateFile() {
-		return companyCertificateFile;
+	public FileDB getScannedCopyFile() {
+		return scannedCopyFile;
 	}
-
-	public void setCompanyCertificateFile(FileDB companyCertificateFile) {
-		this.companyCertificateFile = companyCertificateFile;
+	
+	public void setScannedCopyFile(FileDB scannedCopyFile) {
+		this.scannedCopyFile = scannedCopyFile;
+	}
+	
+	public String getPinCode() {
+		return pinCode;
+	}
+	
+	public void setPinCode(String pinCode) {
+		this.pinCode = pinCode;
+	}
+	
+	public String getRejectReason() {
+		return rejectReason;
+	}
+	
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
 	}
 
 	public Distributor(Long id, String distributorName, String distributorCode, String distributorType, String gstin,
-			String pan, String contact, String mobile, String phone, String email, String address, String suppName,
+			String pan, String contact, String mobile, String phone, String email, String billingAddress, String suppName,
 			String suppCode, String status, LocalDateTime create_date, LocalDateTime inactive_date,LocalDateTime updatedDateTime,
-			String serviceStatus, String approvalStatus,Region region,State state,City city,User user,FileDB gstFile,FileDB panFile,
-			FileDB companyCertificateFile,District district) {
+			String serviceStatus, String approvalStatus,Region region,State state,City city,HqMaster hqMaster,FileDB gstFile,FileDB panFile,
+			FileDB scannedFile,District district,String pinCode,String deliveryAddress,String rejectReason) {
 		super();
 		this.id = id;
 		this.distributorName = distributorName;
@@ -386,7 +426,7 @@ public class Distributor{
 		this.mobile = mobile;
 		this.phone = phone;
 		this.email = email;
-		this.address = address;
+		this.billingAddress = billingAddress;
 		this.suppName = suppName;
 		this.suppCode = suppCode;
 		this.status = status;
@@ -397,12 +437,15 @@ public class Distributor{
 		this.region = region;
 		this.state = state;
 		this.city = city;
-		this.user = user;
+		this.hqMaster = hqMaster;
 		this.updatedDateTime = updatedDateTime;
 		this.gstFile = gstFile;
 		this.panFile = panFile;
-		this.companyCertificateFile = companyCertificateFile;
+		this.scannedCopyFile = scannedFile;
 		this.district = district;
+		this.pinCode = pinCode;
+		this.deliveryAddress = deliveryAddress;
+		this.rejectReason = rejectReason;
 	}
 	
 	public Distributor() {

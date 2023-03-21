@@ -81,7 +81,7 @@ public class CityImportHelper {
 						if (cell.getStringCellValue() != null) {
 							String dName = cell.getStringCellValue();
 							System.out.println(cell.getStringCellValue());
-							Long dId = cityRepository.findByDistrict(dName);
+							Long dId = cityRepository.findByDistName(dName);
 							District district = districtService.getDistrictById(dId);
 							city.setDistrict(district);
 						}

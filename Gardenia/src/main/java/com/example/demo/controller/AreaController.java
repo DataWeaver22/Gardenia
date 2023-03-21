@@ -101,6 +101,9 @@ public class AreaController {
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
 	public ResponseEntity<Map<String, Object>> listArea(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "areaName") String sortBy, @RequestParam(defaultValue = "25") Integer pageSize,
+			@RequestParam(required = false) Optional<String> areaCode,
+			@RequestParam(required = false) Optional<String> areaName,
+			@RequestParam(required = false) Optional<String> cityName,
 			@RequestParam(defaultValue = "DESC") String DIR) {
 		try {
 			List<Area> areas = new ArrayList<Area>();
@@ -119,7 +122,7 @@ public class AreaController {
 			}
 
 			Page<Area> pageArea;
-			pageArea = areaRepository.findAll(paging);
+			pageArea = areaRepository.findByFilterParam(areaCode,cityName,areaName,paging);
 			areas = pageArea.getContent();
 			Map<String, Object> pageContent = new HashMap<>();
 			pageContent.put("currentPage", page);

@@ -119,7 +119,15 @@ public class ProductController {
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
 	public ResponseEntity<Map<String, Object>> listProduct(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "updatedDateTime") String sortBy,
-			@RequestParam(defaultValue = "25") Integer pageSize, @RequestParam(defaultValue = "DESC") String DIR,
+			@RequestParam(required = false) Optional<String> productCode,
+			@RequestParam(required = false) Optional<String> productName,
+			@RequestParam(required = false) Optional<String> brandName,
+			@RequestParam(required = false) Optional<String> categoryName,
+			@RequestParam(required = false) Optional<String> familyName,
+			@RequestParam(required = false) Optional<String> variant,
+			@RequestParam(required = false) Optional<String> salesDiaryCode,
+			@RequestParam(required = false) Optional<BigDecimal> mrp, @RequestParam(defaultValue = "25") Integer pageSize,
+			@RequestParam(defaultValue = "DESC") String DIR,
 			@RequestParam(defaultValue = "Approved") Optional<String> productStatus) {
 
 		try {
@@ -136,7 +144,9 @@ public class ProductController {
 			}
 
 			Page<Product> pageProducts;
-			pageProducts = productRepository.findByProductStatus(productStatus, paging);
+			System.out.println(brandName);
+			pageProducts = productRepository.findByFilterParam(productCode, productName, brandName, categoryName, familyName,
+					variant, salesDiaryCode, mrp, productStatus, paging);
 			products = pageProducts.getContent();
 			Map<String, Object> pageContent = new HashMap<>();
 			pageContent.put("currentPage", page);
@@ -239,29 +249,24 @@ public class ProductController {
 		return productService.editProduct(existingProduct);
 	}
 
-	@GetMapping("/{id}")
-	public String deleteProduct(@PathVariable Long id) {
-		productService.deleteProductById(id);
-		return "redirect:/product";
-	}
-
 	@GetMapping("/approve/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
 	public String approveProduct(@PathVariable Long id) {
 		Long pID = id;
 		System.out.println(pID);
 		String approved = "Approved";
-		productRepository.updateByStatus(approved, pID);
+		productRepository.updateByApprovedStatus(approved, pID);
 		return "Approved";
 	}
 
-	@GetMapping("/reject/{id}")
+	@PostMapping("/reject/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	public String rejectProduct(@PathVariable Long id) {
+	public String rejectProduct(@PathVariable Long id,@RequestBody Map<String, Object> body) {
 		Long pID = id;
 		System.out.println(pID);
+		String rejectReason = body.get("rejectReason").toString();
 		String approved = "Rejected";
-		productRepository.updateByStatus(approved, pID);
+		productRepository.updateByStatus(approved, rejectReason, pID);
 		return "Rejected";
 	}
 

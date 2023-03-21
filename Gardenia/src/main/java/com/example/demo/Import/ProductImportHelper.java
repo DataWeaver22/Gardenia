@@ -65,7 +65,7 @@ public class ProductImportHelper {
 			XSSFSheet sheet = workbook.getSheet("Sheet1");
 			int rowNumber = 0;
 			Iterator<Row> iterator = sheet.iterator();
-
+			int count =1;
 			while (iterator.hasNext()) {
 				Row row = iterator.next();
 
@@ -161,7 +161,10 @@ public class ProductImportHelper {
 					product.setApproval_status("Approved");
 					cid++;
 				}
+				System.out.println(count);
+				count++;
 				list.add(product);
+				
 
 			}
 

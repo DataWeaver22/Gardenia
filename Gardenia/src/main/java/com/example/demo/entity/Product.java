@@ -92,6 +92,9 @@ public class Product{
 	@Column(name="updatedDateTime")
 	private LocalDateTime updatedDateTime;
 	
+	@Column(name="rejectReason", columnDefinition = "TEXT")
+	private String rejectReason;
+	
 	public Long getId() {
 		return id;
 	}
@@ -243,10 +246,18 @@ public class Product{
 	public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
 		this.updatedDateTime = updatedDateTime;
 	}
+	
+	public String getRejectReason() {
+		return rejectReason;
+	}
+	
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
+	}
 
 	public Product(Long id, String pname, String code, Brand brand, Category category, Family family, String variant,
 			String group_name, String uom, BigDecimal ptd, BigDecimal ptr, String status, String description, LocalDateTime create_date,
-			LocalDateTime inactive_date, String salesDiaryCode, BigDecimal mrp, String approval_status,LocalDateTime updatedDateTime) {
+			LocalDateTime inactive_date, String salesDiaryCode, BigDecimal mrp, String approval_status,LocalDateTime updatedDateTime,String rejectReason) {
 		super();
 		this.id = id;
 		this.pname = pname;
@@ -267,6 +278,7 @@ public class Product{
 		this.mrp = mrp;
 		this.approval_status = approval_status;
 		this.updatedDateTime = updatedDateTime;
+		this.rejectReason = rejectReason;
 	}
 	
 	public Product() {

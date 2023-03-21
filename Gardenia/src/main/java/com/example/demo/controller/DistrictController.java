@@ -102,6 +102,9 @@ public class DistrictController {
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
 	public ResponseEntity<Map<String, Object>> listRegion(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "districtName") String sortBy,
+			@RequestParam(required = false) Optional<String> districtCode,
+			@RequestParam(required = false) Optional<String> districtName,
+			@RequestParam(required = false) Optional<String> regionName,
 			@RequestParam(defaultValue = "25") Integer pageSize, @RequestParam(defaultValue = "DESC") String DIR) {
 
 		try {
@@ -121,7 +124,7 @@ public class DistrictController {
 			}
 
 			Page<District> pageDistrict;
-			pageDistrict = districtRepository.findAll(paging);
+			pageDistrict = districtRepository.findByFilterParam(districtCode,regionName,districtName,paging);
 			districts = pageDistrict.getContent();
 			Map<String, Object> pageContent = new HashMap<>();
 			pageContent.put("currentPage", page);

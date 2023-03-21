@@ -82,6 +82,9 @@ public class StateController {
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
 	public ResponseEntity<Map<String, Object>> listState(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "stateName") String sortBy,
+			@RequestParam(required = false) Optional<String> stateCode,
+			@RequestParam(required = false) Optional<String> stateName,
+			@RequestParam(required = false) Optional<String> countryName,
 			@RequestParam(defaultValue = "25") Integer pageSize, @RequestParam(defaultValue = "DESC") String DIR) {
 
 		try {
@@ -101,7 +104,7 @@ public class StateController {
 			}
 
 			Page<State> pageState;
-			pageState = stateRepository.findAll(paging);
+			pageState = stateRepository.findByFilterParam(stateCode, stateName, countryName, paging);
 			states = pageState.getContent();
 			Map<String, Object> pageContent = new HashMap<>();
 			pageContent.put("currentPage", page);
@@ -142,7 +145,7 @@ public class StateController {
 				return ResponseEntity.status(HttpStatus.OK).body(new ImportResponseMessage(message));
 			} catch (Exception e) {
 				message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-				//message = e.fillInStackTrace().toString();
+				// message = e.fillInStackTrace().toString();
 				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ImportResponseMessage(message));
 			}
 		}

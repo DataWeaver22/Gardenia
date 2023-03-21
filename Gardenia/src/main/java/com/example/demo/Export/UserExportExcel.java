@@ -91,7 +91,7 @@ public class UserExportExcel {
             createCell(row, columnCount++, user.getId(), style);
             createCell(row, columnCount++, user.getFirstName(), style);
             createCell(row, columnCount++, user.getLastName(), style);
-            createCell(row, columnCount++, user.getTeam(), style);
+            createCell(row, columnCount++, user.getReportingTo(), style);
             createCell(row, columnCount++, user.getRole(), style);
             createCell(row, columnCount++, user.getStatus(), style);
          }

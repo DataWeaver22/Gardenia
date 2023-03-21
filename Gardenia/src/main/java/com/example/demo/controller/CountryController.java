@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.ObjectUtils.Null;
@@ -48,6 +50,7 @@ import com.example.demo.Import.Service.ImportResponseMessage;
 import com.example.demo.Import.Service.ImportService;
 import com.example.demo.entity.Country;
 import com.example.demo.entity.State;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.CountryRepository;
 import com.example.demo.service.CountryService;
 
@@ -97,6 +100,8 @@ public class CountryController {
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> listStudents(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "id") String sortBy, @RequestParam(defaultValue = "25") Integer pageSize,
+			@RequestParam(required = false) Optional<String> countryCode,
+			@RequestParam(required = false) Optional<String> countryName,
 			@RequestParam(defaultValue = "DESC") String DIR) {
 		try {
 			List<Country> countries = new ArrayList<Country>();
@@ -115,7 +120,7 @@ public class CountryController {
 			}
 
 			Page<Country> pageCountry;
-			pageCountry = countryRepository.findAll(paging);
+			pageCountry = countryRepository.findByFilterParam(countryCode,countryName,paging);
 			countries = pageCountry.getContent();
 			Map<String, Object> pageContent = new HashMap<>();
 			pageContent.put("currentPage", page);
@@ -163,14 +168,16 @@ public class CountryController {
 
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
 	@PostMapping
-	Country saveCountry(@RequestBody Country country) {
-
-		return countryService.saveCountry(country);
+	ResponseEntity<?> saveCountry(@RequestBody Country country,HttpServletRequest request) {
+		countryService.saveCountry(country);
+		String message = "Data Added Successfully";
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, message, "OK", request.getRequestURI()));
 	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Country updateCountry(@PathVariable Long id, @RequestBody Country country, Model model) {
+	ResponseEntity<?> updateCountry(@PathVariable Long id, @RequestBody Country country, HttpServletRequest request) {
 
 		// Get Existing Student
 		Country existingCountry = countryService.getCountryById(id);
@@ -178,13 +185,9 @@ public class CountryController {
 		existingCountry.setCountryName(country.getCountryName());
 
 		// Save Student
-
-		return countryService.editCountry(existingCountry);
-	}
-
-	@GetMapping("/{id}")
-	public String deleteCountry(@PathVariable Long id) {
-		countryService.deleteCountryById(id);
-		return "redirect:/country";
+		countryService.editCountry(existingCountry);
+		String message = "Data Edited Successfully";
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, message, "OK", request.getRequestURI())) ;
 	}
 }

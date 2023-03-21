@@ -24,8 +24,8 @@ import com.example.demo.entity.Product;
 public class DistributorExportExcel {
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	static String[] HEADERs = { "Id", "Distributor Name", "Code", "Type of Distributor", "GSTIN", "PAN",
-			"Contact Person", "Mobile", "Phone", "Email", "Address", "Supp Name", "Supp Code", "Assigned TSO ID",
-			"Assigned TSO", "Status", "Service Status", "Approved Status", "Region ID", "Region Name", "State ID",
+			"Contact Person", "Mobile", "Phone", "Email", "Address", "Supp Name", "Supp Code", "HQ ID",
+			"HQ", "Status", "Service Status", "Approved Status", "Region ID", "Region Name", "State ID",
 			"State Name", "City ID", "City Name" };
 	static String SHEET = "Distributors";
 
@@ -56,15 +56,15 @@ public class DistributorExportExcel {
 				row.createCell(7).setCellValue(distributor.getMobile());
 				row.createCell(8).setCellValue(distributor.getPhone());
 				row.createCell(9).setCellValue(distributor.getEmail());
-				row.createCell(10).setCellValue(distributor.getAddress());
+				row.createCell(10).setCellValue(distributor.getBillingAddress());
 				row.createCell(11).setCellValue(distributor.getSuppName());
 				row.createCell(12).setCellValue(distributor.getSuppCode());
-				if (distributor.getUser() == null) {
+				if (distributor.getHqMaster() == null) {
 					row.createCell(13).setCellValue("");
 					row.createCell(14).setCellValue("");
 				} else {
-					row.createCell(13).setCellValue(distributor.getUser().getId());
-					row.createCell(14).setCellValue(distributor.getUser().getFullName());
+					row.createCell(13).setCellValue(distributor.getHqMaster().getId());
+					row.createCell(14).setCellValue(distributor.getHqMaster().getHqName());
 				}
 				row.createCell(15).setCellValue(distributor.getStatus());
 				row.createCell(16).setCellValue(distributor.getServiceStatus());

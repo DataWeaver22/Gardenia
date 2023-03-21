@@ -38,6 +38,8 @@ import com.example.demo.Import.Service.ImportResponseMessage;
 import com.example.demo.Import.Service.ImportService;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Family;
+import com.example.demo.entity.UserTargetDetails;
+import com.example.demo.entity.UserTeam;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.FamilyRepository;
 import com.example.demo.service.CategoryService;
@@ -69,6 +71,8 @@ public class FamilyController {
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
 	public ResponseEntity<Map<String, Object>> listBrand(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "updatedDateTime") String sortBy,
+			@RequestParam(required = false) Optional<String> familyName,
+			@RequestParam(required = false) Optional<String> categoryName,
 			@RequestParam(defaultValue = "25") Integer pageSize, @RequestParam(defaultValue = "DESC") String DIR) {
 
 		try {
@@ -88,8 +92,9 @@ public class FamilyController {
 			}
 
 			Page<Family> pageFamily;
-			pageFamily = familyRepository.findAll(paging);
+			pageFamily = familyRepository.findByFilterParam(familyName,categoryName,paging);
 			families = pageFamily.getContent();
+			
 			Map<String, Object> pageContent = new HashMap<>();
 			pageContent.put("currentPage", page);
 			pageContent.put("pageSize", pageFamily.getSize());

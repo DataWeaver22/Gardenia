@@ -45,8 +45,8 @@ public class User {
 	@Column(name = "empCode", columnDefinition = "Text")
 	private String empCode;
 
-	@Column(name = "team", columnDefinition = "Text")
-	private String team;
+	@Column(name = "reportingTo", columnDefinition = "Text")
+	private String reportingTo;
 
 	@Column(name = "role", columnDefinition = "Text")
 	private String role;
@@ -58,7 +58,7 @@ public class User {
 	private LocalDateTime createDate;
 
 	@Column(name = "resignDate")
-	private LocalDateTime resignDate;
+	private LocalDate resignDate;
 	
 	@Column(name = "inactiveDate")
 	private LocalDateTime inactiveDate;
@@ -74,6 +74,9 @@ public class User {
 
 	@Column(name = "gender", columnDefinition = "Text")
 	private String gender;
+	
+	@Column(name = "aadharNo", columnDefinition = "Text")
+	private String aadharNo;
 
 	@Column(name = "birthDate")
 	private LocalDate birthDate;
@@ -104,6 +107,9 @@ public class User {
 
 	@Column(name = "companyCode", columnDefinition = "Text")
 	private String companyCode;
+	
+	@Column(name = "rejectReason", columnDefinition = "Text")
+	private String rejectReason;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "regionId")
@@ -161,6 +167,10 @@ public class User {
 	@JoinColumn(name = "bankStatementFile")
 	UserFileDB bankStatementFile;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "beatPlanFile")
+	UserFileDB beatPlanFile;
+	
 	@Transient
 	private String regionId;
 	
@@ -189,10 +199,25 @@ public class User {
 	private String hqId;
 	
 	@Transient
-	private List<Map<String, Object>> userTargetDetailsList;
+	private List<Map<String, Object>> userTargetDetails;
 	
-	public List<Map<String, Object>> getUserTargetDetailsList() {
-		return userTargetDetailsList;
+	@Transient
+	private List<Map<String, Object>> userTeam;
+	
+	public List<Map<String, Object>> getUserTeam() {
+		return userTeam;
+	}
+	
+	public List<Map<String, Object>> getUserTargetDetails() {
+		return userTargetDetails;
+	}
+	
+	public String getAadharNo() {
+		return aadharNo;
+	}
+	
+	public void setAadharNo(String aadharNo) {
+		this.aadharNo = aadharNo;
 	}
 
 	public Long getId() {
@@ -235,12 +260,12 @@ public class User {
 		this.empCode = empCode;
 	}
 
-	public String getTeam() {
-		return team;
+	public String getReportingTo() {
+		return reportingTo;
 	}
-
-	public void setTeam(String team) {
-		this.team = team;
+	
+	public void setReportingTo(String reportingTo) {
+		this.reportingTo = reportingTo;
 	}
 
 	public String getRole() {
@@ -267,11 +292,11 @@ public class User {
 		this.createDate = createDate;
 	}
 
-	public LocalDateTime getResignDate() {
+	public LocalDate getResignDate() {
 		return resignDate;
 	}
 
-	public void setResignDate(LocalDateTime resignDate) {
+	public void setResignDate(LocalDate resignDate) {
 		this.resignDate = resignDate;
 	}
 
@@ -563,20 +588,174 @@ public class User {
 		return aseId;
 	}
 	
-	public User(Long id, String login, String firstName, String lastName, String empCode, String team, String role,
-			String status, LocalDateTime createDate, LocalDateTime resignDate, String fullName, String approvalStatus,
+	public UserFileDB getBeatPlanFile() {
+		return beatPlanFile;
+	}
+	
+	public void setBeatPlanFile(UserFileDB beatPlanFile) {
+		this.beatPlanFile = beatPlanFile;
+	}
+	
+	public String getRejectReason() {
+		return rejectReason;
+	}
+	
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
+	}
+	
+	// Last/Current Organisation Details
+	@Column(name = "lcOrgName", columnDefinition = "Text")
+	private String lcOrgName;
+
+	@Column(name = "lcJoiningDate")
+	private LocalDate lcJoiningDate;
+	
+	@Column(name = "lcLastDate")
+	private LocalDate lcLastDate;
+	
+	@Column(name = "lcOrgDesignation", columnDefinition = "Text")
+	private String lcOrgDesignation;
+	
+	@Column(name = "lcOrgSalary", columnDefinition = "Text")
+	private String lcOrgSalary;
+	
+	@Column(name = "lcOrgManagerMobile", columnDefinition = "Text")
+	private String lcOrgManagerMobile;
+	
+	@Column(name = "lcOrgManagerEmailID", columnDefinition = "Text")
+	private String lcOrgManagerEmailID;
+	
+	@Column(name = "lcOrgHREmailID", columnDefinition = "Text")
+	private String lcOrgHREmailID;
+	
+	//Recommendations
+	@Column(name = "dateOfJoining")
+	private LocalDate dateOfJoining;
+	
+	@Column(name = "designationRecommended", columnDefinition = "Text")
+	private String designationRecommended;
+	
+	@Column(name = "goSalary", columnDefinition = "Text")
+	private String goSalary;
+	
+	@Column(name = "growthPercentage", columnDefinition = "Text")
+	private String growthPercentage;
+	
+	
+	public String getlcOrgName() {
+		return lcOrgName;
+	}
+
+	public void setlcOrgName(String lcOrgName) {
+		this.lcOrgName = lcOrgName;
+	}
+
+	public LocalDate getlcJoiningDate() {
+		return lcJoiningDate;
+	}
+
+	public void setlcJoiningDate(LocalDate lcJoiningDate) {
+		this.lcJoiningDate = lcJoiningDate;
+	}
+
+	public LocalDate getlcLastDate() {
+		return lcLastDate;
+	}
+
+	public void setlcLastDate(LocalDate lcLastDate) {
+		this.lcLastDate = lcLastDate;
+	}
+
+	public String getlcOrgDesignation() {
+		return lcOrgDesignation;
+	}
+
+	public void setlcOrgDesignation(String lcOrgDesignation) {
+		this.lcOrgDesignation = lcOrgDesignation;
+	}
+
+	public String getlcOrgSalary() {
+		return lcOrgSalary;
+	}
+
+	public void setlcOrgSalary(String lcOrgSalary) {
+		this.lcOrgSalary = lcOrgSalary;
+	}
+
+	public String getlcOrgManagerMobile() {
+		return lcOrgManagerMobile;
+	}
+
+	public void setlcOrgManagerMobile(String lcOrgManagerMobile) {
+		this.lcOrgManagerMobile = lcOrgManagerMobile;
+	}
+
+	public String getlcOrgManagerEmailID() {
+		return lcOrgManagerEmailID;
+	}
+
+	public void setlcOrgManagerEmailID(String lcOrgManagerEmailID) {
+		this.lcOrgManagerEmailID = lcOrgManagerEmailID;
+	}
+
+	public String getlcOrgHREmailID() {
+		return lcOrgHREmailID;
+	}
+
+	public void setlcOrgHREmailID(String lcOrgHREmailID) {
+		this.lcOrgHREmailID = lcOrgHREmailID;
+	}
+
+	public LocalDate getDateOfJoining() {
+		return dateOfJoining;
+	}
+
+	public void setDateOfJoining(LocalDate dateOfJoining) {
+		this.dateOfJoining = dateOfJoining;
+	}
+
+	public String getDesignationRecommended() {
+		return designationRecommended;
+	}
+
+	public void setDesignationRecommended(String designationRecommended) {
+		this.designationRecommended = designationRecommended;
+	}
+
+	public String getgoSalary() {
+		return goSalary;
+	}
+
+	public void setgoSalary(String goSalary) {
+		this.goSalary = goSalary;
+	}
+
+	public String getGrowthPercentage() {
+		return growthPercentage;
+	}
+
+	public void setGrowthPercentage(String growthPercentage) {
+		this.growthPercentage = growthPercentage;
+	}
+
+	public User(Long id, String login, String firstName, String lastName, String empCode, String reportingTo, String role,
+			String status, LocalDateTime createDate, LocalDate resignDate, String fullName, String approvalStatus,
 			String title, String maritalStatus, String gender, LocalDate birthDate, LocalDate joinDate, String grade,
 			String branch, String department, String paymentMode, String email, String middleName,
 			LocalDate processStartDate, String companyCode, Region region, State state, District district, City city,
 			Area area, HqMaster hqMaster, User rsm, User asm, User ase,LocalDateTime inactiveDateTime,LocalDateTime updatedDateTime,
-			UserFileDB aadharFile,UserFileDB panFile,UserFileDB resumeFile,UserFileDB paySlipFile,UserFileDB bankStatementFile) {
+			UserFileDB aadharFile,UserFileDB panFile,UserFileDB resumeFile,UserFileDB paySlipFile,UserFileDB bankStatementFile,
+			String lcOrgName,LocalDate lcJoiningDate,LocalDate lcLastDate,String lcDesignation,String lcOrgSalary, String lcOrgManagerMobile,
+			String lcOrgManagerEmailID, String lcOrgHREmailID,LocalDate dateOfJoining,String designationRecommended,String goSalary,String growthPercentage,
+			String rejectReason, UserFileDB beatPlanFile, String aadharNo) {
 		super();
 		this.id = id;
 		this.login = login;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.empCode = empCode;
-		this.team = team;
+		this.reportingTo = reportingTo;
 		this.role = role;
 		this.status = status;
 		this.createDate = createDate;
@@ -612,6 +791,21 @@ public class User {
 		this.resumeFile = resumeFile;
 		this.paySlipFile = paySlipFile;
 		this.bankStatementFile = bankStatementFile;
+		this.lcOrgName = lcOrgName;
+		this.lcJoiningDate = lcJoiningDate;
+		this.lcLastDate = lcLastDate;
+		this.lcOrgDesignation = lcDesignation;
+		this.lcOrgSalary = lcOrgSalary;
+		this.lcOrgManagerMobile = lcOrgManagerMobile;
+		this.lcOrgManagerEmailID = lcOrgManagerEmailID;
+		this.lcOrgHREmailID = lcOrgHREmailID;
+		this.dateOfJoining = dateOfJoining;
+		this.designationRecommended = designationRecommended;
+		this.goSalary = goSalary;
+		this.growthPercentage = growthPercentage;
+		this.rejectReason = rejectReason;
+		this.beatPlanFile = beatPlanFile;
+		this.aadharNo = aadharNo;
 	}
 
 	public User() {
@@ -621,7 +815,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", title=" + title + ", login=" + login + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", fullName=" + fullName + ", empCode=" + empCode + ", team=" + team + ", role=" + role
+				+ lastName + ", fullName=" + fullName + ", empCode=" + empCode + ", reportingTo=" + reportingTo + ", role=" + role
 				+ ", status=" + status + ", createDate=" + createDate + ", resignDate=" + resignDate + ", inactiveDate="
 				+ inactiveDate + ", updatedDateTime=" + updatedDateTime + ", approvalStatus=" + approvalStatus
 				+ ", maritalStatus=" + maritalStatus + ", gender=" + gender + ", birthDate=" + birthDate + ", joinDate="
@@ -633,7 +827,7 @@ public class User {
 				+ ", resumeFile=" + resumeFile + ", paySlipFile=" + paySlipFile + ", bankStatementFile="
 				+ bankStatementFile + ", regionId=" + regionId + ", stateId=" + stateId + ", districtId=" + districtId
 				+ ", cityId=" + cityId + ", areaId=" + areaId + ", rsmId=" + rsmId + ", asmId=" + asmId + ", aseId="
-				+ aseId + ", hqId=" + hqId + ", userTargetDetailsList=" + userTargetDetailsList + "]";
+				+ aseId + ", hqId=" + hqId + ", userTargetDetails=" + userTargetDetails + "]";
 	}
 
 }

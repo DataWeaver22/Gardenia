@@ -16,12 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.entity.City;
 import com.example.demo.entity.Distributor;
 import com.example.demo.entity.District;
+import com.example.demo.entity.HqMaster;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
 import com.example.demo.entity.User;
 import com.example.demo.repository.DistRepository;
 import com.example.demo.service.CityService;
 import com.example.demo.service.DistrictService;
+import com.example.demo.service.HqService;
 import com.example.demo.service.RegionService;
 import com.example.demo.service.StateService;
 import com.example.demo.service.UserService;
@@ -34,7 +36,7 @@ public class DistributorImportHelper {
 	private static StateService stateService;
 	private static DistrictService districtService;
 	private static CityService cityService;
-	private static UserService userService;
+	private static HqService hqService;
 
 	@Autowired
 	public DistributorImportHelper(DistRepository distRepository) {
@@ -45,7 +47,7 @@ public class DistributorImportHelper {
 	// check if file type is excel or not
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	static String[] HEADERs = { "Distributor Code", "Distributor Name", "Distributor Type", "Address", "State Name",
-			"Region Name", "District Name", "City Name", "Assign TSO Name", "Contact Name", "Email", "GSTIN", "PAN",
+			"Region Name", "District Name", "City Name", "HQ Name", "Contact Name", "Email", "GSTIN", "PAN",
 			"Phone", "Mobile", "Service Status", "Supp Code", "Supp Name", "Status" };
 	static String SHEET = "Sheet1";
 
@@ -95,7 +97,7 @@ public class DistributorImportHelper {
 						distributor.setDistributorType(cell.getStringCellValue());
 						break;
 					case 3:
-						distributor.setAddress(cell.getStringCellValue());
+						distributor.setBillingAddress(cell.getStringCellValue());
 						break;
 					case 4:
 						if(cell.getStringCellValue()!=null) {
@@ -139,10 +141,10 @@ public class DistributorImportHelper {
 						break;
 					case 9:
 						if(cell.getStringCellValue()!=null) {
-							String empCode = cell.getStringCellValue();
-							Long uId = distRepository.findByEmpCode(empCode);
-							User user = userService.getUser(uId);
-							distributor.setUser(user);
+							String hqName = cell.getStringCellValue();
+							Long hqId = distRepository.findByHq(hqName);
+							HqMaster hqMaster = hqService.getHqMaster(hqId);
+							distributor.setHqMaster(hqMaster);
 						}
 						break;
 					case 10:

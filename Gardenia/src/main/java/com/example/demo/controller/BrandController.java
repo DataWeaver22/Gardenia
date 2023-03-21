@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -62,6 +63,7 @@ public class BrandController {
 			@RequestParam(defaultValue = "1")Integer page,
 			@RequestParam(defaultValue = "updatedDateTime")String sortBy, 
 			@RequestParam(defaultValue = "25")Integer pageSize,
+			@RequestParam(required = false) Optional<String> brandName,
 			@RequestParam(defaultValue = "DESC") String DIR){
 		
 		try {
@@ -83,7 +85,7 @@ public class BrandController {
 		      
 		      
 		      Page<Brand> pageBrands;
-		      pageBrands = brandRepository.findAll(paging);
+		      pageBrands = brandRepository.findByFilterParam(brandName,paging);
 		      brands = pageBrands.getContent();
 		      Map<String, Object> pageContent = new HashMap<>();
 		      pageContent.put("currentPage", page);
@@ -103,7 +105,7 @@ public class BrandController {
 	}
 	
 	@GetMapping("/dropdown")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
 	public List<Map<String, Object>> dropDownValues() {
 		// Create student object to hold student form data
 		List<Brand> brands= brandService.getAllBrands();

@@ -16,8 +16,14 @@ import com.example.demo.entity.Distributor;
 
 public interface DistRepository extends JpaRepository<Distributor, Long>{
 	
-	@Query("select d from Distributor d where d.approvalStatus=?1")
-	Page<Distributor> findByDistributorStatus(@Param("distributorStatus")Optional<String> distributorStatus,Pageable pageable);
+	@Query(value = "select count(*) from distributorTable where gstin=?1",nativeQuery=true)
+	Long isDistributorPresent(@Param("gstin") String gstin);
+	
+	@Query(value = "select count(*) from distributorTable where distributorName=?1",nativeQuery=true)
+	Long isDistributorNamePresent(@Param("distributorName") String distributorName);
+	
+	@Query(value="select * from distributorTable where approvalStatus=?1 and regionId in ?2",nativeQuery = true)
+	Page<Distributor> findByDistributorStatus(@Param("distributorStatus")Optional<String> distributorStatus,@Param("regionId")List<Long> regionId,Pageable pageable);
 	
 	@Query(value="select * from distributorTable where id=?1",nativeQuery = true)
 	List<Distributor> findWithoutTransientColumns(@Param("dId")Long dId);
@@ -37,8 +43,21 @@ public interface DistRepository extends JpaRepository<Distributor, Long>{
 	@Query("select u.id from User u where u.empCode = ?1")
 	Long findByEmpCode(@Param("empCode") String empCode);
 	
+	@Query(value = "select id from hqmaster where hqName=?1",nativeQuery = true)
+	Long findByHq(@Param("hqName")String hqName);
+	
+	@Transactional
+	@Modifying
+	@Query("update Distributor d set d.approvalStatus=:approved,d.distributorCode=:dCode where d.id=:distID")
+	void updateStatusAndCode(@Param("approved") String approved,@Param("dCode")String dCode,@Param("distID") Long distID);
+	
 	@Transactional
 	@Modifying
 	@Query("update Distributor d set d.approvalStatus=:approved where d.id=:distID")
 	void updateByStatus(@Param("approved") String approved,@Param("distID") Long distID);
+	
+	@Transactional
+	@Modifying
+	@Query("update Distributor d set d.approvalStatus=:approved,d.rejectReason=:rejectReason where d.id=:distID")
+	void updateByRejectStatus(@Param("approved") String approved,@Param("rejectReason")String rejectReason,@Param("distID") Long distID);
 }

@@ -48,7 +48,7 @@ public class FileController {
 //  }
 
   @GetMapping("/files")
-  @PreAuthorize("hasAuthority('ROLE_MIS')")
+  @PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
   public ResponseEntity<List<ResponseFile>> getListFiles() {
     List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
       String fileDownloadUri = ServletUriComponentsBuilder
@@ -68,7 +68,7 @@ public class FileController {
   }
 
   @GetMapping("/files/{id}")
-  @PreAuthorize("hasAuthority('ROLE_MIS')")
+  @PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
   public ResponseEntity<byte[]> getFile(@PathVariable String id) {
     FileDB fileDB = storageService.getFile(id);
 

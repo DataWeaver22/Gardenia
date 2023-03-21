@@ -1,6 +1,7 @@
 package com.example.demo.jwt;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,6 +16,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.entity.TokenBlacklist;
 import com.example.demo.myUserDetailsService.MyUserDetailsService;
 import com.example.demo.repository.TokenBlacklistRepository;
@@ -38,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String requestTokenHeader = request.getHeader("Authorization");
 		String username = null;
 		String jwtToken = null;
+		DecodedJWT decodedJWT = null;
 		if ("OPTIONS".equals(request.getMethod())) {
 			response.setStatus(HttpServletResponse.SC_OK);
 
@@ -46,29 +50,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 				jwtToken = requestTokenHeader.substring(7);
-				TokenBlacklist tokenBlacklist = tokenBlacklistRepository.findByToken(jwtToken);
-				if (tokenBlacklist == null) {
-					try {
-						username = this.jwtUtil.extractUsername(jwtToken);
-					} catch (Exception e) {
-						// TODO: handle exception
-						e.printStackTrace();
-					}
-					UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(username);
-					// security
-					if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-						UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-								userDetails, null, userDetails.getAuthorities());
-						System.out.println("Role: " + userDetails.getAuthorities());
-						usernamePasswordAuthenticationToken
-								.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-						SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-					}
+				decodedJWT = JWT.decode(jwtToken);
+				if (decodedJWT.getExpiresAt().before(new Date())) {
+					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired Token");
 				} else {
-					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
+
+					TokenBlacklist tokenBlacklist = tokenBlacklistRepository.findByToken(jwtToken);
+					if (tokenBlacklist == null) {
+						try {
+							username = this.jwtUtil.extractUsername(jwtToken);
+						} catch (Exception e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
+						UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(username);
+						// security
+						if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+							UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+									userDetails, null, userDetails.getAuthorities());
+							System.out.println("Role: " + userDetails.getAuthorities());
+							usernamePasswordAuthenticationToken
+									.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+							SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+						}
+
+					} else {
+						response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
+					}
 				}
+
 			}
 			filterChain.doFilter(request, response);
+
 		}
 	}
 

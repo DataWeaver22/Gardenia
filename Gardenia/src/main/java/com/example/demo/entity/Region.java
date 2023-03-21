@@ -1,5 +1,8 @@
 package com.example.demo.entity;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -31,6 +35,20 @@ public class Region {
     @JoinColumn(name = "stateId")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	State state;
+	
+	@Transient
+	private List<Map<String, Object>> stateList;
+	
+	@Transient
+	private String stateId;
+	
+	public String getStateId() {
+		return stateId;
+	}
+	
+	public List<Map<String, Object>> getStateList() {
+		return stateList;
+	}
 	
 	public Long getId() {
 		return Id;

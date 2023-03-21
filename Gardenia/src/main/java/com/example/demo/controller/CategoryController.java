@@ -72,6 +72,8 @@ public class CategoryController {
 			@RequestParam(defaultValue = "1")Integer page,
 			@RequestParam(defaultValue = "updatedDateTime")String sortBy, 
 			@RequestParam(defaultValue = "25")Integer pageSize,
+			@RequestParam(required = false) Optional<String> brandName,
+			@RequestParam(required = false) Optional<String> categoryName,
 			@RequestParam(defaultValue = "DESC") String DIR){
 		
 		try {
@@ -93,7 +95,7 @@ public class CategoryController {
 		      
 		      
 		      Page<Category> pageCategories;
-		      pageCategories = categoryRepository.findAll(paging);
+		      pageCategories = categoryRepository.findByFilterParam(brandName,categoryName,paging);
 		      categories = pageCategories.getContent();
 		      Map<String, Object> pageContent = new HashMap<>();
 		      pageContent.put("currentPage", page);

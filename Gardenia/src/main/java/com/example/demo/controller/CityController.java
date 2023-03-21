@@ -101,6 +101,9 @@ public class CityController {
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
 	public ResponseEntity<Map<String, Object>> listCity(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "cityName") String sortBy, @RequestParam(defaultValue = "25") Integer pageSize,
+			@RequestParam(required = false) Optional<String> cityCode,
+			@RequestParam(required = false) Optional<String> districtName,
+			@RequestParam(required = false) Optional<String> cityName,
 			@RequestParam(defaultValue = "DESC") String DIR) {
 		try {
 			List<City> cities = new ArrayList<City>();
@@ -119,7 +122,7 @@ public class CityController {
 			}
 
 			Page<City> pageCity;
-			pageCity = cityRepository.findAll(paging);
+			pageCity = cityRepository.findByFilterParam(cityCode,cityName,districtName,paging);
 			cities = pageCity.getContent();
 			Map<String, Object> pageContent = new HashMap<>();
 			pageContent.put("currentPage", page);

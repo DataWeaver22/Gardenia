@@ -21,12 +21,12 @@ public class BrandAssociatedToDist {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brandId")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	Brand brand;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "distributorId")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	Distributor distributor;

@@ -16,8 +16,8 @@ public interface DistributorCodeRepository extends JpaRepository<DistributorCode
 	@Query("select dc.id from DistributorCode dc where dc.regionCode=?1")
 	String findByRegionCode(@Param("regionCodeString")String regionCodeString);
 	
-	@Query(value = "select * from distributorcode where regionDCId=?1",nativeQuery=true)
-	DistributorCode findByRegionId(@Param("regionDCId") Long regionDCId);
+	@Query(value = "select * from distributorcode where regionCode=?1",nativeQuery=true)
+	DistributorCode findByRegionDCode(@Param("regionCode") String regionDCId);
 	
 //	@Transactional
 //	@Modifying
