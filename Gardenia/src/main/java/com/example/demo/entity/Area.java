@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -13,7 +14,13 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "area")
+@Table(name = "area", indexes = {
+		@Index(
+			name="idx_areaName_city",
+			columnList = "areaName,cityId",
+			unique = true
+		)
+})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Area {
 	@Id

@@ -672,7 +672,8 @@ public class UserController {
 
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body(userList);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "User Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@Autowired
@@ -680,7 +681,7 @@ public class UserController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM')")
-	List<Map<String, Object>> editUser(@PathVariable Long id, @RequestPart(name = "body", required = false) User user,
+	ResponseEntity<?> editUser(@PathVariable Long id, @RequestPart(name = "body", required = false) User user, HttpServletRequest request,
 			@RequestPart(name = "aadharFile", required = false) MultipartFile aadharFile,
 			@RequestPart(name = "panFile", required = false) MultipartFile panFile,
 			@RequestPart(name = "resumeFile", required = false) MultipartFile resumeFile,
@@ -1228,12 +1229,13 @@ public class UserController {
 
 		}
 
-		return userList;
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "User Edited Successfully", "OK", request.getRequestURI()));
 	}
 
 	@PutMapping("/{id}/reapproval")
 	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM')")
-	List<Map<String, Object>> reApproveUser(@PathVariable Long id,
+	ResponseEntity<?> reApproveUser(@PathVariable Long id,HttpServletRequest request,
 			@RequestPart(name = "body", required = false) User user,
 			@RequestPart(name = "aadharFile", required = false) MultipartFile aadharFile,
 			@RequestPart(name = "panFile", required = false) MultipartFile panFile,
@@ -1778,27 +1780,30 @@ public class UserController {
 
 		}
 
-		return userList;
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "User Sent for Re-Approval Successfully", "OK", request.getRequestURI()));
 	}
 
 	@GetMapping("/approve/{id}")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public String approveUser(@PathVariable Long id) {
+	public ResponseEntity<?> approveUser(@PathVariable Long id,HttpServletRequest request) {
 		Long uID = id;
 		System.out.println(uID);
 		String approved = "Approved";
 		hqUserRepository.updateByStatus(approved, uID);
-		return "User Approved";
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "User Approved", "OK", request.getRequestURI()));
 	}
 
 	@PostMapping("/reject/{id}")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public String rejectUser(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+	public ResponseEntity<?> rejectUser(@PathVariable Long id, @RequestBody Map<String, Object> body,HttpServletRequest request) {
 		Long uID = id;
 		System.out.println(uID);
 		String rejectReason = body.get("rejectReason").toString();
 		String approved = "Rejected";
 		hqUserRepository.updateByRejectStatus(approved, rejectReason, uID);
-		return "User Rejected";
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "User Rejected", "OK", request.getRequestURI()));
 	}
 }

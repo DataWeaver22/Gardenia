@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -46,6 +47,7 @@ import com.example.demo.Import.Service.ImportResponseMessage;
 import com.example.demo.entity.City;
 import com.example.demo.entity.District;
 import com.example.demo.entity.Region;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.CityRepository;
 import com.example.demo.repository.DistRepository;
 import com.example.demo.repository.DistrictRepository;
@@ -163,14 +165,17 @@ public class CityController {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	City saveCity(@RequestBody Map<String, Object> body) {
+	ResponseEntity<?> saveCity(@RequestBody Map<String, Object> body,HttpServletRequest request) {
 		City city = new City();
 		District district = districtRepository.getById(Long.parseLong(body.get("districtId").toString()));
 		city.setDistrict(district);
 		city.setCityCode(body.get("cityCode").toString());
 		city.setCityName(body.get("cityName").toString());
 
-		return cityService.saveCity(city);
+		cityService.saveCity(city);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@Autowired
@@ -190,7 +195,7 @@ public class CityController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	City updateCity(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+	ResponseEntity<?> updateCity(@PathVariable Long id, @RequestBody Map<String, Object> body,HttpServletRequest request) {
 
 		// Get Existing Region
 		City existingCity = cityService.getCityById(id);
@@ -201,12 +206,10 @@ public class CityController {
 		existingCity.setCityName(body.get("cityName").toString());
 		existingCity.setDistrict(district);
 
-		return cityService.editCity(existingCity);
+		cityService.editCity(existingCity);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
 
-	@GetMapping("/{id}")
-	public String deleteCity(@PathVariable Long id) {
-		cityService.deleteCityById(id);
-		return "redirect:/city";
-	}
 }

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -39,6 +41,7 @@ import com.example.demo.Import.Service.ImportResponseMessage;
 import com.example.demo.Import.Service.ImportService;
 import com.example.demo.entity.Brand;
 import com.example.demo.entity.Category;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.BrandRepository;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.service.BrandService;
@@ -136,7 +139,7 @@ public class CategoryController {
 	
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Category saveCategory(@RequestBody Map<String,Object> body) {
+	ResponseEntity<?> saveCategory(@RequestBody Map<String,Object> body, HttpServletRequest request) {
 		Brand brand = new Brand();
 		Category category = new Category();
 		category.setCategoryName(body.get("categoryName").toString());
@@ -144,12 +147,15 @@ public class CategoryController {
 		category.setBrand(brand);
 		LocalDateTime updatedDateTime = LocalDateTime.now();
 		category.setUpdatedDateTime(updatedDateTime);
-		return categoryService.saveCategory(category);
+		categoryService.saveCategory(category);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Added Successfully", "OK", request.getRequestURI()));
 	}
 	
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Category updateCategory(@PathVariable Long id, @RequestBody Map<String,Object> body) {
+	ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Map<String,Object> body, HttpServletRequest request) {
 
 		// Get Existing State
 		Category existingCategory = categoryService.getCategoryById(id);
@@ -160,7 +166,10 @@ public class CategoryController {
 		existingCategory.setCategoryName(body.get("categoryName").toString());
 		existingCategory.setUpdatedDateTime(updatedDateTime);
 		existingCategory.setBrand(brand);
-		return categoryService.editCategory(existingCategory);
+		categoryService.editCategory(existingCategory);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
 
 	@Autowired

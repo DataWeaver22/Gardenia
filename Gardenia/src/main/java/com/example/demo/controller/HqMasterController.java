@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ import com.example.demo.entity.Region;
 import com.example.demo.entity.RegionAssociatedToHq;
 import com.example.demo.entity.State;
 import com.example.demo.entity.StatesAssociatedToRegion;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.HqRepository;
 import com.example.demo.repository.RegionAssociatedToHqRepository;
 import com.example.demo.repository.RegionRepository;
@@ -175,7 +177,7 @@ public class HqMasterController {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	List<Map<String, Object>> saveHqMaster(@RequestBody HqMaster hqMaster) {
+	ResponseEntity<?> saveHqMaster(@RequestBody HqMaster hqMaster,HttpServletRequest request) {
 
 		hqService.saveHqMaster(hqMaster);
 
@@ -220,7 +222,8 @@ public class HqMasterController {
 
 			hqmasterList.add(hqMap);
 		}
-		return hqmasterList;
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@Autowired
@@ -240,7 +243,7 @@ public class HqMasterController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	List<Map<String, Object>> updateHqMaster(@PathVariable Long id, @RequestBody HqMaster hqMaster) {
+	ResponseEntity<?> updateHqMaster(@PathVariable Long id, @RequestBody HqMaster hqMaster,HttpServletRequest request) {
 
 		// Get Existing HqMaster
 		HqMaster existingHqMaster = hqService.getHqMaster(id);
@@ -332,7 +335,8 @@ public class HqMasterController {
 
 			hqmasterList.add(hqMap);
 		}
-		return hqmasterList;
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
 
 	@GetMapping("/{id}")

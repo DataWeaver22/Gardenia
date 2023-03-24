@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -38,6 +40,7 @@ import com.example.demo.Import.BrandImportHelper;
 import com.example.demo.Import.Service.ImportResponseMessage;
 import com.example.demo.Import.Service.ImportService;
 import com.example.demo.entity.Brand;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.BrandRepository;
 import com.example.demo.service.BrandService;
 
@@ -121,17 +124,20 @@ public class BrandController {
 	
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Brand saveBrand(@RequestBody Map<String,Object> body) {
+	ResponseEntity<?> saveBrand(@RequestBody Map<String,Object> body,HttpServletRequest request) {
 		Brand brand = new Brand();
 		brand.setBrandName(body.get("brandName").toString());
 		LocalDateTime updatedDateTime = LocalDateTime.now();
 		brand.setUpdatedDateTime(updatedDateTime);
-		return brandService.saveBrand(brand);
+		brandService.saveBrand(brand);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Added Successfully", "OK", request.getRequestURI()));
 	}
 	
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Brand updateBrand(@PathVariable Long id, @RequestBody Map<String,Object> body) {
+	ResponseEntity<?> updateBrand(@PathVariable Long id, @RequestBody Map<String,Object> body,HttpServletRequest request) {
 
 		// Get Existing State
 		Brand existingBrand = brandService.getBrandById(id);
@@ -140,7 +146,10 @@ public class BrandController {
 		LocalDateTime updatedDateTime = LocalDateTime.now();
 		existingBrand.setBrandName(body.get("brandName").toString());
 		existingBrand.setUpdatedDateTime(updatedDateTime);
-		return brandService.editBrand(existingBrand);
+		brandService.editBrand(existingBrand);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
 	
 	@Autowired

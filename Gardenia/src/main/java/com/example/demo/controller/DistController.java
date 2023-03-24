@@ -509,7 +509,8 @@ public class DistController {
 
 		}
 
-		return ResponseEntity.status(HttpStatus.OK).body(distributorList);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Distributor Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@Autowired
@@ -517,7 +518,7 @@ public class DistController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
-	List<Map<String, Object>> updateDistributor(@PathVariable Long id,
+	ResponseEntity<?> updateDistributor(@PathVariable Long id,HttpServletRequest request,
 			@RequestPart(name = "body", required = false) Distributor distributor,
 			@RequestPart(name = "gstFile", required = false) MultipartFile gstFile,
 			@RequestPart(name = "panFile", required = false) MultipartFile panFile,
@@ -911,12 +912,13 @@ public class DistController {
 
 		}
 
-		return distributorList;
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Distributor Edited Successfully", "OK", request.getRequestURI()));
 	}
 
 	@PutMapping("/{id}/reapproval")
 	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
-	List<Map<String, Object>> reapprovalDistributor(@PathVariable Long id,
+	ResponseEntity<?> reapprovalDistributor(@PathVariable Long id,HttpServletRequest request,
 			@RequestPart(name = "body", required = false) Distributor distributor,
 			@RequestPart(name = "gstFile", required = false) MultipartFile gstFile,
 			@RequestPart(name = "panFile", required = false) MultipartFile panFile,
@@ -1309,12 +1311,13 @@ public class DistController {
 
 		}
 
-		return distributorList;
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Distributor sent for Re-Approval Successfully", "OK", request.getRequestURI()));
 	}
 
 	@GetMapping("/approve/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	public String approveDistributor(@PathVariable Long id) {
+	public ResponseEntity<?> approveDistributor(@PathVariable Long id, HttpServletRequest request) {
 		Long distID = id;
 
 		Distributor distributor = distributorService.getDistributor(distID);
@@ -1343,17 +1346,19 @@ public class DistController {
 		String distCode = distributorCode.getRegionCode().toString() + finalCodeNumber;
 		String approved = "Approved";
 		distRepository.updateStatusAndCode(approved, distCode, distID);
-		return "Approved";
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Distributor Approved", "OK", request.getRequestURI()));
 	}
 
 	@PostMapping("/reject/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	public String rejectDistributor(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+	public ResponseEntity<?> rejectDistributor(@PathVariable Long id, @RequestBody Map<String, Object> body, HttpServletRequest request) {
 		Long distID = id;
 		System.out.println(distID);
 		String rejectReason = body.get("rejectReason").toString();
 		String approved = "Rejected";
 		distRepository.updateByRejectStatus(approved, rejectReason, distID);
-		return "Rejected";
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Distributor Rejected", "OK", request.getRequestURI()));
 	}
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -48,6 +49,7 @@ import com.example.demo.entity.Country;
 import com.example.demo.entity.District;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.DistrictRepository;
 import com.example.demo.repository.RegionRepository;
 import com.example.demo.service.DistrictImportService;
@@ -180,19 +182,21 @@ public class DistrictController {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	District saveDistrict(@RequestBody Map<String, Object> body) {
+	ResponseEntity<?> saveDistrict(@RequestBody Map<String, Object> body,HttpServletRequest request) {
 		District district = new District();
 		Region region = regionRepository.getById(Long.parseLong(body.get("regionId").toString()));
 		district.setRegion(region);
 		district.setDistrictCode(body.get("districtCode").toString());
 		district.setDistrictName(body.get("districtName").toString());
 
-		return districtService.saveDistrict(district);
+		districtService.saveDistrict(district);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	District updateDistrict(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+	ResponseEntity<?> updateDistrict(@PathVariable Long id, @RequestBody Map<String, Object> body,HttpServletRequest request) {
 
 		// Get Existing District
 		District existingDistrict = districtService.getDistrictById(id);
@@ -203,12 +207,9 @@ public class DistrictController {
 		existingDistrict.setDistrictCode(body.get("districtCode").toString());
 		existingDistrict.setDistrictName(body.get("districtName").toString());
 		existingDistrict.setRegion(region);
-		return districtService.editDistrict(existingDistrict);
-	}
-
-	@GetMapping("/{id}")
-	public String deleteDistrict(@PathVariable Long id) {
-		districtService.deleteDistrictById(id);
-		return "redirect:/district";
+		districtService.editDistrict(existingDistrict);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
 }

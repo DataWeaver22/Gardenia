@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ import com.example.demo.entity.Family;
 import com.example.demo.entity.FileDB;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.Region;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.message.ResponseMessage;
 import com.example.demo.repository.BrandRepository;
 import com.example.demo.repository.CategoryRepository;
@@ -170,7 +172,7 @@ public class ProductController {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Product saveProduct(@RequestBody Map<String, Object> body) {
+	ResponseEntity<?> saveProduct(@RequestBody Map<String, Object> body,HttpServletRequest request) {
 		Product product = new Product();
 		LocalDateTime createDateTime = LocalDateTime.now();
 		LocalDateTime updatedDateTime = LocalDateTime.now();
@@ -195,7 +197,10 @@ public class ProductController {
 		product.setDescription(body.get("description").toString());
 		product.setSalesDiaryCode(body.get("salesDiaryCode").toString());
 		product.setMrp(new BigDecimal(body.get("mrp").toString()));
-		return productService.saveProduct(product);
+		productService.saveProduct(product);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Product Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@Autowired
@@ -215,7 +220,7 @@ public class ProductController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Product updateProduct(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+	ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Map<String, Object> body, HttpServletRequest request) {
 
 		// Get Existing Student
 		Product existingProduct = productService.getProduct(id);
@@ -245,29 +250,33 @@ public class ProductController {
 		existingProduct.setMrp(new BigDecimal(body.get("mrp").toString()));
 
 		// Save Student
-
-		return productService.editProduct(existingProduct);
+		productService.editProduct(existingProduct);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Product Edited Successfully", "OK", request.getRequestURI()));
 	}
 
 	@GetMapping("/approve/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	public String approveProduct(@PathVariable Long id) {
+	public ResponseEntity<?> approveProduct(@PathVariable Long id, HttpServletRequest request) {
 		Long pID = id;
 		System.out.println(pID);
 		String approved = "Approved";
 		productRepository.updateByApprovedStatus(approved, pID);
-		return "Approved";
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Product Approved", "OK", request.getRequestURI()));
 	}
 
 	@PostMapping("/reject/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	public String rejectProduct(@PathVariable Long id,@RequestBody Map<String, Object> body) {
+	public ResponseEntity<?> rejectProduct(@PathVariable Long id,@RequestBody Map<String, Object> body,HttpServletRequest request) {
 		Long pID = id;
 		System.out.println(pID);
 		String rejectReason = body.get("rejectReason").toString();
 		String approved = "Rejected";
 		productRepository.updateByStatus(approved, rejectReason, pID);
-		return "Rejected";
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Product Rejected", "OK", request.getRequestURI()));
 	}
 
 }

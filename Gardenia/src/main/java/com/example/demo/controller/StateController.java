@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.Id;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.attoparser.config.ParseConfiguration;
@@ -52,6 +53,7 @@ import com.example.demo.entity.Country;
 import com.example.demo.entity.State;
 import com.example.demo.jwt.JwtAuthenticationEntryPoint;
 import com.example.demo.jwt.JwtUtil;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.CountryRepository;
 import com.example.demo.repository.StateRepository;
 import com.example.demo.service.StateService;
@@ -188,19 +190,20 @@ public class StateController {
 
 	@RequestMapping(value = "/state", method = RequestMethod.POST)
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	State saveState(@RequestBody Map<String, Object> body) {
+	ResponseEntity<?> saveState(@RequestBody Map<String, Object> body,HttpServletRequest request) {
 		State state = new State();
 		Country country = countryRepository.getById(Long.parseLong(body.get("countryId").toString()));
 		state.setCountry(country);
 		state.setStateCode(body.get("stateCode").toString());
 		state.setStateName(body.get("stateName").toString());
-
-		return stateService.saveState(state);
+		stateService.saveState(state);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@RequestMapping(value = "/state/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	State updateState(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+	ResponseEntity<?> updateState(@PathVariable Long id, @RequestBody Map<String, Object> body,HttpServletRequest request) {
 
 		// Get Existing State
 		State existingState = stateService.getStateById(id);
@@ -211,7 +214,9 @@ public class StateController {
 		existingState.setStateCode(body.get("stateCode").toString());
 		existingState.setStateName(body.get("stateName").toString());
 		existingState.setCountry(country);
-		return stateService.editState(existingState);
+		stateService.editState(existingState);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
 
 }

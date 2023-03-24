@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -40,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.State;
 import com.example.demo.entity.StatesAssociatedToRegion;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.DistributorCodeRepository;
 import com.example.demo.repository.RegionRepository;
 import com.example.demo.repository.StateRepository;
@@ -261,7 +264,7 @@ public class RegionController {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	List<Map<String, Object>> saveRegion(@RequestBody Region region) {
+	ResponseEntity<?> saveRegion(@RequestBody Region region,HttpServletRequest request) {
 		DistributorCode distributorCode = new DistributorCode();
 
 //		State state = stateRepository.getById(Long.parseLong(region.getStateId()));
@@ -320,7 +323,8 @@ public class RegionController {
 
 			regionList.add(regionMap);
 		}
-		return regionList;
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@Autowired
@@ -340,7 +344,7 @@ public class RegionController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	List<Map<String, Object>> updateRegion(@PathVariable Long id, @RequestBody Region region) {
+	ResponseEntity<?> updateRegion(@PathVariable Long id, @RequestBody Region region,HttpServletRequest request) {
 
 		// Get Existing Region
 		Region existingRegion = regionService.getRegionById(id);
@@ -445,12 +449,7 @@ public class RegionController {
 			regionList.add(regionMap);
 		}
 
-		return regionList;
-	}
-
-	@GetMapping("/{id}")
-	public String deleteRegion(@PathVariable Long id) {
-		regionService.deleteRegionById(id);
-		return "redirect:/region";
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
 }

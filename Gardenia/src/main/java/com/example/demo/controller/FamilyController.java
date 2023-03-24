@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -40,6 +42,7 @@ import com.example.demo.entity.Category;
 import com.example.demo.entity.Family;
 import com.example.demo.entity.UserTargetDetails;
 import com.example.demo.entity.UserTeam;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.FamilyRepository;
 import com.example.demo.service.CategoryService;
@@ -135,7 +138,7 @@ public class FamilyController {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Family saveFamily(@RequestBody Map<String, Object> body) {
+	ResponseEntity<?> saveFamily(@RequestBody Map<String, Object> body,HttpServletRequest request) {
 		Family family = new Family();
 		Category category = new Category();
 		family.setFamilyName(body.get("familyName").toString());
@@ -143,12 +146,14 @@ public class FamilyController {
 		family.setCategory(category);
 		LocalDateTime updatedDateTime = LocalDateTime.now();
 		family.setUpdatedDateTime(updatedDateTime);
-		return familyService.saveFamily(family);
+		familyService.saveFamily(family);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Family updateFamily(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+	ResponseEntity<?> updateFamily(@PathVariable Long id, @RequestBody Map<String, Object> body,HttpServletRequest request) {
 
 		// Get Existing State
 		Family existingFamily = familyService.getFamilyById(id);
@@ -159,7 +164,10 @@ public class FamilyController {
 		existingFamily.setFamilyName(body.get("familyName").toString());
 		existingFamily.setUpdatedDateTime(updatedDateTime);
 		existingFamily.setCategory(category);
-		return familyService.editFamily(existingFamily);
+		familyService.editFamily(existingFamily);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
 
 	@Autowired

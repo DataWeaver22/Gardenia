@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ import com.example.demo.Import.Service.ImportResponseMessage;
 import com.example.demo.entity.Area;
 import com.example.demo.entity.City;
 import com.example.demo.entity.District;
+import com.example.demo.message.ErrorMessage;
 import com.example.demo.repository.AreaRepository;
 import com.example.demo.repository.CityRepository;
 import com.example.demo.service.AreaImportService;
@@ -178,19 +180,22 @@ public class AreaController {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Area saveArea(@RequestBody Map<String, Object> body) {
+	ResponseEntity<?> saveArea(@RequestBody Map<String, Object> body,HttpServletRequest request) {
 		Area area = new Area();
 		City city = cityRepository.getById(Long.parseLong(body.get("cityId").toString()));
 		area.setCity(city);
 		area.setAreaCode(body.get("areaCode").toString());
 		area.setAreaName(body.get("areaName").toString());
 
-		return areaService.saveArea(area);
+		areaService.saveArea(area);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Added Successfully", "OK", request.getRequestURI()));
 	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	Area updateArea(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+	ResponseEntity<?> updateArea(@PathVariable Long id, @RequestBody Map<String, Object> body, HttpServletRequest request) {
 
 		// Get Existing Region
 		Area existingArea = areaService.getAreaById(id);
@@ -201,12 +206,10 @@ public class AreaController {
 		existingArea.setAreaName(body.get("areaName").toString());
 		existingArea.setCity(city);
 
-		return areaService.editArea(existingArea);
+		areaService.editArea(existingArea);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
 
-	@GetMapping("/{id}")
-	public String deleteArea(@PathVariable Long id) {
-		areaService.deleteAreaById(id);
-		return "redirect:/area";
-	}
 }
