@@ -46,7 +46,7 @@ public class HqMaster {
 	Region region;
 	
 	@Transient
-	private List<Map<String, Object>> regionList;
+	private List<Integer> regionList;
 	
 	@Transient
 	private String regionId;
@@ -54,7 +54,7 @@ public class HqMaster {
 	@Transient
 	private String parentHqId;
 	
-	public List<Map<String, Object>> getRegionList() {
+	public List<Integer> getRegionList() {
 		return regionList;
 	}
 	

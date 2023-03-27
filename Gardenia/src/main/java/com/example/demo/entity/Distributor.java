@@ -121,7 +121,7 @@ public class Distributor{
 	FileDB scannedCopyFile;
 	
 	@Transient
-	private List<Map<String, Object>> brandList;
+	private List<Integer> brandList;
 	
 	@Transient
 	private List<Map<String, Object>> currentBusinessAssociation;
@@ -145,7 +145,7 @@ public class Distributor{
 	@Transient
 	private String hqId;
 	
-	public List<Map<String, Object>> getBrandList() {
+	public List<Integer> getBrandList() {
 		return brandList;
 	}
 	

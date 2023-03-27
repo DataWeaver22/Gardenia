@@ -37,7 +37,7 @@ public class Region {
 	State state;
 	
 	@Transient
-	private List<Map<String, Object>> stateList;
+	private List<Integer> stateList;
 	
 	@Transient
 	private String stateId;
@@ -46,7 +46,7 @@ public class Region {
 		return stateId;
 	}
 	
-	public List<Map<String, Object>> getStateList() {
+	public List<Integer> getStateList() {
 		return stateList;
 	}
 	

@@ -61,7 +61,7 @@ public class BrandController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public ResponseEntity<Map<String, Object>> listBrand(
 			@RequestParam(defaultValue = "1")Integer page,
 			@RequestParam(defaultValue = "updatedDateTime")String sortBy, 
@@ -108,7 +108,7 @@ public class BrandController {
 	}
 	
 	@GetMapping("/dropdown")
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM','ROLE_DISTAPPROVER','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public List<Map<String, Object>> dropDownValues() {
 		// Create student object to hold student form data
 		List<Brand> brands= brandService.getAllBrands();
@@ -123,9 +123,14 @@ public class BrandController {
 	}
 	
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	ResponseEntity<?> saveBrand(@RequestBody Map<String,Object> body,HttpServletRequest request) {
 		Brand brand = new Brand();
+		if(brandRepository.findIfExists(body.get("brandName").toString())>0) {
+			String errorMsg = "Brand: " + body.get("brandName").toString() + " is already registered";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new ErrorMessage(400, errorMsg, "Bad Request", request.getRequestURI()));
+		}
 		brand.setBrandName(body.get("brandName").toString());
 		LocalDateTime updatedDateTime = LocalDateTime.now();
 		brand.setUpdatedDateTime(updatedDateTime);
@@ -136,7 +141,7 @@ public class BrandController {
 	}
 	
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	ResponseEntity<?> updateBrand(@PathVariable Long id, @RequestBody Map<String,Object> body,HttpServletRequest request) {
 
 		// Get Existing State
@@ -156,7 +161,7 @@ public class BrandController {
 	ExportService exportService;
 	
 	@GetMapping("/export/excel")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public ResponseEntity<Resource> getFile() {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		LocalDate downloadDate = localDateTime.toLocalDate();
@@ -173,7 +178,7 @@ public class BrandController {
 	ImportService importService;
 	
 	@PostMapping("/upload/import")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public ResponseEntity<ImportResponseMessage> uploadFile(@RequestParam("file") MultipartFile file,@RequestHeader Map<String,String> headers) {
 		String message = "";
 		headers.forEach((key,value) ->{

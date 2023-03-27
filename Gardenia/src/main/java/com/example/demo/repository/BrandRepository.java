@@ -15,4 +15,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
 
 	@Query("select b from Brand b where (:brandName is null or b.brandName Like %:brandName%)")
 	Page<Brand> findByFilterParam(@Param("brandName") Optional<String> brandName, Pageable pageable);
+	
+	@Query(value = "select count(*) from brand where brandName=?1",nativeQuery = true)
+	Long findIfExists(@Param("brandName")String brandName);
 }

@@ -157,7 +157,7 @@ public class StateController {
 	}
 
 	@RequestMapping(value = "/state/dropdown", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_USER','ROLE_RSM')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_USER','ROLE_RSM','ROLE_DISTAPPROVER')")
 	public List<Map<String, Object>> dropDownValues(@RequestParam Optional<Long> countryId) {
 		// Create student object to hold student form data
 		List<State> states;

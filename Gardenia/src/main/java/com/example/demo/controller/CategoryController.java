@@ -69,7 +69,7 @@ public class CategoryController {
 		// TODO Auto-generated constructor stub
 	}
 	
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> listBrand(
 			@RequestParam(defaultValue = "1")Integer page,
@@ -118,7 +118,7 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/dropdown")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public List<Map<String, Object>> dropDownValues(@RequestParam Optional<Long> brandId) {
 		List<Category> categories;
 		if(brandId.isPresent()) {
@@ -138,12 +138,18 @@ public class CategoryController {
 	}
 	
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	ResponseEntity<?> saveCategory(@RequestBody Map<String,Object> body, HttpServletRequest request) {
 		Brand brand = new Brand();
-		Category category = new Category();
-		category.setCategoryName(body.get("categoryName").toString());
 		brand = brandRepository.getById(Long.parseLong(body.get("brandId").toString()));
+		Category category = new Category();
+		if(categoryRepository.findIfExists(Long.parseLong(body.get("brandId").toString()),body.get("categoryName").toString())>0) {
+			String errorMsg = "Category: " + body.get("categoryName").toString() + "for Brand: "+brand.getBrandName()+" is already registered";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new ErrorMessage(400, errorMsg, "Bad Request", request.getRequestURI()));
+		}
+		category.setCategoryName(body.get("categoryName").toString());
+		
 		category.setBrand(brand);
 		LocalDateTime updatedDateTime = LocalDateTime.now();
 		category.setUpdatedDateTime(updatedDateTime);
@@ -154,7 +160,7 @@ public class CategoryController {
 	}
 	
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Map<String,Object> body, HttpServletRequest request) {
 
 		// Get Existing State
@@ -176,7 +182,7 @@ public class CategoryController {
 	ExportService exportService;
 	
 	@GetMapping("/export/excel")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public ResponseEntity<Resource> getFile() {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		LocalDate downloadDate = localDateTime.toLocalDate();

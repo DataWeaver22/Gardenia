@@ -48,7 +48,7 @@ public class DropdownController {
 	}
 
 	@GetMapping("/uom/dropdown")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	List<Map<String, Object>> uomDropDown() {
 		// Create student object to hold student form data
 		List<Map<String, Object>> uomList = new ArrayList<Map<String, Object>>();
@@ -64,7 +64,7 @@ public class DropdownController {
 	}
 
 	@GetMapping("/status/dropdown")
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_USER','ROLE_RSM')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_USER','ROLE_RSM','ROLE_DISTAPPROVER','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	List<Map<String, Object>> statusDropDown() {
 		// Create student object to hold student form data
 		List<Map<String, Object>> statusList = new ArrayList<Map<String, Object>>();
@@ -80,7 +80,7 @@ public class DropdownController {
 	}
 
 	@GetMapping("/serviceStatus/dropdown")
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM','ROLE_DISTAPPROVER')")
 	List<Map<String, Object>> serviceStatusDropDown() {
 		// Create student object to hold student form data
 		List<Map<String, Object>> serviceStatusList = new ArrayList<Map<String, Object>>();
@@ -461,7 +461,7 @@ public class DropdownController {
 	}
 
 	@GetMapping("/typeOfDistributor/dropdown")
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM','ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM','ROLE_MIS','ROLE_DISTAPPROVER')")
 	List<Map<String, Object>> typeOfDistDropDown() {
 		// Create student object to hold student form data
 		List<Map<String, Object>> typeOfDistList = new ArrayList<Map<String, Object>>();
@@ -518,7 +518,7 @@ public class DropdownController {
 	private RegionAssociatedToHqRepository regionAssociatedToHqRepository;
 
 	@GetMapping("/hq/dropdown")
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM','ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM','ROLE_MIS','ROLE_DISTAPPROVER')")
 	public List<Map<String, Object>> hqDropDownValues(@RequestParam(required = false) Optional<Long> regionId,
 			@RequestParam(required = false) Optional<String> role) {
 		// Create student object to hold student form data
@@ -584,7 +584,7 @@ public class DropdownController {
 	}
 
 	@GetMapping("/hqDistributor/dropdown")
-	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM','ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM','ROLE_MIS','ROLE_DISTAPPROVER')")
 	public List<Map<String, Object>> hqDropDownValuesDistributor(
 			@RequestParam(required = false) Optional<Long> regionId) {
 		// Create student object to hold student form data

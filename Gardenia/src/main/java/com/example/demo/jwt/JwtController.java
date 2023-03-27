@@ -57,6 +57,12 @@ public class JwtController {
 				role = "MIS";
 			}else if(userDetails.getAuthorities().toString().equals("[ROLE_RSM]")) {
 				role = "RSM";
+			}else if(userDetails.getAuthorities().toString().equals("[ROLE_DISTAPPROVER]")) {
+				role = "DISTAPPROVER";
+			}else if(userDetails.getAuthorities().toString().equals("[ROLE_PRODUCTAPPROVER]")) {
+				role = "PRODUCTAPPROVER";
+			}else if(userDetails.getAuthorities().toString().equals("[ROLE_PRODUCT]")) {
+				role = "PRODUCT";
 			}
 			
 			System.out.println("JWT Token:"+tokenString);

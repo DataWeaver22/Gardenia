@@ -183,16 +183,12 @@ public class HqMasterController {
 
 		// RegionAssociatedToHq
 		if (hqMaster.getRegionList() != null) {
-			for (Map<String, Object> listMap : hqMaster.getRegionList()) {
-				for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-					if (entry.getKey() == "value") {
-						RegionAssociatedToHq regionAssociatedToHq = new RegionAssociatedToHq();
-						Region region = regionRepository.getById(Long.parseLong(entry.getValue().toString()));
-						regionAssociatedToHq.setHqMaster(hqMaster);
-						regionAssociatedToHq.setRegion(region);
-						regionAssociatedToHqRepository.save(regionAssociatedToHq);
-					}
-				}
+			for(int i =0;i<hqMaster.getRegionList().size();i++) {
+				RegionAssociatedToHq regionAssociatedToHq = new RegionAssociatedToHq();
+				Region region = regionRepository.getById(Long.parseLong(hqMaster.getRegionList().get(i).toString()));
+				regionAssociatedToHq.setHqMaster(hqMaster);
+				regionAssociatedToHq.setRegion(region);
+				regionAssociatedToHqRepository.save(regionAssociatedToHq);
 			}
 		}
 
@@ -261,15 +257,10 @@ public class HqMasterController {
 			regionAssociatedToHqsUpdate = regionAssociatedToHqRepository.findByHq(hqId);
 			for (int i = 0; i < regionAssociatedToHqsUpdate.size(); i++) {
 				Integer count = 0;
-
-				for (Map<String, Object> listMap : hqMaster.getRegionList()) {
-					for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-						if (entry.getKey() == "value") {
-							if (entry.getValue().toString()
-									.equals(regionAssociatedToHqsUpdate.get(i).getRegion().getId().toString())) {
-								count += 1;
-							}
-						}
+				for(int j=0;j<hqMaster.getRegionList().size();j++) {
+					if (hqMaster.getRegionList().get(j).toString()
+							.equals(regionAssociatedToHqsUpdate.get(i).getRegion().getId().toString())) {
+						count += 1;
 					}
 				}
 				if (count <= 0) {
@@ -279,30 +270,22 @@ public class HqMasterController {
 			}
 
 			// Upsert State
-
-			for (Map<String, Object> listMap : hqMaster.getRegionList()) {
-				for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-					if (entry.getKey() == "value") {
-						Integer count = 0;
-						List<RegionAssociatedToHq> regionAssociatedToHqsUpsert = new ArrayList<RegionAssociatedToHq>();
-						regionAssociatedToHqsUpsert = regionAssociatedToHqRepository.findByHq(hqId);
-						for (int i = 0; i < regionAssociatedToHqsUpsert.size(); i++) {
-							if (entry.getValue().toString()
-									.equals(regionAssociatedToHqsUpsert.get(i).getRegion().getId().toString())) {
-								count += 1;
-								System.out.println(entry.getKey() + "-" + entry.getValue());
-							}
-							System.out.println(entry.getKey() + "-" + entry.getValue() + "-" + count);
-						}
-						if (count <= 0) {
-							RegionAssociatedToHq regionAssociatedToHq = new RegionAssociatedToHq();
-							Region region = regionRepository.getById(Long.parseLong(entry.getValue().toString()));
-							regionAssociatedToHq.setHqMaster(existingHqMaster);
-							regionAssociatedToHq.setRegion(region);
-							regionAssociatedToHqRepository.save(regionAssociatedToHq);
-							System.out.println(entry.getKey() + "-" + entry.getValue());
-						}
+			for(int j=0;j<hqMaster.getRegionList().size();j++) {
+				Integer count = 0;
+				List<RegionAssociatedToHq> regionAssociatedToHqsUpsert = new ArrayList<RegionAssociatedToHq>();
+				regionAssociatedToHqsUpsert = regionAssociatedToHqRepository.findByHq(hqId);
+				for (int i = 0; i < regionAssociatedToHqsUpsert.size(); i++) {
+					if (hqMaster.getRegionList().get(j).toString()
+							.equals(regionAssociatedToHqsUpsert.get(i).getRegion().getId().toString())) {
+						count += 1;
 					}
+				}
+				if (count <= 0) {
+					RegionAssociatedToHq regionAssociatedToHq = new RegionAssociatedToHq();
+					Region region = regionRepository.getById(Long.parseLong(hqMaster.getRegionList().get(j).toString()));
+					regionAssociatedToHq.setHqMaster(existingHqMaster);
+					regionAssociatedToHq.setRegion(region);
+					regionAssociatedToHqRepository.save(regionAssociatedToHq);
 				}
 			}
 		} else {

@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -53,6 +54,27 @@ public class Product{
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	Family family;
 	
+	@Transient
+	private String brandId;
+	
+	@Transient
+	private String categoryId;
+	
+	@Transient
+	private String familyId;
+	
+	public String getBrandId() {
+		return brandId;
+	}
+	
+	public String getCategoryId() {
+		return categoryId;
+	}
+	
+	public String getFamilyId() {
+		return familyId;
+	}
+	
 	@Column(name = "variant", columnDefinition = "TEXT")
 	private String variant;
 	
@@ -67,6 +89,18 @@ public class Product{
 	
 	@Column(name = "ptr", columnDefinition = "Decimal(10,2)")
 	private BigDecimal ptr;
+	
+	@Column(name = "schemeQty", columnDefinition = "Integer")
+	private Integer schemeQty;
+	
+	@Column(name = "gstRate", columnDefinition = "Integer")
+	private Integer gstRate;
+
+	@Column(name = "minQty", columnDefinition = "Integer")
+	private Integer minQty;
+	
+	@Column(name = "HSNCode", columnDefinition = "TEXT")
+	private String HSNCode;
 	
 	@Column(name = "status",  columnDefinition = "TEXT")
 	private String status;
@@ -94,6 +128,38 @@ public class Product{
 	
 	@Column(name="rejectReason", columnDefinition = "TEXT")
 	private String rejectReason;
+	
+	public Integer getSchemeQty() {
+		return schemeQty;
+	}
+	
+	public void setSchemeQty(Integer schemeQty) {
+		this.schemeQty = schemeQty;
+	}
+	
+	public Integer getGstRate() {
+		return gstRate;
+	}
+	
+	public void setGstRate(Integer gstRate) {
+		this.gstRate = gstRate;
+	}
+	
+	public Integer getMinQty() {
+		return minQty;
+	}
+	
+	public void setMinQty(Integer minQty) {
+		this.minQty = minQty;
+	}
+	
+	public String getHSNCode() {
+		return HSNCode;
+	}
+	
+	public void setHSNCode(String hSNCode) {
+		HSNCode = hSNCode;
+	}
 	
 	public Long getId() {
 		return id;
@@ -257,7 +323,8 @@ public class Product{
 
 	public Product(Long id, String pname, String code, Brand brand, Category category, Family family, String variant,
 			String group_name, String uom, BigDecimal ptd, BigDecimal ptr, String status, String description, LocalDateTime create_date,
-			LocalDateTime inactive_date, String salesDiaryCode, BigDecimal mrp, String approval_status,LocalDateTime updatedDateTime,String rejectReason) {
+			LocalDateTime inactive_date, String salesDiaryCode, BigDecimal mrp, String approval_status,LocalDateTime updatedDateTime,String rejectReason,
+			Integer schemeQty,Integer gstRate,Integer minQty,String HSNCode) {
 		super();
 		this.id = id;
 		this.pname = pname;
@@ -279,6 +346,10 @@ public class Product{
 		this.approval_status = approval_status;
 		this.updatedDateTime = updatedDateTime;
 		this.rejectReason = rejectReason;
+		this.schemeQty = schemeQty;
+		this.gstRate = gstRate;
+		this.minQty = minQty;
+		this.HSNCode = HSNCode;
 	}
 	
 	public Product() {

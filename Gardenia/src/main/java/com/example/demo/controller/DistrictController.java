@@ -146,7 +146,7 @@ public class DistrictController {
 	}
 
 	@GetMapping("/dropdown")
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_USER','ROLE_RSM')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_USER','ROLE_RSM','ROLE_DISTAPPROVER')")
 	public List<Map<String, Object>> dropDownValues(@RequestParam Optional<Long> regionId) {
 		// Create student object to hold student form data
 		List<District> districts;

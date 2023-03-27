@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -11,10 +12,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -25,6 +34,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +49,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,6 +64,8 @@ import com.example.demo.Import.Service.ImportResponseMessage;
 import com.example.demo.Import.Service.ImportService;
 import com.example.demo.entity.Brand;
 import com.example.demo.entity.Category;
+import com.example.demo.entity.Country;
+import com.example.demo.entity.Distributor;
 import com.example.demo.entity.Family;
 import com.example.demo.entity.FileDB;
 import com.example.demo.entity.Product;
@@ -73,6 +87,11 @@ import ch.qos.logback.core.status.Status;
 @RequestMapping("/product")
 public class ProductController {
 
+	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	static String[] HEADERs = { "Id", "Brand", "Category", "Family", "Variant", "Product Name", "Product Code",
+			"Group Name", "UOM", "Description", "PTD", "PTR", "MRP" };
+	static String SHEET = "Sheet1";
+
 	@Autowired
 	private ProductService productService;
 
@@ -90,6 +109,9 @@ public class ProductController {
 
 	@Autowired
 	private ProductImportService productImportService;
+
+	@Autowired
+	private JavaMailSender javaMailSender;
 
 	public ProductController(ProductService productService) {
 		super();
@@ -118,7 +140,7 @@ public class ProductController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public ResponseEntity<Map<String, Object>> listProduct(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "updatedDateTime") String sortBy,
 			@RequestParam(required = false) Optional<String> productCode,
@@ -128,8 +150,8 @@ public class ProductController {
 			@RequestParam(required = false) Optional<String> familyName,
 			@RequestParam(required = false) Optional<String> variant,
 			@RequestParam(required = false) Optional<String> salesDiaryCode,
-			@RequestParam(required = false) Optional<BigDecimal> mrp, @RequestParam(defaultValue = "25") Integer pageSize,
-			@RequestParam(defaultValue = "DESC") String DIR,
+			@RequestParam(required = false) Optional<BigDecimal> mrp,
+			@RequestParam(defaultValue = "25") Integer pageSize, @RequestParam(defaultValue = "DESC") String DIR,
 			@RequestParam(defaultValue = "Approved") Optional<String> productStatus) {
 
 		try {
@@ -147,8 +169,8 @@ public class ProductController {
 
 			Page<Product> pageProducts;
 			System.out.println(brandName);
-			pageProducts = productRepository.findByFilterParam(productCode, productName, brandName, categoryName, familyName,
-					variant, salesDiaryCode, mrp, productStatus, paging);
+			pageProducts = productRepository.findByFilterParam(productCode, productName, brandName, categoryName,
+					familyName, variant, salesDiaryCode, mrp, productStatus, paging);
 			products = pageProducts.getContent();
 			Map<String, Object> pageContent = new HashMap<>();
 			pageContent.put("currentPage", page);
@@ -171,34 +193,42 @@ public class ProductController {
 	private FileStorageService storageService;
 
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	ResponseEntity<?> saveProduct(@RequestBody Map<String, Object> body,HttpServletRequest request) {
-		Product product = new Product();
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
+	ResponseEntity<?> saveProduct(@RequestPart(name = "body", required = false) Product product,
+			HttpServletRequest request) throws MessagingException {
 		LocalDateTime createDateTime = LocalDateTime.now();
 		LocalDateTime updatedDateTime = LocalDateTime.now();
 		product.setCreate_date(createDateTime);
 		product.setUpdatedDateTime(updatedDateTime);
 		product.setApproval_status("Pending");
-
-		product.setCode(body.get("code").toString());
-		product.setPname(body.get("pname").toString());
-		Brand brand = brandRepository.getById(Long.parseLong(body.get("brandId").toString()));
+		Brand brand = brandRepository.getById(Long.parseLong(product.getBrandId()));
 		product.setBrand(brand);
-		Category category = categoryRepository.getById(Long.parseLong(body.get("categoryId").toString()));
+		Category category = categoryRepository.getById(Long.parseLong(product.getCategoryId()));
 		product.setCategory(category);
-		Family family = familyRepository.getById(Long.parseLong(body.get("familyId").toString()));
+		Family family = familyRepository.getById(Long.parseLong(product.getFamilyId()));
 		product.setFamily(family);
-		product.setVariant(body.get("variant").toString());
-		product.setGroup_name(body.get("group_name").toString());
-		product.setUom(body.get("uom").toString());
-		product.setPtd(new BigDecimal(body.get("ptd").toString()));
-		product.setPtr(new BigDecimal(body.get("ptr").toString()));
-		product.setStatus(body.get("status").toString());
-		product.setDescription(body.get("description").toString());
-		product.setSalesDiaryCode(body.get("salesDiaryCode").toString());
-		product.setMrp(new BigDecimal(body.get("mrp").toString()));
+
+		if (productRepository.findIfExists(Long.parseLong(product.getBrandId()),
+				Long.parseLong(product.getCategoryId()), Long.parseLong(product.getFamilyId()),
+				product.getPname()) > 0) {
+			String errorMsg = "Product: " + product.getPname() + "for Brand: " + brand.getBrandName()
+					+ " and Category: " + category.getCategoryName() + " and Family: " + family.getFamilyName()
+					+ " is already registered";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new ErrorMessage(400, errorMsg, "Bad Request", request.getRequestURI()));
+		}
+
+		product.setStatus("Active");
 		productService.saveProduct(product);
-		
+
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+		mimeMessageHelper.setSubject("Product");
+		mimeMessageHelper.setText("New Product Added");
+		javaMailSender.send(mimeMessage);
+
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "Product Added Successfully", "OK", request.getRequestURI()));
 	}
@@ -207,7 +237,7 @@ public class ProductController {
 	ExportService exportService;
 
 	@GetMapping("/export/excel")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public ResponseEntity<Resource> getFile() {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		LocalDate downloadDate = localDateTime.toLocalDate();
@@ -219,59 +249,132 @@ public class ProductController {
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Map<String, Object> body, HttpServletRequest request) {
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
+	ResponseEntity<?> updateProduct(@PathVariable Long id,
+			@RequestPart(name = "body", required = false) Product product, HttpServletRequest request) {
 
 		// Get Existing Student
 		Product existingProduct = productService.getProduct(id);
 		LocalDateTime updatedDateTime = LocalDateTime.now();
 		existingProduct.setUpdatedDateTime(updatedDateTime);
-		if (body.get("status").toString().equals("Inactive")) {
-			System.out.println(body.get("status").toString());
+		if (product.getStatus() == "Inactive") {
 			existingProduct.setInactive_date(updatedDateTime);
 		}
 
-		existingProduct.setCode(body.get("code").toString());
-		existingProduct.setPname(body.get("pname").toString());
-		Brand brand = brandRepository.getById(Long.parseLong(body.get("brandId").toString()));
+		existingProduct.setPname(product.getPname());
+		Brand brand = brandRepository.getById(Long.parseLong(product.getBrandId()));
 		existingProduct.setBrand(brand);
-		Category category = categoryRepository.getById(Long.parseLong(body.get("categoryId").toString()));
+		Category category = categoryRepository.getById(Long.parseLong(product.getCategoryId()));
 		existingProduct.setCategory(category);
-		Family family = familyRepository.getById(Long.parseLong(body.get("familyId").toString()));
+		Family family = familyRepository.getById(Long.parseLong(product.getFamilyId()));
 		existingProduct.setFamily(family);
-		existingProduct.setVariant(body.get("variant").toString());
-		existingProduct.setGroup_name(body.get("group_name").toString());
-		existingProduct.setUom(body.get("uom").toString());
-		existingProduct.setPtd(new BigDecimal(body.get("ptd").toString()));
-		existingProduct.setPtr(new BigDecimal(body.get("ptr").toString()));
-		existingProduct.setStatus(body.get("status").toString());
-		existingProduct.setDescription(body.get("description").toString());
-		existingProduct.setSalesDiaryCode(body.get("salesDiaryCode").toString());
-		existingProduct.setMrp(new BigDecimal(body.get("mrp").toString()));
-
+		existingProduct.setVariant(product.getVariant());
+		if (product.getGroup_name() != null) {
+			existingProduct.setGroup_name(product.getGroup_name());
+		}
+		if (product.getPtd() != null) {
+			existingProduct.setPtd(product.getPtd());
+		}
+		if (product.getPtr() != null) {
+			existingProduct.setPtr(product.getPtr());
+		}
+		if (product.getDescription() != null) {
+			existingProduct.setDescription(product.getDescription());
+		}
+		if (product.getSalesDiaryCode() != null) {
+			existingProduct.setSalesDiaryCode(product.getSalesDiaryCode());
+		}
+		if (product.getMrp() != null) {
+			existingProduct.setMrp(product.getMrp());
+		}
+		if (product.getSchemeQty() != null) {
+			existingProduct.setSchemeQty(product.getSchemeQty());
+		}
+		if (product.getGstRate() != null) {
+			existingProduct.setGstRate(product.getGstRate());
+		}
+		if (product.getMinQty() != null) {
+			existingProduct.setMinQty(product.getMinQty());
+		}
+		if (product.getHSNCode() != null) {
+			existingProduct.setHSNCode(product.getHSNCode());
+		}
+		existingProduct.setUom(product.getUom());
+		existingProduct.setStatus(product.getStatus());
 		// Save Student
 		productService.editProduct(existingProduct);
-		
+
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "Product Edited Successfully", "OK", request.getRequestURI()));
 	}
 
 	@GetMapping("/approve/{id}")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	public ResponseEntity<?> approveProduct(@PathVariable Long id, HttpServletRequest request) {
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER')")
+	public ResponseEntity<?> approveProduct(@PathVariable Long id, HttpServletRequest request)
+			throws MessagingException {
+
+		Integer code = productRepository.findByCode();
+
+		code += 1;
+
 		Long pID = id;
-		System.out.println(pID);
 		String approved = "Approved";
-		productRepository.updateByApprovedStatus(approved, pID);
+		productRepository.updateByApprovedStatus(approved, pID, code.toString());
+		productRepository.updateCode(code);
+		List<Product> products = productRepository.findByProductIdForMail(pID);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try (Workbook workbook = new XSSFWorkbook();) {
+			Sheet sheet = workbook.createSheet(SHEET);
+
+			// Header
+			Row headerRow = sheet.createRow(0);
+
+			for (int col = 0; col < HEADERs.length; col++) {
+				Cell cell = headerRow.createCell(col);
+				cell.setCellValue(HEADERs[col]);
+			}
+
+			int rowIdx = 1;
+			for (Product product : products) {
+				Row row = sheet.createRow(rowIdx++);
+
+				row.createCell(0).setCellValue(product.getId());
+				row.createCell(1).setCellValue(product.getBrand().getBrandName());
+				row.createCell(2).setCellValue(product.getCategory().getCategoryName());
+				row.createCell(3).setCellValue(product.getFamily().getFamilyName());
+				row.createCell(4).setCellValue(product.getVariant());
+				row.createCell(5).setCellValue(product.getPname());
+				row.createCell(6).setCellValue(product.getCode());
+				row.createCell(7).setCellValue(product.getGroup_name());
+				row.createCell(8).setCellValue(product.getUom());
+				row.createCell(9).setCellValue(product.getDescription());
+
+			}
+
+			workbook.write(out);
+		} catch (IOException e) {
+			throw new RuntimeException("fail to convert data to Excel file: " + e.getMessage());
+		}
+		byte[] excelFileAsBytes = out.toByteArray();
+		ByteArrayResource resource = new ByteArrayResource(excelFileAsBytes);
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+		mimeMessageHelper.setSubject("Test");
+		mimeMessageHelper.setText("Test");
+		mimeMessageHelper.addAttachment("Product.xlsx", resource);
+		javaMailSender.send(mimeMessage);
+
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "Product Approved", "OK", request.getRequestURI()));
 	}
 
 	@PostMapping("/reject/{id}")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	public ResponseEntity<?> rejectProduct(@PathVariable Long id,@RequestBody Map<String, Object> body,HttpServletRequest request) {
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER')")
+	public ResponseEntity<?> rejectProduct(@PathVariable Long id, @RequestBody Map<String, Object> body,
+			HttpServletRequest request) {
 		Long pID = id;
-		System.out.println(pID);
 		String rejectReason = body.get("rejectReason").toString();
 		String approved = "Rejected";
 		productRepository.updateByStatus(approved, rejectReason, pID);

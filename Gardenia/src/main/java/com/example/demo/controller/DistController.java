@@ -199,7 +199,7 @@ public class DistController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM','ROLE_DISTAPPROVER')")
 	public ResponseEntity<Map<String, Object>> listDistributor(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "updatedDateTime") String sortBy,
 			@RequestParam(defaultValue = "25") Integer pageSize, @RequestParam(defaultValue = "DESC") String DIR,
@@ -327,7 +327,7 @@ public class DistController {
 	private FileStorageService storageService;
 
 	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM','ROLE_DISTAPPROVER')")
 	ResponseEntity<?> saveDistributor(HttpServletRequest request,
 			@RequestPart(name = "body", required = false) Distributor distributor,
 			@RequestPart(name = "gstFile", required = false) MultipartFile gstFile,
@@ -429,16 +429,12 @@ public class DistController {
 		distributorService.saveDistributor(distributor);
 
 		if (distributor.getBrandList() != null) {
-			for (Map<String, Object> listMap : distributor.getBrandList()) {
-				for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-					if (entry.getKey() == "value") {
-						BrandAssociatedToDist brandAssociatedToDist = new BrandAssociatedToDist();
-						Brand brand = brandRepository.getById(Long.parseLong(entry.getValue().toString()));
-						brandAssociatedToDist.setBrand(brand);
-						brandAssociatedToDist.setDistributor(distributor);
-						brandAssociatedToDistRepository.save(brandAssociatedToDist);
-					}
-				}
+			for (int i = 0; i < distributor.getBrandList().size(); i++) {
+				BrandAssociatedToDist brandAssociatedToDist = new BrandAssociatedToDist();
+				Brand brand = brandRepository.getById(Long.parseLong(distributor.getBrandList().get(i).toString()));
+				brandAssociatedToDist.setBrand(brand);
+				brandAssociatedToDist.setDistributor(distributor);
+				brandAssociatedToDistRepository.save(brandAssociatedToDist);
 			}
 		}
 
@@ -517,8 +513,8 @@ public class DistController {
 	private FileDBRepository fileDBRepository;
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
-	ResponseEntity<?> updateDistributor(@PathVariable Long id,HttpServletRequest request,
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM','ROLE_DISTAPPROVER')")
+	ResponseEntity<?> updateDistributor(@PathVariable Long id, HttpServletRequest request,
 			@RequestPart(name = "body", required = false) Distributor distributor,
 			@RequestPart(name = "gstFile", required = false) MultipartFile gstFile,
 			@RequestPart(name = "panFile", required = false) MultipartFile panFile,
@@ -729,15 +725,10 @@ public class DistController {
 			brandAssociatedToDistsUpdate = brandAssociatedToDistRepository.findByDistributor(distributorId);
 			for (int i = 0; i < brandAssociatedToDistsUpdate.size(); i++) {
 				Integer count = 0;
-
-				for (Map<String, Object> listMap : distributor.getBrandList()) {
-					for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-						if (entry.getKey() == "value") {
-							if (entry.getValue().toString()
-									.equals(brandAssociatedToDistsUpdate.get(i).getBrand().getId().toString())) {
-								count += 1;
-							}
-						}
+				for (int j = 0; j < distributor.getBrandList().size(); j++) {
+					if (distributor.getBrandList().get(j).toString()
+							.equals(brandAssociatedToDistsUpdate.get(i).getBrand().getId().toString())) {
+						count += 1;
 					}
 				}
 				if (count <= 0) {
@@ -748,30 +739,22 @@ public class DistController {
 			}
 
 			// Upsert Brand
-
-			for (Map<String, Object> listMap : distributor.getBrandList()) {
-				for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-					if (entry.getKey() == "value") {
-						Integer count = 0;
-						List<BrandAssociatedToDist> brandAssociatedToDistsUpsert = new ArrayList<BrandAssociatedToDist>();
-						brandAssociatedToDistsUpsert = brandAssociatedToDistRepository.findByDistributor(distributorId);
-						for (int i = 0; i < brandAssociatedToDistsUpsert.size(); i++) {
-							if (entry.getValue().toString()
-									.equals(brandAssociatedToDistsUpsert.get(i).getBrand().getId().toString())) {
-								count += 1;
-								System.out.println(entry.getKey() + "-" + entry.getValue());
-							}
-							System.out.println(entry.getKey() + "-" + entry.getValue() + "-" + count);
-						}
-						if (count <= 0) {
-							BrandAssociatedToDist brandAssociatedToDist = new BrandAssociatedToDist();
-							Brand brand = brandRepository.getById(Long.parseLong(entry.getValue().toString()));
-							brandAssociatedToDist.setBrand(brand);
-							brandAssociatedToDist.setDistributor(existingDistributor);
-							brandAssociatedToDistRepository.save(brandAssociatedToDist);
-							System.out.println(entry.getKey() + "-" + entry.getValue());
-						}
+			for(int j =0;j<distributor.getBrandList().size();j++) {
+				Integer count = 0;
+				List<BrandAssociatedToDist> brandAssociatedToDistsUpsert = new ArrayList<BrandAssociatedToDist>();
+				brandAssociatedToDistsUpsert = brandAssociatedToDistRepository.findByDistributor(distributorId);
+				for (int i = 0; i < brandAssociatedToDistsUpsert.size(); i++) {
+					if (distributor.getBrandList().get(j).toString()
+							.equals(brandAssociatedToDistsUpsert.get(i).getBrand().getId().toString())) {
+						count += 1;
 					}
+				}
+				if (count <= 0) {
+					BrandAssociatedToDist brandAssociatedToDist = new BrandAssociatedToDist();
+					Brand brand = brandRepository.getById(Long.parseLong(distributor.getBrandList().get(j).toString()));
+					brandAssociatedToDist.setBrand(brand);
+					brandAssociatedToDist.setDistributor(existingDistributor);
+					brandAssociatedToDistRepository.save(brandAssociatedToDist);
 				}
 			}
 		} else {
@@ -917,8 +900,8 @@ public class DistController {
 	}
 
 	@PutMapping("/{id}/reapproval")
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM')")
-	ResponseEntity<?> reapprovalDistributor(@PathVariable Long id,HttpServletRequest request,
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_RSM','ROLE_DISTAPPROVER')")
+	ResponseEntity<?> reapprovalDistributor(@PathVariable Long id, HttpServletRequest request,
 			@RequestPart(name = "body", required = false) Distributor distributor,
 			@RequestPart(name = "gstFile", required = false) MultipartFile gstFile,
 			@RequestPart(name = "panFile", required = false) MultipartFile panFile,
@@ -1128,15 +1111,10 @@ public class DistController {
 			brandAssociatedToDistsUpdate = brandAssociatedToDistRepository.findByDistributor(distributorId);
 			for (int i = 0; i < brandAssociatedToDistsUpdate.size(); i++) {
 				Integer count = 0;
-
-				for (Map<String, Object> listMap : distributor.getBrandList()) {
-					for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-						if (entry.getKey() == "value") {
-							if (entry.getValue().toString()
-									.equals(brandAssociatedToDistsUpdate.get(i).getBrand().getId().toString())) {
-								count += 1;
-							}
-						}
+				for (int j = 0; j < distributor.getBrandList().size(); j++) {
+					if (distributor.getBrandList().get(j).toString()
+							.equals(brandAssociatedToDistsUpdate.get(i).getBrand().getId().toString())) {
+						count += 1;
 					}
 				}
 				if (count <= 0) {
@@ -1147,30 +1125,22 @@ public class DistController {
 			}
 
 			// Upsert Brand
-
-			for (Map<String, Object> listMap : distributor.getBrandList()) {
-				for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-					if (entry.getKey() == "value") {
-						Integer count = 0;
-						List<BrandAssociatedToDist> brandAssociatedToDistsUpsert = new ArrayList<BrandAssociatedToDist>();
-						brandAssociatedToDistsUpsert = brandAssociatedToDistRepository.findByDistributor(distributorId);
-						for (int i = 0; i < brandAssociatedToDistsUpsert.size(); i++) {
-							if (entry.getValue().toString()
-									.equals(brandAssociatedToDistsUpsert.get(i).getBrand().getId().toString())) {
-								count += 1;
-								System.out.println(entry.getKey() + "-" + entry.getValue());
-							}
-							System.out.println(entry.getKey() + "-" + entry.getValue() + "-" + count);
-						}
-						if (count <= 0) {
-							BrandAssociatedToDist brandAssociatedToDist = new BrandAssociatedToDist();
-							Brand brand = brandRepository.getById(Long.parseLong(entry.getValue().toString()));
-							brandAssociatedToDist.setBrand(brand);
-							brandAssociatedToDist.setDistributor(existingDistributor);
-							brandAssociatedToDistRepository.save(brandAssociatedToDist);
-							System.out.println(entry.getKey() + "-" + entry.getValue());
-						}
+			for(int j =0;j<distributor.getBrandList().size();j++) {
+				Integer count = 0;
+				List<BrandAssociatedToDist> brandAssociatedToDistsUpsert = new ArrayList<BrandAssociatedToDist>();
+				brandAssociatedToDistsUpsert = brandAssociatedToDistRepository.findByDistributor(distributorId);
+				for (int i = 0; i < brandAssociatedToDistsUpsert.size(); i++) {
+					if (distributor.getBrandList().get(j).toString()
+							.equals(brandAssociatedToDistsUpsert.get(i).getBrand().getId().toString())) {
+						count += 1;
 					}
+				}
+				if (count <= 0) {
+					BrandAssociatedToDist brandAssociatedToDist = new BrandAssociatedToDist();
+					Brand brand = brandRepository.getById(Long.parseLong(distributor.getBrandList().get(j).toString()));
+					brandAssociatedToDist.setBrand(brand);
+					brandAssociatedToDist.setDistributor(existingDistributor);
+					brandAssociatedToDistRepository.save(brandAssociatedToDist);
 				}
 			}
 		} else {
@@ -1311,12 +1281,12 @@ public class DistController {
 
 		}
 
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(new ErrorMessage(200, "Distributor sent for Re-Approval Successfully", "OK", request.getRequestURI()));
+		return ResponseEntity.status(HttpStatus.OK).body(
+				new ErrorMessage(200, "Distributor sent for Re-Approval Successfully", "OK", request.getRequestURI()));
 	}
 
 	@GetMapping("/approve/{id}")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_DISTAPPROVER')")
 	public ResponseEntity<?> approveDistributor(@PathVariable Long id, HttpServletRequest request) {
 		Long distID = id;
 
@@ -1351,8 +1321,9 @@ public class DistController {
 	}
 
 	@PostMapping("/reject/{id}")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	public ResponseEntity<?> rejectDistributor(@PathVariable Long id, @RequestBody Map<String, Object> body, HttpServletRequest request) {
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_DISTAPPROVER')")
+	public ResponseEntity<?> rejectDistributor(@PathVariable Long id, @RequestBody Map<String, Object> body,
+			HttpServletRequest request) {
 		Long distID = id;
 		System.out.println(distID);
 		String rejectReason = body.get("rejectReason").toString();

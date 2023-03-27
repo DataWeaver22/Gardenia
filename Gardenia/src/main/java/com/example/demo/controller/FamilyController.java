@@ -71,7 +71,7 @@ public class FamilyController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public ResponseEntity<Map<String, Object>> listBrand(@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "updatedDateTime") String sortBy,
 			@RequestParam(required = false) Optional<String> familyName,
@@ -95,9 +95,9 @@ public class FamilyController {
 			}
 
 			Page<Family> pageFamily;
-			pageFamily = familyRepository.findByFilterParam(familyName,categoryName,paging);
+			pageFamily = familyRepository.findByFilterParam(familyName, categoryName, paging);
 			families = pageFamily.getContent();
-			
+
 			Map<String, Object> pageContent = new HashMap<>();
 			pageContent.put("currentPage", page);
 			pageContent.put("pageSize", pageFamily.getSize());
@@ -116,7 +116,7 @@ public class FamilyController {
 	}
 
 	@GetMapping("/dropdown")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public List<Map<String, Object>> dropDownValues(@RequestParam Optional<Long> categoryId) {
 		// Create student object to hold student form data
 		List<Family> families;
@@ -137,12 +137,21 @@ public class FamilyController {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	ResponseEntity<?> saveFamily(@RequestBody Map<String, Object> body,HttpServletRequest request) {
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
+	ResponseEntity<?> saveFamily(@RequestBody Map<String, Object> body, HttpServletRequest request) {
 		Family family = new Family();
 		Category category = new Category();
-		family.setFamilyName(body.get("familyName").toString());
 		category = categoryRepository.getById(Long.parseLong(body.get("categoryId").toString()));
+		if (familyRepository.findIfExists(Long.parseLong(body.get("categoryId").toString()),
+				body.get("familyName").toString()) > 0) {
+			String errorMsg = "Family: " + body.get("familyName").toString() + "for Brand: "
+					+ category.getBrand().getBrandName() + " and Category: " + category.getCategoryName()
+					+ " is already registered";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new ErrorMessage(400, errorMsg, "Bad Request", request.getRequestURI()));
+		}
+		family.setFamilyName(body.get("familyName").toString());
+
 		family.setCategory(category);
 		LocalDateTime updatedDateTime = LocalDateTime.now();
 		family.setUpdatedDateTime(updatedDateTime);
@@ -152,8 +161,9 @@ public class FamilyController {
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
-	ResponseEntity<?> updateFamily(@PathVariable Long id, @RequestBody Map<String, Object> body,HttpServletRequest request) {
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
+	ResponseEntity<?> updateFamily(@PathVariable Long id, @RequestBody Map<String, Object> body,
+			HttpServletRequest request) {
 
 		// Get Existing State
 		Family existingFamily = familyService.getFamilyById(id);
@@ -165,7 +175,7 @@ public class FamilyController {
 		existingFamily.setUpdatedDateTime(updatedDateTime);
 		existingFamily.setCategory(category);
 		familyService.editFamily(existingFamily);
-		
+
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "Data Edited Successfully", "OK", request.getRequestURI()));
 	}
@@ -174,7 +184,7 @@ public class FamilyController {
 	ExportService exportService;
 
 	@GetMapping("/export/excel")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public ResponseEntity<Resource> getFile() {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		LocalDate downloadDate = localDateTime.toLocalDate();
@@ -189,7 +199,7 @@ public class FamilyController {
 	ImportService importService;
 
 	@PostMapping("/upload/import")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public ResponseEntity<ImportResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
 		String message = "";
 

@@ -240,7 +240,7 @@ public class RegionController {
 	StatesAssociatedToRegionService statesAssociatedToRegionService;
 	
 	@GetMapping("/dropdown")
-	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_USER','ROLE_RSM')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_USER','ROLE_RSM','ROLE_DISTAPPROVER')")
 	public List<Map<String, Object>> dropDownValues(@RequestParam Optional<Long> stateId) {
 		// Create student object to hold student form data
 		List<StatesAssociatedToRegion> statesAssociatedToRegions;
@@ -285,16 +285,12 @@ public class RegionController {
 
 		// StateAssociatedToRegion
 		if (region.getStateList() != null) {
-			for (Map<String, Object> listMap : region.getStateList()) {
-				for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-					if (entry.getKey() == "value") {
-						StatesAssociatedToRegion statesAssociatedToRegion = new StatesAssociatedToRegion();
-						State stateAssociated = stateRepository.getById(Long.parseLong(entry.getValue().toString()));
-						statesAssociatedToRegion.setState(stateAssociated);
-						statesAssociatedToRegion.setRegion(region);
-						statesAssociatedToRegionRepository.save(statesAssociatedToRegion);
-					}
-				}
+			for(int i =0;i<region.getStateList().size();i++) {
+				StatesAssociatedToRegion statesAssociatedToRegion = new StatesAssociatedToRegion();
+				State stateAssociated = stateRepository.getById(Long.parseLong(region.getStateList().get(i).toString()));
+				statesAssociatedToRegion.setState(stateAssociated);
+				statesAssociatedToRegion.setRegion(region);
+				statesAssociatedToRegionRepository.save(statesAssociatedToRegion);
 			}
 		}
 
@@ -374,15 +370,10 @@ public class RegionController {
 			statesAssociatedToRegionsUpdate = statesAssociatedToRegionRepository.findByRegion(regionId);
 			for (int i = 0; i < statesAssociatedToRegionsUpdate.size(); i++) {
 				Integer count = 0;
-
-				for (Map<String, Object> listMap : region.getStateList()) {
-					for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-						if (entry.getKey() == "value") {
-							if (entry.getValue().toString()
-									.equals(statesAssociatedToRegionsUpdate.get(i).getState().getId().toString())) {
-								count += 1;
-							}
-						}
+				for(int j=0;j<region.getStateList().size();j++) {
+					if (region.getStateList().get(j).toString()
+							.equals(statesAssociatedToRegionsUpdate.get(i).getState().getId().toString())) {
+						count += 1;
 					}
 				}
 				if (count <= 0) {
@@ -393,30 +384,22 @@ public class RegionController {
 			}
 
 			// Upsert State
-
-			for (Map<String, Object> listMap : region.getStateList()) {
-				for (Map.Entry<String, Object> entry : listMap.entrySet()) {
-					if (entry.getKey() == "value") {
-						Integer count = 0;
-						List<StatesAssociatedToRegion> statesAssociatedToRegionsUpsert = new ArrayList<StatesAssociatedToRegion>();
-						statesAssociatedToRegionsUpsert = statesAssociatedToRegionRepository.findByRegion(regionId);
-						for (int i = 0; i < statesAssociatedToRegionsUpsert.size(); i++) {
-							if (entry.getValue().toString()
-									.equals(statesAssociatedToRegionsUpsert.get(i).getState().getId().toString())) {
-								count += 1;
-								System.out.println(entry.getKey() + "-" + entry.getValue());
-							}
-							System.out.println(entry.getKey() + "-" + entry.getValue() + "-" + count);
-						}
-						if (count <= 0) {
-							StatesAssociatedToRegion statesAssociatedToRegion = new StatesAssociatedToRegion();
-							State state = stateRepository.getById(Long.parseLong(entry.getValue().toString()));
-							statesAssociatedToRegion.setState(state);
-							statesAssociatedToRegion.setRegion(existingRegion);
-							statesAssociatedToRegionRepository.save(statesAssociatedToRegion);
-							System.out.println(entry.getKey() + "-" + entry.getValue());
-						}
+			for(int j=0;j<region.getStateList().size();j++) {
+				Integer count = 0;
+				List<StatesAssociatedToRegion> statesAssociatedToRegionsUpsert = new ArrayList<StatesAssociatedToRegion>();
+				statesAssociatedToRegionsUpsert = statesAssociatedToRegionRepository.findByRegion(regionId);
+				for (int i = 0; i < statesAssociatedToRegionsUpsert.size(); i++) {
+					if (region.getStateList().get(j).toString()
+							.equals(statesAssociatedToRegionsUpsert.get(i).getState().getId().toString())) {
+						count += 1;
 					}
+				}
+				if (count <= 0) {
+					StatesAssociatedToRegion statesAssociatedToRegion = new StatesAssociatedToRegion();
+					State state = stateRepository.getById(Long.parseLong(region.getStateList().get(j).toString()));
+					statesAssociatedToRegion.setState(state);
+					statesAssociatedToRegion.setRegion(existingRegion);
+					statesAssociatedToRegionRepository.save(statesAssociatedToRegion);
 				}
 			}
 		} else {

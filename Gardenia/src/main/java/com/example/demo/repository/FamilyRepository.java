@@ -28,4 +28,7 @@ public interface FamilyRepository extends JpaRepository<Family, Long>{
 	@Query("select f from Family f where (:familyName is null or f.familyName Like %:familyName%) and (:categoryName is null or f.category.categoryName Like %:categoryName%"
 			+ " or f.category.brand.brandName LIKE %:categoryName%)")
 	Page<Family> findByFilterParam(@Param("familyName") Optional<String> familyName,@Param("categoryName") Optional<String> categoryName, Pageable pageable);
+	
+	@Query(value = "select count(*) from family where categoryId=?1 and familyName=?2",nativeQuery = true)
+	Long findIfExists(@Param("categoryId")Long brandId,@Param("familyName")String categoryName);
 }

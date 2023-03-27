@@ -395,7 +395,7 @@ public class UserController {
 			@RequestPart(name = "resumeFile", required = false) MultipartFile resumeFile,
 			@RequestPart(name = "paySlipFile", required = false) MultipartFile paySlipFile,
 			@RequestPart(name = "bankStatementFile", required = false) MultipartFile bankStatementFile,
-			@RequestPart(name = "beatPlanFile", required = false) MultipartFile beatPlanFile) {
+			@RequestPart(name = "beatPlanFile", required = false) MultipartFile beatPlanFile) throws MessagingException {
 		// Distributor distributor = new Distributor();
 		LocalDateTime createDateTime = LocalDateTime.now(ZoneId.of("Asia/Kolkata"));
 		LocalDateTime updatedDateTime = LocalDateTime.now(ZoneId.of("Asia/Kolkata"));
@@ -671,6 +671,14 @@ public class UserController {
 			userList.add(userMap);
 
 		}
+		
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+		mimeMessageHelper.setSubject("Employee");
+		mimeMessageHelper.setText("New User Added in Pending");
+		javaMailSender.send(mimeMessage);
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "User Added Successfully", "OK", request.getRequestURI()));
@@ -1786,23 +1794,41 @@ public class UserController {
 
 	@GetMapping("/approve/{id}")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public ResponseEntity<?> approveUser(@PathVariable Long id,HttpServletRequest request) {
+	public ResponseEntity<?> approveUser(@PathVariable Long id,HttpServletRequest request)throws MessagingException {
 		Long uID = id;
 		System.out.println(uID);
 		String approved = "Approved";
 		hqUserRepository.updateByStatus(approved, uID);
+		
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+		mimeMessageHelper.setSubject("Employee");
+		mimeMessageHelper.setText("User Approved");
+		javaMailSender.send(mimeMessage);
+		
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "User Approved", "OK", request.getRequestURI()));
 	}
 
 	@PostMapping("/reject/{id}")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public ResponseEntity<?> rejectUser(@PathVariable Long id, @RequestBody Map<String, Object> body,HttpServletRequest request) {
+	public ResponseEntity<?> rejectUser(@PathVariable Long id, @RequestBody Map<String, Object> body,HttpServletRequest request) throws MessagingException {
 		Long uID = id;
 		System.out.println(uID);
 		String rejectReason = body.get("rejectReason").toString();
 		String approved = "Rejected";
 		hqUserRepository.updateByRejectStatus(approved, rejectReason, uID);
+		
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+		mimeMessageHelper.setSubject("Employee");
+		mimeMessageHelper.setText("User Rejected");
+		javaMailSender.send(mimeMessage);
+		
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "User Rejected", "OK", request.getRequestURI()));
 	}

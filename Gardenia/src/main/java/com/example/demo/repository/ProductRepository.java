@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entity.Area;
 import com.example.demo.entity.Product;
+import com.example.demo.entity.ProductCode;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Transactional
@@ -21,11 +23,22 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("update Product d set d.approval_status=:approved,d.rejectReason=:rejectReason where d.id=:pID")
 	void updateByStatus(@Param("approved") String approved, @Param("rejectReason") String rejectReason,
 			@Param("pID") Long pID);
+	
+	@Query(value = "select * from product where id=?1", nativeQuery = true)
+	List<Product> findByProductIdForMail(@Param("id") Long id);
+	
+	@Query(value = "select code from productCode where id =1", nativeQuery = true)
+	Integer findByCode();
+	
+	@Transactional
+	@Modifying
+	@Query(value="update productCode set code=:code where id=1",nativeQuery = true)
+	void updateCode(@Param("code") Integer code);
 
 	@Transactional
 	@Modifying
-	@Query("update Product d set d.approval_status=:approved where d.id=:pID")
-	void updateByApprovedStatus(@Param("approved") String approved, @Param("pID") Long pID);
+	@Query("update Product d set d.approval_status=:approved,d.code=:code where d.id=:pID")
+	void updateByApprovedStatus(@Param("approved") String approved, @Param("pID") Long pID,@Param("code")String code);
 
 	@Query("select p.brand from Product p where p.id=?1")
 	String findBrandByID(@Param("pID") Long pID);
@@ -53,4 +66,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 			@Param("variant") Optional<String> variant, @Param("salesDiaryCode") Optional<String> salesDiaryCode,
 			@Param("mrp") Optional<BigDecimal> mrp, @Param("productStatus") Optional<String> productStatus,
 			Pageable pageable);
+	
+	@Query(value = "select count(*) from product where brandId=?1 and categoryId=?2 and familyId=?3 and pname=?4",nativeQuery = true)
+	Long findIfExists(@Param("brandId")Long brandId,@Param("categoryId")Long categoryId,@Param("familyId")Long familyId,@Param("pname")String pname);
 }

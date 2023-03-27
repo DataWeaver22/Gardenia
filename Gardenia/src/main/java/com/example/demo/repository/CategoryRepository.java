@@ -24,4 +24,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>{
 	
 	@Query("select c from Category c where (:brandName is null or c.brand.brandName Like %:brandName%) and (:categoryName is null or c.categoryName Like %:categoryName%)")
 	Page<Category> findByFilterParam(@Param("brandName") Optional<String> brandName,@Param("categoryName") Optional<String> categoryName, Pageable pageable);
+	
+	@Query(value = "select count(*) from category where brandId=?1 and categoryName=?2",nativeQuery = true)
+	Long findIfExists(@Param("brandId")Long brandId,@Param("categoryName")String categoryName);
 }
