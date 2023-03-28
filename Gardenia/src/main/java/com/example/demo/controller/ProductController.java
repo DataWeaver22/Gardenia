@@ -221,13 +221,13 @@ public class ProductController {
 		product.setStatus("Active");
 		productService.saveProduct(product);
 
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
-		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
-		mimeMessageHelper.setSubject("Product");
-		mimeMessageHelper.setText("New Product Added");
-		javaMailSender.send(mimeMessage);
+//		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+//		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+//		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+//		mimeMessageHelper.setSubject("Product");
+//		mimeMessageHelper.setText("New Product Added");
+//		javaMailSender.send(mimeMessage);
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "Product Added Successfully", "OK", request.getRequestURI()));
@@ -321,50 +321,50 @@ public class ProductController {
 		String approved = "Approved";
 		productRepository.updateByApprovedStatus(approved, pID, code.toString());
 		productRepository.updateCode(code);
-		List<Product> products = productRepository.findByProductIdForMail(pID);
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try (Workbook workbook = new XSSFWorkbook();) {
-			Sheet sheet = workbook.createSheet(SHEET);
-
-			// Header
-			Row headerRow = sheet.createRow(0);
-
-			for (int col = 0; col < HEADERs.length; col++) {
-				Cell cell = headerRow.createCell(col);
-				cell.setCellValue(HEADERs[col]);
-			}
-
-			int rowIdx = 1;
-			for (Product product : products) {
-				Row row = sheet.createRow(rowIdx++);
-
-				row.createCell(0).setCellValue(product.getId());
-				row.createCell(1).setCellValue(product.getBrand().getBrandName());
-				row.createCell(2).setCellValue(product.getCategory().getCategoryName());
-				row.createCell(3).setCellValue(product.getFamily().getFamilyName());
-				row.createCell(4).setCellValue(product.getVariant());
-				row.createCell(5).setCellValue(product.getPname());
-				row.createCell(6).setCellValue(product.getCode());
-				row.createCell(7).setCellValue(product.getGroup_name());
-				row.createCell(8).setCellValue(product.getUom());
-				row.createCell(9).setCellValue(product.getDescription());
-
-			}
-
-			workbook.write(out);
-		} catch (IOException e) {
-			throw new RuntimeException("fail to convert data to Excel file: " + e.getMessage());
-		}
-		byte[] excelFileAsBytes = out.toByteArray();
-		ByteArrayResource resource = new ByteArrayResource(excelFileAsBytes);
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
-		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
-		mimeMessageHelper.setSubject("Test");
-		mimeMessageHelper.setText("Test");
-		mimeMessageHelper.addAttachment("Product.xlsx", resource);
-		javaMailSender.send(mimeMessage);
+//		List<Product> products = productRepository.findByProductIdForMail(pID);
+//		ByteArrayOutputStream out = new ByteArrayOutputStream();
+//		try (Workbook workbook = new XSSFWorkbook();) {
+//			Sheet sheet = workbook.createSheet(SHEET);
+//
+//			// Header
+//			Row headerRow = sheet.createRow(0);
+//
+//			for (int col = 0; col < HEADERs.length; col++) {
+//				Cell cell = headerRow.createCell(col);
+//				cell.setCellValue(HEADERs[col]);
+//			}
+//
+//			int rowIdx = 1;
+//			for (Product product : products) {
+//				Row row = sheet.createRow(rowIdx++);
+//
+//				row.createCell(0).setCellValue(product.getId());
+//				row.createCell(1).setCellValue(product.getBrand().getBrandName());
+//				row.createCell(2).setCellValue(product.getCategory().getCategoryName());
+//				row.createCell(3).setCellValue(product.getFamily().getFamilyName());
+//				row.createCell(4).setCellValue(product.getVariant());
+//				row.createCell(5).setCellValue(product.getPname());
+//				row.createCell(6).setCellValue(product.getCode());
+//				row.createCell(7).setCellValue(product.getGroup_name());
+//				row.createCell(8).setCellValue(product.getUom());
+//				row.createCell(9).setCellValue(product.getDescription());
+//
+//			}
+//
+//			workbook.write(out);
+//		} catch (IOException e) {
+//			throw new RuntimeException("fail to convert data to Excel file: " + e.getMessage());
+//		}
+//		byte[] excelFileAsBytes = out.toByteArray();
+//		ByteArrayResource resource = new ByteArrayResource(excelFileAsBytes);
+//		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+//		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+//		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+//		mimeMessageHelper.setSubject("Test");
+//		mimeMessageHelper.setText("Test");
+//		mimeMessageHelper.addAttachment("Product.xlsx", resource);
+//		javaMailSender.send(mimeMessage);
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "Product Approved", "OK", request.getRequestURI()));

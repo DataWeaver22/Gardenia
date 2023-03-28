@@ -152,47 +152,47 @@ public class UserController {
 	@Autowired
 	private EmailSenderService emailSenderService;
 
-	@PostMapping("/mail")
-	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public String email() throws MessagingException {
-		List<Country> countries = countryRepository.findAll();
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try (Workbook workbook = new XSSFWorkbook(); ) {
-			Sheet sheet = workbook.createSheet(SHEET);
-
-			// Header
-			Row headerRow = sheet.createRow(0);
-
-			for (int col = 0; col < HEADERs.length; col++) {
-				Cell cell = headerRow.createCell(col);
-				cell.setCellValue(HEADERs[col]);
-			}
-
-			int rowIdx = 1;
-			for (Country country : countries) {
-				Row row = sheet.createRow(rowIdx++);
-
-				row.createCell(0).setCellValue(country.getId());
-				row.createCell(1).setCellValue(country.getCountryName());
-				row.createCell(2).setCellValue(country.getCountryCode());
-			}
-
-			workbook.write(out);
-		} catch (IOException e) {
-			throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
-		}
-		byte[] excelFileAsBytes = out.toByteArray();
-		ByteArrayResource resource = new ByteArrayResource(excelFileAsBytes);
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
-		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
-		mimeMessageHelper.setSubject("Test");
-		mimeMessageHelper.setText("Test");
-		mimeMessageHelper.addAttachment("Test.xlsx", resource);
-		javaMailSender.send(mimeMessage);
-		return "Sent";
-	}
+//	@PostMapping("/mail")
+//	@PreAuthorize("hasAuthority('ROLE_USER')")
+//	public String email() throws MessagingException {
+//		List<Country> countries = countryRepository.findAll();
+//		ByteArrayOutputStream out = new ByteArrayOutputStream();
+//		try (Workbook workbook = new XSSFWorkbook(); ) {
+//			Sheet sheet = workbook.createSheet(SHEET);
+//
+//			// Header
+//			Row headerRow = sheet.createRow(0);
+//
+//			for (int col = 0; col < HEADERs.length; col++) {
+//				Cell cell = headerRow.createCell(col);
+//				cell.setCellValue(HEADERs[col]);
+//			}
+//
+//			int rowIdx = 1;
+//			for (Country country : countries) {
+//				Row row = sheet.createRow(rowIdx++);
+//
+//				row.createCell(0).setCellValue(country.getId());
+//				row.createCell(1).setCellValue(country.getCountryName());
+//				row.createCell(2).setCellValue(country.getCountryCode());
+//			}
+//
+//			workbook.write(out);
+//		} catch (IOException e) {
+//			throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
+//		}
+//		byte[] excelFileAsBytes = out.toByteArray();
+//		ByteArrayResource resource = new ByteArrayResource(excelFileAsBytes);
+//		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+//		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+//		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+//		mimeMessageHelper.setSubject("Test");
+//		mimeMessageHelper.setText("Test");
+//		mimeMessageHelper.addAttachment("Test.xlsx", resource);
+//		javaMailSender.send(mimeMessage);
+//		return "Sent";
+//	}
 
 	@PostMapping("/upload/import")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
@@ -672,13 +672,13 @@ public class UserController {
 
 		}
 		
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
-		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
-		mimeMessageHelper.setSubject("Employee");
-		mimeMessageHelper.setText("New User Added in Pending");
-		javaMailSender.send(mimeMessage);
+//		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+//		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+//		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+//		mimeMessageHelper.setSubject("Employee");
+//		mimeMessageHelper.setText("New User Added in Pending");
+//		javaMailSender.send(mimeMessage);
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "User Added Successfully", "OK", request.getRequestURI()));
@@ -1800,13 +1800,13 @@ public class UserController {
 		String approved = "Approved";
 		hqUserRepository.updateByStatus(approved, uID);
 		
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
-		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
-		mimeMessageHelper.setSubject("Employee");
-		mimeMessageHelper.setText("User Approved");
-		javaMailSender.send(mimeMessage);
+//		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+//		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+//		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+//		mimeMessageHelper.setSubject("Employee");
+//		mimeMessageHelper.setText("User Approved");
+//		javaMailSender.send(mimeMessage);
 		
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "User Approved", "OK", request.getRequestURI()));
@@ -1821,13 +1821,13 @@ public class UserController {
 		String approved = "Rejected";
 		hqUserRepository.updateByRejectStatus(approved, rejectReason, uID);
 		
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
-		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
-		mimeMessageHelper.setSubject("Employee");
-		mimeMessageHelper.setText("User Rejected");
-		javaMailSender.send(mimeMessage);
+//		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+//		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
+//		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
+//		mimeMessageHelper.setSubject("Employee");
+//		mimeMessageHelper.setText("User Rejected");
+//		javaMailSender.send(mimeMessage);
 		
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "User Rejected", "OK", request.getRequestURI()));

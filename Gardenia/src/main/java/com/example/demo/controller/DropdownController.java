@@ -33,7 +33,7 @@ public class DropdownController {
 	private CategoryService categoryService;
 
 	@GetMapping("/categoryBrand/dropdown")
-	@PreAuthorize("hasAuthority('ROLE_MIS')")
+	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_PRODUCTAPPROVER','ROLE_PRODUCT')")
 	public List<Map<String, Object>> CategorydropDownValues() {
 		List<Category> categories;
 		categories = categoryService.getAllCategories();
