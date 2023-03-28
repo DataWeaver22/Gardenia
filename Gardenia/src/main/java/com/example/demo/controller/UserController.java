@@ -1827,7 +1827,7 @@ public class UserController {
 //		mimeMessageHelper.setTo("bhavikdesai1710@gmail.com");
 //		mimeMessageHelper.setSubject("Employee");
 //		mimeMessageHelper.setText("User Rejected");
-//		javaMailSender.send(mimeMessage);
+//		javaMailSender.send(mimeMessage);abcs
 		
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "User Rejected", "OK", request.getRequestURI()));
