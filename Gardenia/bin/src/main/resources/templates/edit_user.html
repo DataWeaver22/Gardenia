@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
 <title>User Master</title>
@@ -25,171 +26,15 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
-<script type="text/javascript" th:src="@{/js/src/fileup.js}"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<link href="" th:href="@{/css/style.css}" rel="stylesheet"/>
 <style>
-nav {
-	background-color: #068203;
-	width: 100%;
-	height: 50px;
-	padding: 0 16px;
-	display: -ms-flexbox;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-align-items: center;
-	align-items: center;
-	/* fade in checked menu */
-}
-
-nav .m-menu__checkbox {
-	display: none;
-}
-
-nav label.m-menu__toggle {
-	cursor: pointer;
-	margin-top: 0.5rem;
-	margin-bottom: 0rem !important;
-}
-
-nav .m-menu {
-	position: absolute;
-	top: 0;
-	left: 0;
-	max-width: 230px;
-	width: calc(100vw - 30px);
-	height: 100%;
-	-moz-transform: translate3d(-450px, 0, 0);
-	-o-transform: translate3d(-450px, 0, 0);
-	-ms-transform: translate3d(-450px, 0, 0);
-	-webkit-transform: translate3d(-450px, 0, 0);
-	transform: translate3d(-450px, 0, 0);
-	-moz-transition: transform 0.35s;
-	-o-transition: transform 0.35s;
-	-webkit-transition: transform 0.35s;
-	transition: transform 0.35s;
-	z-index: 1;
-	overflow: hidden;
-	background-color: #fff;
-}
-
-nav .m-menu__overlay {
-	background-color: rgba(103, 103, 103, 0.5);
-	position: absolute;
-	top: 0;
-	width: 100%;
-	bottom: 0;
-	z-index: 1;
-	display: none;
-}
-
-nav .m-menu__header {
-	padding: 0 16px;
-	height: 50px;
-	display: -ms-flexbox;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-justify-content: space-around;
-	justify-content: space-around;
-	-ms-flex-pack: space-around;
-	-webkit-align-items: center;
-	align-items: center;
-	border-bottom: 1px solid #e8e8e8;
-}
-
-nav .m-menu__header span {
-	font-size: 14px;
-	font-weight: bold;
-	text-align: center;
-	width: 100%;
-	margin-top: 0.6rem;
-}
-
-nav .m-menu .m-menu {
-	-moz-transform: translate3d(480px, 0, 0);
-	-o-transform: translate3d(480px, 0, 0);
-	-ms-transform: translate3d(480px, 0, 0);
-	-webkit-transform: translate3d(480px, 0, 0);
-	transform: translate3d(480px, 0, 0);
-}
-
-nav .m-menu ul {
-	height: 100%;
-	overflow-y: auto;
-}
-
-nav .m-menu ul li a, nav .m-menu ul li label {
-	display: block;
-	text-align: left;
-	line-height: 70px;
-	text-decoration: none;
-	color: #333;
-	cursor: pointer;
-	font-size: 14px;
-	position: relative;
-}
-
-nav .m-menu ul li label.a-label__chevron::after {
-	content: "";
-	position: absolute;
-	display: inline-block;
-	height: 5px;
-	width: 5px;
-	border-color: #333;
-	border-style: solid;
-	border-width: 1px 1px 0 0;
-	-moz-transform: rotate(45deg);
-	-o-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-	transform: rotate(45deg);
-	top: 57%;
-	margin-top: -5px;
-	right: 16px;
-}
-
-nav .m-menu ul li .-invisible {
-	border-bottom: 0;
-}
-
-nav .m-menu .m-menu label.m-menu__toggle {
-	display: -ms-flexbox;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
-	border-bottom: 0;
-	padding: 0;
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
-}
-
-nav .m-menu__checkbox:checked ~ .m-menu__overlay {
-	display: block;
-}
-
-nav .m-menu__checkbox:checked ~ .m-menu {
-	-moz-transform: translate3d(0, 0, 0);
-	-o-transform: translate3d(0, 0, 0);
-	-ms-transform: translate3d(0, 0, 0);
-	-webkit-transform: translate3d(0, 0, 0);
-	transform: translate3d(0, 0, 0);
-}
-
-header {
-	
-}
-
-body {
-	background-color: #f1f1f1;
-	padding: 0;
-	margin: 0;
-	font-family: sans-serif;
-}
 
 thead th {
 	font-size: 9px;
-	font-weight: 700;
+	font-weight: 600;
 }
 
 tbody td {
@@ -199,14 +44,21 @@ tbody td {
 
 .btn {
 	font-size: 9px;
-	width: 65px;
+	width: 55px;
+	height: 25px;
+	float: right;
+}
+
+.btn2 {
+	font-size: 9px;
+	width: 80px;
 	height: 25px;
 	float: right;
 }
 
 .btn_sm {
 	font-size: 9px;
-	width: 80px;
+	width: 65px;
 	height: 25px;
 }
 
@@ -219,10 +71,83 @@ label {
 }
 
 input[type=text] {
-	font-size: 12px;
+	font-size: 10px;
+}
+
+input[type=email] {
+	font-size: 10px;
+}
+
+input[type=date] {
+	font-size: 10px;
+	height: 28px;
 }
 
 #dropDownList {
+	font-size: 10px;
+	height: auto;
+}
+
+#genderList {
+	font-size: 10px;
+	height: auto;
+}
+
+#maritalStatusList {
+	font-size: 10px;
+	height: auto;
+}
+
+#paymentModeList {
+	font-size: 10px;
+	height: auto;
+}
+
+#regionList {
+	font-size: 10px;
+	height: auto;
+}
+
+#stateList {
+	font-size: 10px;
+	height: auto;
+}
+
+#areaList {
+	font-size: 10px;
+	height: auto;
+}
+
+#hqList {
+	font-size: 10px;
+	height: auto;
+}
+
+#statusList {
+	font-size: 10px;
+	height: auto;
+}
+
+#roleList {
+	font-size: 10px;
+	height: auto;
+}
+
+#rsm{
+	font-size: 10px;
+	height: auto;
+}
+
+#asm{
+	font-size: 10px;
+	height: auto;
+}
+#ase{
+	font-size: 10px;
+	height: auto;
+}
+
+#regionDropdown{
 	font-size: 12px;
 	height: auto;
 }
@@ -231,22 +156,83 @@ input[type=text] {
 	border-radius: 20px;
 	border-bottom: 5px solid black;
 	border-top: 5px solid #068203;
+	padding: 20px 35px;
 }
 
-.card h1 {
-	margin-top: 30px;
+.table>tbody>tr>td {
+	vertical-align: middle;
 }
+
+.input-group {
+	width: 100%;
+}
+
+.editable {
+	border: 1px solid lightgrey;
+	padding: 5px;
+	margin: 0;
+	text-shadow: none;
+	box-shadow: none;
+}
+
+.addBtn {
+	cursor: pointer;
+	border: none !important;
+}
+
+.addBtn2 {
+	border: none !important;
+}
+
+.remove {
+	background: #f1f1f1;
+}
+
+.remove td {
+	font-style: italic;
+}
+
 #thumbnail{
-width:70px;
-height:70px;
+	width: 50px;
+    height: 50px;
+    margin-top: 9px;
 }
 
 .file-upl{
 margin-top:33px;
 font-size:smaller;
 }
+
+.dir-img{
+
+position:relative;
+width:70px;
+height:70px;
+}
+#thumbnail {position:absolute; top: 0px; left: 70px; font-size:15px; cursor: pointer }
+#img-preview{display: none;width:70px;
+height:70px;}
+
+
 </style>
 <script>
+$(document).ready(function(){	
+	$('#fileImage').change(function(){
+		showImageThumbnail(this);
+	});
+	
+	function showImageThumbnail(fileInput){
+		file = fileInput.files[0];
+		reader = new FileReader();
+		
+		reader.onload = function(e) {
+			$('#thumbnail').attr('src',e.target.result);
+		};
+		
+		reader.readAsDataURL(file);
+	}
+	});
+
 function myFunc(){
 	var firstName = $("#firstName").val();
 	var lastName = $("#lastName").val();
@@ -260,176 +246,217 @@ function myFunc(){
 		$("#fullName").val("");
 	}
 }
+
+function closeWin() {
+  document.getElementById("image1").style.display = "none";
+  document.getElementById("thumbnail").style.display = "none";
+  document.getElementById("img-preview").style.display = "block";
+  var x = document.getElementById("img-preview");
+  if (x.style.display === "none") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+</script>
+<script>
+$(document).ready(function(){	
+	$('#fileImage').change(function(){
+		showImageThumbnail(this);
+	});
+	
+	function showImageThumbnail(fileInput){
+		file = fileInput.files[0];
+		reader = new FileReader();
+		
+		reader.onload = function(e) {
+			$('#thumbnail').attr('src',e.target.result);
+		};
+		
+		reader.readAsDataURL(file);
+	}
+	});
+	
+function myFunc(){
+	var firstName = $("#firstName").val();
+	var middleName = $("#middleName").val();
+	var lastName = $("#lastName").val();
+	if(firstName!= null && lastName!= null && middleName!= null){
+		$("#fullName").val(firstName + " " + middleName + " " + lastName);
+	}else if(firstName!= null && middleName == null){
+		$("#fullName").val(firstName);
+	}else if(firstName== null && lastName != null){
+		$("#fullName").val(lastName);
+	}else if(lastName == null && middleName != null){
+		$("#fullName").val(middleName);
+	}else{
+		$("#fullName").val("");
+	}
+}
+
+function dynamicRole(){
+	var roleSelected = $('#roleList').val();
+	console.log(roleSelected);
+	if(roleSelected == 'Territory Sales Officer'){
+		$('#ase').show();
+		$('#asm').show();
+		$('#rsm').show();
+		$('#aseLabel').show();
+		$('#asmLabel').show();
+		$('#rsmLabel').show();
+	}else if(roleSelected == 'Area Sales Executive'){
+		$('#ase').hide();
+		$('#asm').show();
+		$('#rsm').show();
+		$('#aseLabel').hide();
+		$('#asmLabel').show();
+		$('#rsmLabel').show();
+	}else if(roleSelected == 'Area Sales Manager'){
+		$('#ase').hide();
+		$('#asm').hide();
+		$('#rsm').show();
+		$('#aseLabel').hide();
+		$('#asmLabel').hide();
+		$('#rsmLabel').show();
+	}else if(roleSelected == 'Regional Sales Manager'){
+		$('#ase').hide();
+		$('#asm').hide();
+		$('#rsm').hide();
+		$('#aseLabel').hide();
+		$('#asmLabel').hide();
+		$('#rsmLabel').hide();
+	}else{
+		$('#ase').hide();
+		$('#asm').hide();
+		$('#rsm').hide();
+		$('#aseLabel').hide();
+		$('#asmLabel').hide();
+		$('#rsmLabel').hide();
+	}
+}
+
+function currentDate(){
+	var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+
+	today = yyyy + '-' + mm + '-' + dd;
+	document.getElementById("birthDateID").value = today;
+	document.getElementById("processStartDateID").value = today;
+}
+
+function multipleFunctionOnStart(){
+	dynamicRole();
+}
 </script>
 </head>
-<body>
-	<div class="wrapper">
-		<nav>
-			<input type="checkbox" id="menu" name="menu" class="m-menu__checkbox">
-			<label class="m-menu__toggle" for="menu"> <svg width="20"
-					height="35" viewBox="0 0 24 24" fill="none" stroke="#fff"
-					stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-					<line x1="3" y1="12" x2="21" y2="12"></line>
-					<line x1="3" y1="6" x2="21" y2="6"></line>
-					<line x1="3" y1="18" x2="21" y2="18"></line></svg>
-			</label> <label class="m-menu__overlay" for="menu"></label>
-
-			<div class="m-menu">
-				<div class="m-menu__header">
-					<label class="m-menu__toggle" for="menu"> <svg width="20"
-							height="35" viewBox="0 0 24 24" fill="none" stroke="#000000"
-							stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-					</label> <span style="color: #fff">MENU</span>
-				</div>
-				<ul>
-
-					<li style="list-style: none"><label class="a-label__chevron"
-						for="item-2">Masters</label> <input type="checkbox" id="item-2"
-						name="item-2" class="m-menu__checkbox">
-						<div class="m-menu">
-							<div class="m-menu__header">
-								<label class="m-menu__toggle" for="item-2"> <svg
-										width="20" height="35" viewBox="0 0 24 24" fill="none"
-										stroke="#000000" stroke-width="2" stroke-linecap="butt"
-										stroke-linejoin="arcs">
-                  <path d="M19 12H6M12 5l-7 7 7 7" />
-                </svg>
-								</label> <span>Masters</span>
-							</div>
-							<!--<ul>
-
-								 <li>
-                <label class="a-label__chevron" for="item-2-3">Item 2.3</label>
-                <input type="checkbox" id="item-2-3" name="item-2" class="m-menu__checkbox">
-                <div class="m-menu">
-                  <div class="m-menu__header">
-                    <label class="m-menu__toggle" for="item-2-3">
-                      <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-                        <path d="M19 12H6M12 5l-7 7 7 7"/>
-                      </svg>
-                    </label>
-                    <span>Item 2.3 </span>
-                  </div>
-                  <ul>
-                    <li><label>Item 2.3.1</label></li>
-                    <li><label>Item 2.3.2</label></li>
-                    <li><label>Item 2.3.3</label></li>
-                    <li><label>Item 2.3.4</label></li>
-                    <li><label>Item 2.3.5</label></li>
-                  </ul>                
-              </li> -->
-							<ul>
-
-
-
-
-								<li style="list-style: none"><label
-									class="a-label__chevron" for="item-2-3">Country Master</label>
-									<input type="checkbox" id="item-2-3" name="item-2"
-									class="m-menu__checkbox">
-									<div class="m-menu">
-										<div class="m-menu__header">
-											<label class="m-menu__toggle" for="item-2-3"> <svg
-													width="20" height="35" viewBox="0 0 24 24" fill="none"
-													stroke="#000000" stroke-width="2" stroke-linecap="butt"
-													stroke-linejoin="arcs">
-                        <path d="M19 12H6M12 5l-7 7 7 7" />
-                      </svg>
-											</label> <span>Country Master</span>
-										</div>
-										<ul>
-											<li style="list-style: none"><label><a
-													th:href="@{/state}">State Master</a></label></li>
-											<li style="list-style: none"><label><a
-													th:href="@{/region}">Region Master</a></label></li>
-											<li style="list-style: none"><label><a
-													th:href="@{/district}">District Master</a></label></li>
-											<li style="list-style: none"><label><a
-													th:href="@{/city}">City Master</a></label></li>
-											<li style="list-style: none"><label><a
-													th:href="@{/area}">Area Master</a></label></li>
-										</ul></li>
-
-								<li style="list-style: none"><label><a
-										th:href="@{/user}">User Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/distributor}">Distributor Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/product}">Product Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/hqmaster}">HQ Master</a></label></li>
-							</ul>
-						</div></li>
-
-				</ul>
-
-				<ul>
-					<li style="list-style: none"><label><a
-							th:href="@{/user}">User Master</a></label></li>
-					<li style="list-style: none"><label><a
-							th:href="@{/distributor}">Distributor Master</a></label></li>
-					<li style="list-style: none"><label><a
-							th:href="@{/product}">Product Master</a></label></li>
-					<li style="list-style: none"><label><a
-							th:href="@{/hqmaster}">HQ Master</a></label></li>
-				</ul>
-			</div>
-			</li>
-			</ul>
-
-
-			<div class="mx-auto">
-				<header class="text-center text-white font-weight-bold">Gardenia</header>
-			</div>
-
-		</nav>
-
-	</div>
-	<br>
-	<br>
-
+<body onload="multipleFunctionOnStart()">
+<nav class="headbar">
+<div class="btn1">
+  <span class="fa fa-bars"></span>
+</div>
+<div class="sidebar">
+  <div class="text">
+    <img th:src="@{/images/logo.png}" class="img-responsive"/>
+  </div>
+  <ul>
+    <li class="active"><a th:href="@{/}">Dashboard</a></li>
+    <li>
+      <a class="feat-btn">Masters
+        <span class="fa fa-caret-down first"></span>
+      </a>
+      <ul class="feat-show">
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/country}">Country Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/state}">State Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/region}">Region Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/district}">District Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/city}">City Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/area}">Area Master</a></li>
+        <li sec:authorize="hasAnyRole('USER')"><a th:href="@{/user}">User Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/distributor}">Distributor Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/product}">Product Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/hqmaster}">HQ Master</a></li>
+      </ul>
+    </li>
+    <!-- <li>
+      <a href="#" class="serv-btn">Services
+        <span class="fa fa-caret-down second"></span>
+      </a>
+      <ul class="serv-show">
+        <li><a href="#">App Design</a></li>
+        <li><a href="#">Web Design</a></li>
+      </ul>
+    </li>
+    <li><a href="#">Portfolio</a></li>
+    <li><a href="#">Overview</a></li>
+    <li><a href="#">Shortcuts</a></li>
+    <li><a href="#">Feedback</a></li> -->
+  </ul>
+</div>
+<div class="btn-logout">
+  <a th:href="@{/logout}"><span class="fa fa-power-off"></span></a>
+</div>
+</nav>
+<form th:action="@{/user/{id} (id=${user.id})}" th:object="${user}" method="POST" enctype="multipart/form-data">
 	<div class="container">
 		<div class="row">
-			<div
-				class="col-lg-12 col-md-12 col-sm-12 container justify-content-center card">
-				<h1 class="text-center">Create New User</h1>
+			<div class="col-lg-12 col-md-12 col-sm-12 mt-5 container justify-content-center card">
+				<h1 class="text-center">Update User</h1>
 				<div class="card-body">
-					<form th:action="@{/user/{id} (id=${user.id})}" th:object="${user}"
-						method="POST">
 						<div class="row">
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
-								<label>Login</label> <input type="text" name="login"
-									th:field="*{login}" class="form-control"
-									placeholder="Enter Login" />
-							</div>
-
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
-								<label>First Name</label> <input type="text" name="first_name" id="firstName" oninput="myFunc()"
-									th:field="*{firstName}" class="form-control"
-									placeholder="Enter First Name" />
-							</div>
-
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
-									<label>Last Name</label> <input type="text" name="last_name" id="lastName" oninput="myFunc()"
-										th:field="*{lastName}" class="form-control"
-										placeholder="Enter Last Name" />
+									<label>Title</label>
+										<input
+										type="text"
+										name="title"
+										th:field="*{title}"
+										class="form-control"
+										placeholder="Enter Title"
+										/>
 								</div>
 							</div>
-
-							<div class="col-lg-3 col-md-3 col-sm-6 file-upl form-group">
-								<div class="form-group">
-									<input type="file" name="image"
-									accept="image/png, image/jpeg" id="fileImage" />
-								</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">	
+							<label>First Name</label>
+							<input
+							type="text"
+							id="firstName"
+							oninput="myFunc()"
+							name="firstName"
+							th:field="*{firstName}"
+							class="form-control"
+							placeholder="Enter First Name"
+							/>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+							<div class="form-group">
+								<label>Middle Name</label>
+								<input
+								type="text"
+								id="middleName"
+								oninput="myFunc()"
+								name="middle_name"
+								th:field="*{middle_name}"
+								class="form-control"
+								placeholder="Enter Branch"
+								/>
 							</div>
 						</div>
-
-						<div class="row">
-							<div class="col-lg-3 col-md-3 col-sm-3 form-group">
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">	
+							<label>Last Name</label>
+							<input
+							type="text"
+							id="lastName"
+							oninput="myFunc()"
+							name="lastName"
+							th:field="*{lastName}"
+							class="form-control"
+							placeholder="Enter Last Name"
+							/>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 					
 							<div class="form-group">	
 							<label>Full Name</label>
@@ -443,42 +470,222 @@ function myFunc(){
 							/>
 						</div>
 						</div>
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group file-upl">
+								<div class="file-loading">
+									<input type="file" name="image"
+									accept="image/png, image/jpeg" id="fileImage" />
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+						<div class="form-group">
+							<label>Gender</label>
+								<select class="form-control" id="genderList" name="gender">
+									<option value="" selected disabled hidden>Select Gender</option>
+    								<option th:each="gender : ${T(com.example.demo.Enum.Gender).values()}" 
+    								th:selected="${gender.name()} eq ${userGender}?true:false" th:value="${gender}" th:text="${gender}"></option>
+								</select>
+						</div>
+					</div>
+						
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
-									<label>Employee Code</label> <input type="text" name="emp_code"
-										th:field="*{emp_code}" class="form-control"
-										placeholder="Enter Employee Code" />
+									<label>Marital Status </label>
+									<select class="form-control" id="maritalStatusList" name="marital_status">
+										<option value="" selected disabled hidden>Select Marital Status</option>
+    									<option th:each="marital_status : ${T(com.example.demo.Enum.MaritalStatus).values()}"
+    									th:selected="${marital_status.name()} eq ${userMaritalStatus}?true:false" th:value="${marital_status}" th:text="${marital_status}"></option>
+									</select>
+								</div>
+							</div>
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Birth Date</label>
+										<input
+										id="birthDateID"
+										type="date"
+										name="title"
+										th:field="*{birth_date}"
+										class="form-control"
+										placeholder="Enter Title"
+										/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 form-group">
+								<div class="form-group">
+									<label>Email</label>
+									<input
+									type="text"
+									name="email"
+									th:field="*{email}"
+									class="form-control"
+									placeholder="Enter Email"
+									/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Employee Code</label>
+										<input
+										type="text"
+										name="emp_code"
+										th:field="*{emp_code}"
+										class="form-control"
+										placeholder="Enter Employee Code"
+										/>
 								</div>
 							</div>
 
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
-								<div class="form-group">
-									<label>Team</label> <input type="text" name="team"
-										th:field="*{team}" class="form-control"
-										placeholder="Enter Team" />
-								</div>
-							</div>
-
-							
-
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<p>
-										<img id="thumbnail" alt="Image Preview" />
+										<img th:src="@{${images}}" class="dir-img" id="image1"/>
+										<span id="thumbnail" onclick="closeWin()">X</span>
+										<p>
+											<img id="img-preview" alt="Image Preview"/>
+										</p>
 									</p>
 								</div>
 							</div>
 						</div>
 
 						<div class="row">
-						<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+							<div class="form-group">
+								<label>Team</label>
+								<input
+								type="text"
+								name="team"
+								th:field="*{team}"
+								class="form-control"
+								placeholder="Enter Team"
+								/>
+							</div>
+						</div> 
+						
+						<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
-									<label>Role</label> <input type="text" name="roles"
-										th:field="*{roles}" class="form-control"
-										placeholder="Enter Role" />
+									<label>Company Code</label>
+										<input
+										type="text"
+										name="company_code"
+										th:field="*{company_code}"
+										class="form-control"
+										placeholder="Enter Company Code"
+										/>
 								</div>
 							</div>
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Grade</label>
+									<input
+									type="text"
+									name="grade"
+									th:field="*{grade}"
+									class="form-control"
+									placeholder="Enter Grade"
+									/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Branch</label>
+									<input
+									type="text"
+									name="branch"
+									th:field="*{branch}"
+									class="form-control"
+									placeholder="Enter Branch"
+									/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Department</label>
+										<input
+										type="text"
+										name="department"
+										th:field="*{department}"
+										class="form-control"
+										placeholder="Enter Department"
+										/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<label>Payment Mode</label>
+									<select class="form-control" id="paymentModeList" name="payment_mode">
+										<option value="" selected disabled hidden>Select Payment</option>
+    									<option th:each="payment_mode : ${T(com.example.demo.Enum.PaymentMode).values()}" 
+    									th:selected="${payment_mode.name()} eq ${userPaymentMode}?true:false" th:value="${payment_mode}" th:text="${payment_mode}"></option>
+									</select>
+							</div>
+							
+							
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Region</label>  <select class="form-control"
+										id="regionList" name="region_id">
+										<option value="" selected disabled hidden>Select Region</option>
+										<option th:each="region_name : ${region_name}"
+											th:value="${region_name.id}"
+											th:selected="${region_name.id} eq ${region_code_ID}?true:false"
+											th:text="${region_name.region_name}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>State</label> <select class="form-control"
+										id="stateList" name="state_id">
+										<option value="" selected disabled hidden>Select State</option>
+										<option th:each="state_name : ${state_name}"
+											th:value="${state_name.id}"
+											th:selected="${state_name.id} eq ${state_code_ID}?true:false"
+											th:text="${state_name.state_name}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-3 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Area</label>  <select class="form-control"
+										id="areaList" name="area_id">
+										<option value="" selected disabled hidden>Select Area</option>
+										<option th:each="area_name : ${area_name}"
+											th:value="${area_name.id}"
+											th:selected="${area_name.id} eq ${area_code_ID}?true:false"
+											th:text="${area_name.area_name}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-3 col-sm-3 form-group">
+								<div class="form-group">
+									<label>HQ Name</label> <select class="form-control"
+										id="hqList" name="hq_id">
+										<option value="" selected disabled hidden>Select HQ</option>
+										<option th:each="hq_name : ${hq_name}"
+											th:value="${hq_name.id}"
+											th:selected="${hq_name.id} eq ${hq_code_ID}?true:false"
+											th:text="${hq_name.hq_name}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label>Process Start Date</label>
+										<input
+										id="processStartDateID"
+										type="date"
+										name="date"
+										th:field="*{process_start_date}"
+										class="form-control"
+										placeholder="Enter Date"
+										/>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
 									<label>Status</label> <select class="form-control"
 										id="statusList" name="status">
@@ -489,71 +696,72 @@ function myFunc(){
 									</select>
 							</div>
 						</div>
-
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
-								<div class="form-group">
-									<label>Region</label>  <select class="form-control"
-										id="dropDownList" name="region_id">
-
-										<option th:each="region_name : ${region_name}"
-											th:value="${region_name.id}"
-											th:selected="${region_name.id} eq ${region_code_ID}?true:false"
-											th:text="${region_name.region_name}"></option>
-									</select>
-								</div>
-							</div>
-
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
-								<div class="form-group">
-									<label>State</label> <select class="form-control"
-										id="dropDownList" name="state_id">
-
-										<option th:each="state_name : ${state_name}"
-											th:value="${state_name.id}"
-											th:selected="${state_name.id} eq ${state_code_ID}?true:false"
-											th:text="${state_name.state_name}"></option>
-									</select>
-								</div>
-							</div>
-
-							
-							</div>
-
+						</div>
 						<div class="row">
-						<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
-									<label>Area</label>  <select class="form-control"
-										id="dropDownList" name="area_id">
-
-										<option th:each="area_name : ${area_name}"
-											th:value="${area_name.id}"
-											th:selected="${area_name.id} eq ${area_code_ID}?true:false"
-											th:text="${area_name.area_name}"></option>
+									<label>Role</label><select class="form-control" id="roleList" name="roles" onchange="dyncamicRole()">
+    								<option value="" selected disabled hidden>Select Role</option>
+    								<option th:each="option : ${options}"
+    										th:selected="${option} eq ${userRoles}?true:false"
+    										th:value="${option}"
+											th:text="${option}"></option>
+							</select>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label id='rsmLabel'>RSM</label>
+									<select class="form-control" id="rsm" name="rsm_id">
+										<option value="" selected disabled hidden>Select RSM</option>
+		    							<option th:each="rsmList : ${rsmList}" th:selected="${rsmList.id} eq ${editRSMID}?true:false" th:value="${rsmList.id}" th:text="${rsmList.fullName}"></option>
 									</select>
 								</div>
 							</div>
-							<div class="col-lg-3 col-md-3 col-sm-6 form-group">
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
 								<div class="form-group">
-									<label>HQ Name</label> <select class="form-control"
-										id="dropDownList" name="hq_id">
-
-										<option th:each="hq_name : ${hq_name}"
-											th:value="${hq_name.id}"
-											th:selected="${hq_name.id} eq ${hq_code_ID}?true:false"
-											th:text="${hq_name.hq_name}"></option>
+									<label id='asmLabel'>ASM</label>
+									<select class="form-control" id="asm" name="asm_id">
+										<option value="" selected disabled hidden>Select ASM</option>
+		    							<option th:each="asmList : ${asmList}" th:selected="${asmList.id} eq ${editASMID}?true:false" th:value="${asmList.id}" th:text="${asmList.fullName}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 form-group">
+								<div class="form-group">
+									<label id='aseLabel'>ASE</label>
+									<select class="form-control" id="ase" name="ase_id">
+										<option value="" selected disabled hidden>Select ASE</option>
+		    							<option th:each="aseList : ${aseList}" th:selected="${aseList.id} eq ${editASEID}?true:false" th:value="${aseList.id}" th:text="${aseList.fullName}"></option>
 									</select>
 								</div>
 							</div>
 						</div>
-
+						
 						<div class="box-footer">
 							<button type="submit" class="btn btn-success">Update</button>
 						</div>
-					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-
+</form>
+<script>
+$('.btn1').click(function(){
+  $(this).toggleClass("click");
+  $('.sidebar').toggleClass("show");
+});
+$('.feat-btn').click(function(){
+  $('nav ul .feat-show').toggleClass("show");
+  $('nav ul .first').toggleClass("rotate");
+});
+$('.serv-btn').click(function(){
+  $('nav ul .serv-show').toggleClass("show1");
+  $('nav ul .second').toggleClass("rotate");
+});
+$('nav ul li').click(function(){
+  $(this).addClass("active").siblings().removeClass("active");
+});
+</script>
 </body>
 </html>

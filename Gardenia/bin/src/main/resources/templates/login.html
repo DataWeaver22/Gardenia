@@ -4,10 +4,7 @@
 <title>Login System</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
 
-
-    
-    
-    <style type="text/css">
+ <style type="text/css">
     body,td,th{
         color: #000000;
     }
@@ -39,17 +36,114 @@
     }
     
     
+    .main-content{
+	width: 60%;
+    border-radius: 20px;
+    box-shadow: 0 5px 5px rgb(0 0 0 / 40%);
+    margin: 5em auto;
+    display: flex;
+    height:400px;
+}
+.company__info{
+	background:url([[@{/images/sidebg.jpg}]]);
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	color: #fff;
+	background-size: cover;
+    background-position-x: center;
+    background-repeat: no-repeat;
+}
+.fa-android{
+	font-size:3em;
+}
+@media screen and (max-width: 640px) {
+	.main-content{width: 90%;}
+	.company__info{
+		display: none;
+	}
+	.login_form{
+		border-top-left-radius:20px;
+		border-bottom-left-radius:20px;
+	}
+}
+@media screen and (min-width: 642px) and (max-width:800px){
+	.main-content{width: 70%;}
+}
+.row > h2{
+	color: black;
+    margin-left: 15px;
+    margin-top: 25px;
+    font-size: inherit;
+    font-weight: bold;
+}
+.login_form{
+	background-color: #fff;
+	border-top-right-radius:20px;
+	border-bottom-right-radius:20px;
+	border-top:1px solid #ccc;
+	border-right:1px solid #ccc;
+	padding: 25px 40px;
+}
+form{
+	
+}
+.form__input{
+	width: 100%;
+	border:0px solid transparent;
+	border-radius: 0;
+	border-bottom: 1px solid #aaa;
+	padding: 5px;
+	outline:none;
+	margin:0.5em auto;
+	transition: all .5s ease;
+}
+.form__input:focus{
+	border-bottom-color: #008080;
+	box-shadow: 0 0 5px rgba(0,80,80,.4); 
+	border-radius: 4px;
+}
+.btn{
+	transition: all .5s ease;
+	width: 100%;
+	border-radius: 30px;
+	color:#008080;
+	font-weight: 600;
+	background-color: #fff;
+	border: 1px solid #008080;
+	margin-top: 1.5em;
+	margin-bottom: 1em;
+}
+.btn:hover, .btn:focus{
+	background-color: #008080;
+	color:#fff;
+}
+
+.company__info img{
+	width:100px;
+	height:100px;
+	margin:auto;
+}  
+
+.gnlogo{
+	width: 328px;
+    height: 44px;
+    margin-top: 40px;
+}  
+    
 </style>
  
     </head>
     <body>
-        <div class="container">
+      <!--   <div class="container">
             <table width="100%" height="100%" border="0" cellpadding="0" align="center">
             <tr>
                 <td align="center" valign="middle">
                 <table class="table-bordered" width="350" border="0" cellpadding="3"cellspacing="3" bgcolor="#ffffff">
         
-        <form action="#" th:action="@{/login}" th:object="${user}" method="post">
+        		<form action="#" th:action="@{/login}" th:object="${user}" method="post">
   
           
                   <tr>
@@ -81,7 +175,46 @@
          </td>  
          </tr>  
       </table>
-     </div>  
- 
+     </div>   -->
+    
+     <div class="container-fluid">
+		<div class="row main-content bg-success text-center">
+			<div class="col-md-6 text-center company__info">
+				<!-- <img th:src="@{/images/logo.png}" class="img-responsive"/> -->
+			</div>
+			<div class="col-md-6 col-xs-12 col-sm-12 login_form ">
+				<div class="container-fluid">
+					<div class="row">
+						<img th:src="@{/images/gnlogo.png}" class="img-responsive gnlogo"/>
+					</div>
+					<div class="row">
+						<h2>Login</h2>
+					</div>
+					<hr>
+					<div class="">
+						<form th:action="@{/login}" th:object="${user}" method="post" class="form-group">
+							<div class="">
+								<input type="text" th:field="*{username}" name="username" id="username" class="form__input" placeholder="Username">
+							</div>
+							<div class="">
+								<!-- <span class="fa fa-lock"></span> -->
+								<input type="password" th:field="*{password}" name="password" id="password" class="form__input" placeholder="Password">
+							</div>
+							<!-- <div class="row">
+								<input type="checkbox" name="remember_me" id="remember_me" class="">
+								<label for="remember_me">Remember Me!</label>
+							</div> -->
+							<div class="">
+								<input type="submit" value="Submit" class="btn">
+							</div>
+						</form>
+					</div><!-- 
+					<div class="row">
+						<p>Don't have an account? <a href="#">Register Here</a></p>
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

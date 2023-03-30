@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,6 +14,7 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
 	integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg=="
 	crossorigin="anonymous" />
+	
 <link
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link
@@ -22,7 +24,7 @@
 	href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
 	rel="stylesheet">
 <link
-	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/plugins/piexif.min.js"></script>
@@ -38,166 +40,18 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/js/fileinput.min.js"></script>
 <script type="text/javascript" th:src="@{/js/src/fileup.js}"></script>
 <script src="js/zoom.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+<!-- MultiSelect Dropdown -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
+
+<link href="" th:href="@{/css/style.css}" rel="stylesheet"/>
+
 <style>
-nav {
-	background-color: #068203;
-	width: 100%;
-	height: 50px;
-	padding: 0 16px;
-	display: -ms-flexbox;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-align-items: center;
-	align-items: center;
-	/* fade in checked menu */
-}
-
-nav .m-menu__checkbox {
-	display: none;
-}
-
-nav label.m-menu__toggle {
-	cursor: pointer;
-	margin-top: 0.5rem;
-	margin-bottom: 0rem !important;
-}
-
-nav .m-menu {
-	position: absolute;
-	top: 0;
-	left: 0;
-	max-width: 230px;
-	width: calc(100vw - 30px);
-	height: 100%;
-	-moz-transform: translate3d(-450px, 0, 0);
-	-o-transform: translate3d(-450px, 0, 0);
-	-ms-transform: translate3d(-450px, 0, 0);
-	-webkit-transform: translate3d(-450px, 0, 0);
-	transform: translate3d(-450px, 0, 0);
-	-moz-transition: transform 0.35s;
-	-o-transition: transform 0.35s;
-	-webkit-transition: transform 0.35s;
-	transition: transform 0.35s;
-	z-index: 1;
-	overflow: hidden;
-	background-color: #fff;
-}
-
-nav .m-menu__overlay {
-	background-color: rgba(103, 103, 103, 0.5);
-	position: absolute;
-	top: 0;
-	width: 100%;
-	bottom: 0;
-	z-index: 1;
-	display: none;
-}
-
-nav .m-menu__header {
-	padding: 0 16px;
-	height: 50px;
-	display: -ms-flexbox;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-justify-content: space-around;
-	justify-content: space-around;
-	-ms-flex-pack: space-around;
-	-webkit-align-items: center;
-	align-items: center;
-	border-bottom: 1px solid #e8e8e8;
-}
-
-nav .m-menu__header span {
-	font-size: 14px;
-	font-weight: bold;
-	text-align: center;
-	width: 100%;
-	margin-top: 0.6rem;
-}
-
-nav .m-menu .m-menu {
-	-moz-transform: translate3d(480px, 0, 0);
-	-o-transform: translate3d(480px, 0, 0);
-	-ms-transform: translate3d(480px, 0, 0);
-	-webkit-transform: translate3d(480px, 0, 0);
-	transform: translate3d(480px, 0, 0);
-}
-
-nav .m-menu ul {
-	height: 100%;
-	overflow-y: auto;
-}
-
-nav .m-menu ul li a, nav .m-menu ul li label {
-	display: block;
-	text-align: left;
-	line-height: 70px;
-	text-decoration: none;
-	color: #333;
-	cursor: pointer;
-	font-size: 14px;
-	position: relative;
-}
-
-nav .m-menu ul li label.a-label__chevron::after {
-	content: "";
-	position: absolute;
-	display: inline-block;
-	height: 5px;
-	width: 5px;
-	border-color: #333;
-	border-style: solid;
-	border-width: 1px 1px 0 0;
-	-moz-transform: rotate(45deg);
-	-o-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-	transform: rotate(45deg);
-	top: 57%;
-	margin-top: -5px;
-	right: 16px;
-}
-
-nav .m-menu ul li .-invisible {
-	border-bottom: 0;
-}
-
-nav .m-menu .m-menu label.m-menu__toggle {
-	display: -ms-flexbox;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
-	border-bottom: 0;
-	padding: 0;
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
-}
-
-nav .m-menu__checkbox:checked ~ .m-menu__overlay {
-	display: block;
-}
-
-nav .m-menu__checkbox:checked ~ .m-menu {
-	-moz-transform: translate3d(0, 0, 0);
-	-o-transform: translate3d(0, 0, 0);
-	-ms-transform: translate3d(0, 0, 0);
-	-webkit-transform: translate3d(0, 0, 0);
-	transform: translate3d(0, 0, 0);
-}
-
-header {
-	
-}
-
-body {
-	background-color: #f1f1f1;
-	padding: 0;
-	margin: 0;
-	font-family: sans-serif;
-}
 
 thead th {
 	font-size: 9px;
@@ -250,7 +104,22 @@ input[type=email] {
 	height: auto;
 }
 
+#assignTSOList {
+	font-size: 12px;
+	height: auto;
+}
+
+#testSelect {
+	font-size: 12px;
+	height: auto;
+}
+
 #regionDropdown{
+	font-size: 12px;
+	height: auto;
+}
+
+#choices-multiple-remove-button{
 	font-size: 12px;
 	height: auto;
 }
@@ -304,6 +173,12 @@ height:70px;
 margin-top:33px;
 font-size:smaller;
 }
+
+.mt-100{
+	margin-top: 100px
+}
+
+
 </style>
 <script>
 function create_tr(table_id) {
@@ -348,8 +223,17 @@ $(document).ready(function(){
 		reader.readAsDataURL(file);
 	}
 	});
-	
-
+$(document).ready(function(){
+    
+    var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
+       removeItemButton: true,
+     }); 
+    
+    
+});
+</script>
+<script>
+$('select[multiple]').multiselect()
 </script>
 <script th:inline="javascript">
 /*<![CDATA[*/
@@ -397,124 +281,55 @@ function myFunc(){
 </script>
 </head>
 <body>
-	<div class="wrapper">
-		<nav>
-			<input type="checkbox" id="menu" name="menu" class="m-menu__checkbox">
-			<label class="m-menu__toggle" for="menu"> <svg width="20"
-					height="35" viewBox="0 0 24 24" fill="none" stroke="#fff"
-					stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-					<line x1="3" y1="12" x2="21" y2="12"></line>
-					<line x1="3" y1="6" x2="21" y2="6"></line>
-					<line x1="3" y1="18" x2="21" y2="18"></line></svg>
-			</label> <label class="m-menu__overlay" for="menu"></label>
-
-			<div class="m-menu">
-				<div class="m-menu__header">
-					<label class="m-menu__toggle" for="menu"> <svg width="20"
-							height="35" viewBox="0 0 24 24" fill="none" stroke="#000000"
-							stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-					</label> <span style="color: #fff">MENU</span>
-				</div>
-				<ul>
-
-					<li style="list-style: none"><label class="a-label__chevron"
-						for="item-2">Masters</label> <input type="checkbox" id="item-2"
-						name="item-2" class="m-menu__checkbox">
-						<div class="m-menu">
-							<div class="m-menu__header">
-								<label class="m-menu__toggle" for="item-2"> <svg
-										width="20" height="35" viewBox="0 0 24 24" fill="none"
-										stroke="#000000" stroke-width="2" stroke-linecap="butt"
-										stroke-linejoin="arcs">
-                  <path d="M19 12H6M12 5l-7 7 7 7" />
-                </svg>
-								</label> <span>Masters</span>
-							</div>
-							<!--<ul>
-
-								 <li>
-                <label class="a-label__chevron" for="item-2-3">Item 2.3</label>
-                <input type="checkbox" id="item-2-3" name="item-2" class="m-menu__checkbox">
-                <div class="m-menu">
-                  <div class="m-menu__header">
-                    <label class="m-menu__toggle" for="item-2-3">
-                      <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-                        <path d="M19 12H6M12 5l-7 7 7 7"/>
-                      </svg>
-                    </label>
-                    <span>Item 2.3 </span>
-                  </div>
-                  <ul>
-                    <li><label>Item 2.3.1</label></li>
-                    <li><label>Item 2.3.2</label></li>
-                    <li><label>Item 2.3.3</label></li>
-                    <li><label>Item 2.3.4</label></li>
-                    <li><label>Item 2.3.5</label></li>
-                  </ul>                
-              </li> -->			
-              					<ul>
-
-					
-							
-
-								 <li style="list-style: none">
-                <label class="a-label__chevron" for="item-2-3">Country Master</label>
-                <input type="checkbox" id="item-2-3" name="item-2" class="m-menu__checkbox">
-                <div class="m-menu">
-                  <div class="m-menu__header">
-                    <label class="m-menu__toggle" for="item-2-3">
-                      <svg width="20" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-                        <path d="M19 12H6M12 5l-7 7 7 7"/>
-                      </svg>
-                    </label>
-                    <span>Country Master</span>
-                  </div>
-                  <ul>
-                    <li style="list-style: none"><label><a th:href="@{/state}">State Master</a></label></li>
-                    <li style="list-style: none"><label><a th:href="@{/region}">Region Master</a></label></li>
-                    <li style="list-style: none"><label><a th:href="@{/district}">District Master</a></label></li>
-                    <li style="list-style: none"><label><a th:href="@{/city}">City Master</a></label></li>
-                    <li style="list-style: none"><label><a th:href="@{/area}">Area Master</a></label></li>
-                  </ul>                
-              </li>
-             		
-           	<li style="list-style: none"><label><a
-										th:href="@{/user}">User Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/distributor}">Distributor Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/product}">Product Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/hqmaster}">HQ Master</a></label></li></ul>
-						</div></li>
-
-				</ul>
-								
-				<ul>
-					  <li style="list-style: none"><label><a
-										th:href="@{/user}">User Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/distributor}">Distributor Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/product}">Product Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/hqmaster}">HQ Master</a></label></li></ul>
-						</div></li> 
-				</ul>
-				
-			
-			<div class="mx-auto">
-				<header class="text-center text-white font-weight-bold">Gardenia</header>
-			</div>
-
-		</nav>
-
-	</div>
+<nav class="headbar">
+<div class="btn1">
+  <span class="fa fa-bars"></span>
+</div>
+<div class="sidebar">
+  <div class="text">
+    <img th:src="@{/images/logo.png}" class="img-responsive"/>
+  </div>
+  <ul>
+    <li class="active"><a th:href="@{/}">Dashboard</a></li>
+    <li>
+      <a class="feat-btn">Masters
+        <span class="fa fa-caret-down first"></span>
+      </a>
+      <ul class="feat-show">
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/country}">Country Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/state}">State Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/region}">Region Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/district}">District Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/city}">City Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/area}">Area Master</a></li>
+        <li sec:authorize="hasAnyRole('MIS','USER')"><a th:href="@{/user}">User Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/distributor}">Distributor Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/product}">Product Master</a></li>
+        <li sec:authorize="hasRole('MIS')"><a th:href="@{/hqmaster}">HQ Master</a></li>
+      </ul>
+    </li>
+    <!-- <li>
+      <a href="#" class="serv-btn">Services
+        <span class="fa fa-caret-down second"></span>
+      </a>
+      <ul class="serv-show">
+        <li><a href="#">App Design</a></li>
+        <li><a href="#">Web Design</a></li>
+      </ul>
+    </li>
+    <li><a href="#">Portfolio</a></li>
+    <li><a href="#">Overview</a></li>
+    <li><a href="#">Shortcuts</a></li>
+    <li><a href="#">Feedback</a></li> -->
+  </ul>
+</div>
+<div class="btn-logout">
+  <a th:href="@{/logout}"><span class="fa fa-power-off"></span></a>
+</div>
+</nav>
 	<br>
 	<br>
+
 
 <form th:action="@{/distributor}" method="POST" enctype="multipart/form-data">
 	<div class="container">
@@ -621,7 +436,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>Region </label> <select class="form-control"
 										id="regionDropdown" name="region_id" oninput="myFunc()">
-
+										<option value="" selected disabled hidden>Select Region</option>
 										<option th:each="region_name : ${region_name}"
 											th:value="${region_name.id}"
 											th:text="${region_name.region_name}"></option>
@@ -632,7 +447,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>State</label> <select class="form-control"
 										id="dropDownList" name="state_id">
-
+										<option value="" selected disabled hidden>Select State</option>
 										<option th:each="state_name : ${state_name}"
 											th:value="${state_name.id}"
 											th:text="${state_name.state_name}"></option>
@@ -643,7 +458,7 @@ function myFunc(){
 								<div class="form-group">
 									<label>City</label> <select class="form-control"
 										id="dropDownList" name="city_id">
-
+										<option value="" selected disabled hidden>Select City</option>
 										<option th:each="city_name : ${city_name}"
 											th:value="${city_name.id}" th:text="${city_name.city_name}"></option>
 									</select>
@@ -678,7 +493,8 @@ function myFunc(){
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Serviced Status </label> <select class="form-control"
-										id="dropDownList" name="options">
+										id="dropDownList" name="service_status">
+										<option value="" selected disabled hidden>Select Service Status</option>
 										<option
 											th:each="options : ${T(com.example.demo.Enum.Service).values()}"
 											th:value="${options}" th:text="${options}"></option>
@@ -687,23 +503,27 @@ function myFunc(){
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>Brand List</label> <input type="text" name="brand_list"
-										th:field="*{brand_list}" class="form-control"
-										placeholder="Enter Brand List" />
+									<label>Assigned TSO</label>
+									<select class="form-control" id="assignTSOList" name="assign_tso_id">
+										<option value="" selected disabled hidden>Select TSO</option>
+    									<option th:each="users : ${users}" th:value="${users.id}" th:text="${users.fullName}"></option>
+									</select>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-3">
-								<div class="form-group">
-									<label>Assigned TSO</label> <input type="text"
-										name="supp_code" th:field="*{assign_tso}" class="form-control"
-										placeholder="Enter Assigned TSO" />
-								</div>
+									<label>Brand List</label>
+									 <select id="choices-multiple-remove-button" name="selectedValues" placeholder="Select Brands" multiple>
+										<option th:each="brand : ${brand}"
+											th:value="${brand.id}"
+											th:text="${brand.brand}"></option>
+									</select>
 							</div>
 						</div>
+						
 						<div class="box-footer">
-							<button type="submit" class="btn btn-success">
+							<button type="submit" class="btn btn-success" onClick="setData()">
 								Submit
 							</button>
 						</div> 
@@ -750,5 +570,46 @@ function myFunc(){
 			</div>
 	</div>
 </form>
+<script>
+$('.btn1').click(function(){
+  $(this).toggleClass("click");
+  $('.sidebar').toggleClass("show");
+});
+$('.feat-btn').click(function(){
+  $('nav ul .feat-show').toggleClass("show");
+  $('nav ul .first').toggleClass("rotate");
+});
+$('.serv-btn').click(function(){
+  $('nav ul .serv-show').toggleClass("show1");
+  $('nav ul .second').toggleClass("rotate");
+});
+$('nav ul li').click(function(){
+  $(this).addClass("active").siblings().removeClass("active");
+});
+
+var myDrop = new drop({
+    selector:  '#myMulti'
+});
+
+function setData(){
+
+    var selectedValues= [];
+    $('#choices-multiple-remove-button').each(function(i, selected) {
+    	
+        selectedValues[i] = $('#choices-multiple-remove-button').val();
+    }); 
+    console.log(selectedValues);
+	
+    /* $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: {'selectedValues':selectedValues.toString()},
+        url: '/distributor'
+    }); */
+}
+	
+
+</script>
+
 </body>
 </html>

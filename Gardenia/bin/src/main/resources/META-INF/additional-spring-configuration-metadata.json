@@ -8,5 +8,15 @@
     "name": "app.upload.file",
     "type": "java.lang.String",
     "description": "A description for 'app.upload.file'"
+  },
+  {
+    "name": "System.Net.ServicePointManager.Expect100Continue",
+    "type": "java.lang.String",
+    "description": "A description for 'System.Net.ServicePointManager.Expect100Continue'"
+  },
+  {
+    "name": "System.Net.ServicePointManager.Expect100Continue",
+    "type": "java.lang.String",
+    "description": "A description for 'System.Net.ServicePointManager.Expect100Continue'"
   }
 ]}

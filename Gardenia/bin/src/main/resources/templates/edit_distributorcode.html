@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
 <title>Country Management System</title>
@@ -7,6 +8,9 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 
 <style>
 nav {
@@ -222,85 +226,47 @@ input[type=text] {
 
 </head>
 <body>
-	<div class="wrapper">
-		<nav>
-			<input type="checkbox" id="menu" name="menu" class="m-menu__checkbox">
-			<label class="m-menu__toggle" for="menu"> <svg width="20"
-					height="35" viewBox="0 0 24 24" fill="none" stroke="#fff"
-					stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-					<line x1="3" y1="12" x2="21" y2="12"></line>
-					<line x1="3" y1="6" x2="21" y2="6"></line>
-					<line x1="3" y1="18" x2="21" y2="18"></line></svg>
-			</label> <label class="m-menu__overlay" for="menu"></label>
-
-			<div class="m-menu">
-				<div class="m-menu__header">
-					<label class="m-menu__toggle" for="menu"> <svg width="20"
-							height="35" viewBox="0 0 24 24" fill="none" stroke="#000000"
-							stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-					</label> <span style="color: #fff">MENU</span>
-				</div>
-				<ul>
-
-					<li style="list-style: none"><label class="a-label__chevron"
-						for="item-2">Masters</label> <input type="checkbox" id="item-2"
-						name="item-2" class="m-menu__checkbox">
-						<div class="m-menu">
-							<div class="m-menu__header">
-								<label class="m-menu__toggle" for="item-2"> <svg
-										width="20" height="35" viewBox="0 0 24 24" fill="none"
-										stroke="#000000" stroke-width="2" stroke-linecap="butt"
-										stroke-linejoin="arcs">
-                  <path d="M19 12H6M12 5l-7 7 7 7" />
-                </svg>
-								</label> <span>Masters</span>
-							</div>
-							<ul>
-
-								<!-- <li>
-                <label class="a-label__chevron" for="item-2-3">Item 2.3</label>
-                <input type="checkbox" id="item-2-3" name="item-2" class="m-menu__checkbox">
-                <div class="m-menu">
-                  <div class="m-menu__header">
-                    <label class="m-menu__toggle" for="item-2-3">
-                      <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="butt" stroke-linejoin="arcs">
-                        <path d="M19 12H6M12 5l-7 7 7 7"/>
-                      </svg>
-                    </label>
-                    <span>Item 2.3 </span>
-                  </div>
-                  <ul>
-                    <li><label>Item 2.3.1</label></li>
-                    <li><label>Item 2.3.2</label></li>
-                    <li><label>Item 2.3.3</label></li>
-                    <li><label>Item 2.3.4</label></li>
-                    <li><label>Item 2.3.5</label></li>
-                  </ul>                
-              </li> -->
-								<li style="list-style: none"><label><a
-										th:href="@{/user}">User Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/distributor}">Distributor Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/product}">Product Master</a></label></li>
-								<li style="list-style: none"><label><a
-										th:href="@{/hqmaster}">HQ Master</a></label></li>
-						</div></li>
-
-				</ul>
-			</div>
-			<div class="mx-auto">
-				<header class="text-center">Gardenia</header>
-			</div>
-
-		</nav>
-
-	</div>
-	<br>
-	<br>
+<div class="btn1">
+  <span class="fa fa-bars"></span>
+</div>
+<nav class="sidebar">
+  <div class="text">
+    Side Menu
+  </div>
+  <ul>
+    <li class="active"><a th:href="@{/}">Dashboard</a></li>
+    <li>
+      <a class="feat-btn">Masters
+        <span class="fa fa-caret-down first"></span>
+      </a>
+      <ul class="feat-show">
+        <li><a th:href="@{/country}">Country Master</a></li>
+        <li><a th:href="@{/state}">State Master</a></li>
+        <li><a th:href="@{/region}">Region Master</a></li>
+        <li><a th:href="@{/district}">District Master</a></li>
+        <li><a th:href="@{/city}">City Master</a></li>
+        <li><a th:href="@{/area}">Area Master</a></li>
+        <li><a th:href="@{/user}">User Master</a></li>
+        <li><a th:href="@{/distributor}">Distributor Master</a></li>
+        <li><a th:href="@{/product}">Product Master</a></li>
+        <li><a th:href="@{/hqmaster}">HQ Master</a></li>
+      </ul>
+    </li>
+    <!-- <li>
+      <a href="#" class="serv-btn">Services
+        <span class="fa fa-caret-down second"></span>
+      </a>
+      <ul class="serv-show">
+        <li><a href="#">App Design</a></li>
+        <li><a href="#">Web Design</a></li>
+      </ul>
+    </li>
+    <li><a href="#">Portfolio</a></li>
+    <li><a href="#">Overview</a></li>
+    <li><a href="#">Shortcuts</a></li>
+    <li><a href="#">Feedback</a></li> -->
+  </ul>
+</nav>
 	<div class="container-fluid">
 		<div class="row">
 			<div
@@ -338,5 +304,22 @@ input[type=text] {
 			</div>
 		</div>
 	</div>
+<script>
+$('.btn1').click(function(){
+  $(this).toggleClass("click");
+  $('.sidebar').toggleClass("show");
+});
+$('.feat-btn').click(function(){
+  $('nav ul .feat-show').toggleClass("show");
+  $('nav ul .first').toggleClass("rotate");
+});
+$('.serv-btn').click(function(){
+  $('nav ul .serv-show').toggleClass("show1");
+  $('nav ul .second').toggleClass("rotate");
+});
+$('nav ul li').click(function(){
+  $(this).addClass("active").siblings().removeClass("active");
+});
+</script>
 </body>
 </html>
