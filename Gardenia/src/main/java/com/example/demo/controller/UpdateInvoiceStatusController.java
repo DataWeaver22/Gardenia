@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -140,7 +141,7 @@ public class UpdateInvoiceStatusController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	@PutMapping("/updateInvoice/{id}")
-	public ResponseEntity<?> create(@RequestBody UpdateInvoiceStatus updateInvoiceStatus){
+	public ResponseEntity<?> create(@PathVariable long id,@RequestBody UpdateInvoiceStatus updateInvoiceStatus){
 		UpdateInvoiceStatus newupdateInvoiceStatus = updateInvoiceStatusRepository.getById(updateInvoiceStatus.getId());
 		
 		newupdateInvoiceStatus.setCreatedDate(updateInvoiceStatus.getCreatedDate());
@@ -155,22 +156,47 @@ public class UpdateInvoiceStatusController {
 			inv = invoiceNoRepository.findByid(updateInvoiceStatus.getId());
 			for(int i= 0; i<inv.size();i++) {
 				int count =0;
-				
-				
+				for(int j =0;j<updateInvoiceStatus.getInvoiceno().size();j++ ) {
+					
+						if(updateInvoiceStatus.getInvoiceno().get(j).toString().equals(inv.get(i).getInvoiceNo())) {
+							count+=1;
+						}}
+				if(count<=0) {
+					invoiceNoRepository.deleteByUserAndId(updateInvoiceStatus.getId(),inv.get(i).getId());
+			
+				}}
+			
+			for(int j =0; j<updateInvoiceStatus.getInvoiceno().size();j++) {
+				Integer count =0;
+				List<InvoiceNo> invoiceupsert = new ArrayList<InvoiceNo>();
+				invoiceupsert = invoiceNoRepository.findByid(updateInvoiceStatus.getId());
+				for(int i=0; i<invoiceupsert.size();i++) {
+					if(updateInvoiceStatus.getInvoiceno().get(j).toString()
+							.equals(invoiceupsert.get(i).getInvoiceNo())) {
+							count+=1;
+						}
+					}
+					
+				if(count<= 0) {
+					for (int i = 0; i < updateInvoiceStatus.getInvoiceno().size(); i++) {
+						InvoiceNo invoiceNo = new InvoiceNo();
+						invoiceNo.setInvoiceNo(updateInvoiceStatus.getInvoiceno().get(i));
+
+						invoiceNoRepository.save(invoiceNo);
+					
+				} 
 			}
+			}	
+			}
+				else {
+					invoiceNoRepository.deleteByUser(updateInvoiceStatus.getId());
+				}
 			
-			
-//			for (int i = 0; i < updateInvoiceStatus.getInvoiceno().size(); i++) {
-//				InvoiceNo invoiceNo = new InvoiceNo();
-//				invoiceNo.setInvoiceNo(updateInvoiceStatus.getInvoiceno().get(i));
-//				invoiceNo.setUpdateInvoiceStatus(newupdateInvoiceStatus);
-//				invoiceNoRepository.save(invoiceNo);
-//			}
-		}
+
+	
 		
 		
 		return new ResponseEntity<>("Saved Successfully", HttpStatus.OK);
 		
-	}
+	}}
 	
-}
