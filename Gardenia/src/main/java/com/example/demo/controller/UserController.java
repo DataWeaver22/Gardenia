@@ -121,8 +121,14 @@ import com.example.demo.service.UserService;
 public class UserController {
 
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	static String[] HEADERs = { "Id", "Country Name", "Country Code" };
-	static String SHEET = "Countries";
+	static String[] HEADERs = { "Title", "First Name", "Middle Name", "Last Name", "Full Name", "Emp Code",
+			"Reporting To", "Role", "Region", "State", "District", "City", "Area", "HQ", "Marital Status", "Gender",
+			"Aadhar No", "Birth Date", "Join Date", "Grade", "Branch", "Department", "Payment Mode", "Email",
+			"Process Start Date", "Company Code", "Last/Current Org. Name", "Last/Current Org. Joining Date",
+			"Last/Current Org. Last Date", "Last/Current Org. Designation", "Last/Current Org. Salary",
+			"Last/Current Org. Manager Mobile No.", "Last/Current Org. Manager Email ID",
+			"Last/Current Org. HR Email ID" };
+	static String SHEET = "Sheet1";
 
 	private UserService userService;
 	Status status;
@@ -395,7 +401,8 @@ public class UserController {
 			@RequestPart(name = "resumeFile", required = false) MultipartFile resumeFile,
 			@RequestPart(name = "paySlipFile", required = false) MultipartFile paySlipFile,
 			@RequestPart(name = "bankStatementFile", required = false) MultipartFile bankStatementFile,
-			@RequestPart(name = "beatPlanFile", required = false) MultipartFile beatPlanFile) throws MessagingException {
+			@RequestPart(name = "beatPlanFile", required = false) MultipartFile beatPlanFile)
+			throws MessagingException {
 		// Distributor distributor = new Distributor();
 		LocalDateTime createDateTime = LocalDateTime.now(ZoneId.of("Asia/Kolkata"));
 		LocalDateTime updatedDateTime = LocalDateTime.now(ZoneId.of("Asia/Kolkata"));
@@ -404,16 +411,16 @@ public class UserController {
 		user.setUpdatedDateTime(updatedDateTime);
 		user.setApprovalStatus("Pending");
 
-		if(hqUserRepository.isAadharNoPresent(user.getAadharNo())>0) {
+		if (hqUserRepository.isAadharNoPresent(user.getAadharNo()) > 0) {
 			String errorMsg = "Aadhar No: " + user.getAadharNo().toString() + " is already registered";
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new ErrorMessage(400, errorMsg, "Bad Request", request.getRequestURI()));
-		}else if(hqUserRepository.isUserPresent(user.getFullName())>0) {
+		} else if (hqUserRepository.isUserPresent(user.getFullName()) > 0) {
 			String errorMsg = "User: " + user.getFullName().toString() + " is already registered";
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new ErrorMessage(400, errorMsg, "Bad Request", request.getRequestURI()));
 		}
-		
+
 		if (user.getRegionId() != null) {
 			Region region = regionRepository.getById(Long.parseLong(user.getRegionId().toString()));
 			user.setRegion(region);
@@ -583,95 +590,162 @@ public class UserController {
 		// return Object
 		List<User> users = hqUserRepository.findWithoutTransientColumns(user.getId());
 
-		List<Map<String, Object>> userList = new ArrayList<Map<String, Object>>();
+		// Mail
 
-		for (int i = 0; i < users.size(); i++) {
-			Map<String, Object> userMap = new HashMap<String, Object>();
-			userMap.put("id", users.get(i).getId());
-			userMap.put("title", users.get(i).getTitle());
-			userMap.put("firstName", users.get(i).getFirstName());
-			userMap.put("middleName", users.get(i).getMiddleName());
-			userMap.put("lastName", users.get(i).getLastName());
-			userMap.put("fullName", users.get(i).getFullName());
-			userMap.put("aadharNo", users.get(i).getAadharNo());
-			userMap.put("login", users.get(i).getLogin());
-			userMap.put("gender", users.get(i).getGender());
-			userMap.put("maritalStatus", users.get(i).getMaritalStatus());
-			userMap.put("birthDate", users.get(i).getBirthDate());
-			userMap.put("email", users.get(i).getEmail());
-			userMap.put("empCode", users.get(i).getEmpCode());
-			userMap.put("reportingTo", users.get(i).getReportingTo());
-			userMap.put("companyCode", users.get(i).getCompanyCode());
-			userMap.put("grade", users.get(i).getGrade());
-			userMap.put("branch", users.get(i).getBranch());
-			userMap.put("department", users.get(i).getDepartment());
-			userMap.put("processStartDate", users.get(i).getProcessStartDate());
-			userMap.put("paymentMode", users.get(i).getPaymentMode());
-			userMap.put("region", users.get(i).getRegion());
-			userMap.put("state", users.get(i).getState());
-			userMap.put("district", users.get(i).getDistrict());
-			userMap.put("city", users.get(i).getCity());
-			userMap.put("area", users.get(i).getArea());
-			userMap.put("status", users.get(i).getStatus());
-			userMap.put("hq", users.get(i).getHqMaster());
-			userMap.put("role", users.get(i).getRole());
-			userMap.put("rsm", users.get(i).getRsm());
-			userMap.put("asm", users.get(i).getAsm());
-			userMap.put("ase", users.get(i).getAse());
-			userMap.put("createDate", users.get(i).getCreateDate());
-			userMap.put("inactiveDate", users.get(i).getInactiveDate());
-			userMap.put("updatedDateTime", users.get(i).getUpdatedDateTime());
-			userMap.put("approvalStatus", users.get(i).getApprovalStatus());
-			userMap.put("lcOrgName", users.get(i).getlcOrgName());
-			userMap.put("lcJoiningDate", users.get(i).getlcJoiningDate());
-			userMap.put("lcLastDate", users.get(i).getlcLastDate());
-			userMap.put("lcOrgDesignation", users.get(i).getlcOrgDesignation());
-			userMap.put("lcOrgSalary", users.get(i).getlcOrgSalary());
-			userMap.put("lcOrgManagerMobile", users.get(i).getlcOrgManagerMobile());
-			userMap.put("lcOrgManagerEmailID", users.get(i).getlcOrgManagerEmailID());
-			userMap.put("lcOrgHREmailID", users.get(i).getlcOrgHREmailID());
-			userMap.put("dateOfJoining", users.get(i).getDateOfJoining());
-			userMap.put("designationRecommended", users.get(i).getDesignationRecommended());
-			userMap.put("goSalary", users.get(i).getgoSalary());
-			userMap.put("growthPercentage", users.get(i).getGrowthPercentage());
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try (Workbook workbook = new XSSFWorkbook();) {
+			Sheet sheet = workbook.createSheet(SHEET);
 
-			Long userId = users.get(i).getId();
-			List<UserTargetDetails> userTargetDetailsList = new ArrayList<UserTargetDetails>();
-			userTargetDetailsList = userTargetDetailsRepository.findByUser(userId);
-			List<Map<String, Object>> targetList = new ArrayList<Map<String, Object>>();
-			for (int j = 0; j < userTargetDetailsList.size(); j++) {
-				Map<String, Object> targetMap = new HashMap<String, Object>();
-				targetMap.put("hq", userTargetDetailsList.get(j).getHq());
-				targetMap.put("present", userTargetDetailsList.get(j).getPresent());
-				targetMap.put("goal", userTargetDetailsList.get(j).getGoal());
-				targetMap.put("id", userTargetDetailsList.get(j).getId());
-				targetList.add(targetMap);
+			// Header
+			Row headerRow = sheet.createRow(0);
+
+			for (int col = 0; col < HEADERs.length; col++) {
+				Cell cell = headerRow.createCell(col);
+				cell.setCellValue(HEADERs[col]);
 			}
-			userMap.put("userTargetDetails", targetList);
 
-			// User Team
-			List<UserTeam> userTeamList = new ArrayList<UserTeam>();
-			userTeamList = userTeamRepository.findByUser(userId);
-			List<Map<String, Object>> teamList = new ArrayList<Map<String, Object>>();
-			for (int j = 0; j < userTeamList.size(); j++) {
-				Map<String, Object> teamMap = new HashMap<String, Object>();
-				teamMap.put("employeeName", userTeamList.get(j).getEmployee().getId());
-				teamMap.put("id", userTeamList.get(j).getId());
-				teamList.add(teamMap);
+			int rowIdx = 1;
+			for (User mailUser : users) {
+				Row row = sheet.createRow(rowIdx++);
+
+				row.createCell(0).setCellValue(mailUser.getTitle());
+				row.createCell(1).setCellValue(mailUser.getFirstName());
+				row.createCell(2).setCellValue(mailUser.getMiddleName());
+				row.createCell(3).setCellValue(mailUser.getLastName());
+				row.createCell(4).setCellValue(mailUser.getFullName());
+				row.createCell(5).setCellValue(mailUser.getEmpCode());
+				row.createCell(6).setCellValue(mailUser.getReportingTo());
+				row.createCell(7).setCellValue(mailUser.getRole());
+				row.createCell(8).setCellValue(mailUser.getRegion().getRegionName());
+				row.createCell(9).setCellValue(mailUser.getState().getStateName());
+				row.createCell(10).setCellValue(mailUser.getDistrict().getDistrictName());
+				row.createCell(11).setCellValue(mailUser.getCity().getCityName());
+				row.createCell(12).setCellValue(mailUser.getArea().getAreaName());
+				row.createCell(13).setCellValue(mailUser.getHqMaster().getHqName());
+				row.createCell(14).setCellValue(mailUser.getMaritalStatus());
+				row.createCell(15).setCellValue(mailUser.getGender());
+				row.createCell(16).setCellValue(mailUser.getAadharNo());
+				row.createCell(17).setCellValue(mailUser.getBirthDate().toString());
+				row.createCell(18).setCellValue(mailUser.getJoinDate().toString());
+				row.createCell(19).setCellValue(mailUser.getGrade());
+				row.createCell(20).setCellValue(mailUser.getBranch());
+				row.createCell(21).setCellValue(mailUser.getDepartment());
+				row.createCell(22).setCellValue(mailUser.getPaymentMode());
+				row.createCell(23).setCellValue(mailUser.getEmail());
+				row.createCell(24).setCellValue(mailUser.getProcessStartDate().toString());
+				row.createCell(25).setCellValue(mailUser.getCompanyCode());
+				row.createCell(26).setCellValue(mailUser.getlcOrgName());
+				row.createCell(27).setCellValue(mailUser.getlcJoiningDate().toString());
+				row.createCell(28).setCellValue(mailUser.getlcLastDate().toString());
+				row.createCell(29).setCellValue(mailUser.getlcOrgDesignation());
+				row.createCell(30).setCellValue(mailUser.getlcOrgSalary());
+				row.createCell(31).setCellValue(mailUser.getlcOrgManagerMobile());
+				row.createCell(32).setCellValue(mailUser.getlcOrgManagerEmailID());
+				row.createCell(33).setCellValue(mailUser.getlcOrgHREmailID());
 			}
-			userMap.put("userTeam", teamList);
 
-			userMap.put("aadharFile", users.get(i).getAadharFile());
-			userMap.put("panFile", users.get(i).getPanFile());
-			userMap.put("resumeFile", users.get(i).getResumeFile());
-			userMap.put("paySlipFile", users.get(i).getPaySlipFile());
-			userMap.put("bankStatementFile", users.get(i).getBankStatementFile());
-			userMap.put("beatPlanFile", users.get(i).getBeatPlanFile());
-
-			userList.add(userMap);
-
+			workbook.write(out);
+		} catch (IOException e) {
+			throw new RuntimeException("fail to convert data to Excel file: " + e.getMessage());
 		}
-		
+		byte[] excelFileAsBytes = out.toByteArray();
+		ByteArrayResource resource = new ByteArrayResource(excelFileAsBytes);
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+		mimeMessageHelper.setFrom("mis.gcllp@gmail.com");
+		mimeMessageHelper.setTo(new String[] { "hr@gardenia.ws", "pratik.babar@gardenia.ws" });
+		mimeMessageHelper.setSubject("New User");
+		mimeMessageHelper.setText("New User has been Added to Pending State to review.");
+		mimeMessageHelper.addAttachment("User.xlsx", resource);
+		javaMailSender.send(mimeMessage);
+
+//		for (int i = 0; i < users.size(); i++) {
+//			Map<String, Object> userMap = new HashMap<String, Object>();
+//			userMap.put("id", users.get(i).getId());
+//			userMap.put("title", users.get(i).getTitle());
+//			userMap.put("firstName", users.get(i).getFirstName());
+//			userMap.put("middleName", users.get(i).getMiddleName());
+//			userMap.put("lastName", users.get(i).getLastName());
+//			userMap.put("fullName", users.get(i).getFullName());
+//			userMap.put("aadharNo", users.get(i).getAadharNo());
+//			userMap.put("login", users.get(i).getLogin());
+//			userMap.put("gender", users.get(i).getGender());
+//			userMap.put("maritalStatus", users.get(i).getMaritalStatus());
+//			userMap.put("birthDate", users.get(i).getBirthDate());
+//			userMap.put("email", users.get(i).getEmail());
+//			userMap.put("empCode", users.get(i).getEmpCode());
+//			userMap.put("reportingTo", users.get(i).getReportingTo());
+//			userMap.put("companyCode", users.get(i).getCompanyCode());
+//			userMap.put("grade", users.get(i).getGrade());
+//			userMap.put("branch", users.get(i).getBranch());
+//			userMap.put("department", users.get(i).getDepartment());
+//			userMap.put("processStartDate", users.get(i).getProcessStartDate());
+//			userMap.put("paymentMode", users.get(i).getPaymentMode());
+//			userMap.put("region", users.get(i).getRegion());
+//			userMap.put("state", users.get(i).getState());
+//			userMap.put("district", users.get(i).getDistrict());
+//			userMap.put("city", users.get(i).getCity());
+//			userMap.put("area", users.get(i).getArea());
+//			userMap.put("status", users.get(i).getStatus());
+//			userMap.put("hq", users.get(i).getHqMaster());
+//			userMap.put("role", users.get(i).getRole());
+//			userMap.put("rsm", users.get(i).getRsm());
+//			userMap.put("asm", users.get(i).getAsm());
+//			userMap.put("ase", users.get(i).getAse());
+//			userMap.put("createDate", users.get(i).getCreateDate());
+//			userMap.put("inactiveDate", users.get(i).getInactiveDate());
+//			userMap.put("updatedDateTime", users.get(i).getUpdatedDateTime());
+//			userMap.put("approvalStatus", users.get(i).getApprovalStatus());
+//			userMap.put("lcOrgName", users.get(i).getlcOrgName());
+//			userMap.put("lcJoiningDate", users.get(i).getlcJoiningDate());
+//			userMap.put("lcLastDate", users.get(i).getlcLastDate());
+//			userMap.put("lcOrgDesignation", users.get(i).getlcOrgDesignation());
+//			userMap.put("lcOrgSalary", users.get(i).getlcOrgSalary());
+//			userMap.put("lcOrgManagerMobile", users.get(i).getlcOrgManagerMobile());
+//			userMap.put("lcOrgManagerEmailID", users.get(i).getlcOrgManagerEmailID());
+//			userMap.put("lcOrgHREmailID", users.get(i).getlcOrgHREmailID());
+//			userMap.put("dateOfJoining", users.get(i).getDateOfJoining());
+//			userMap.put("designationRecommended", users.get(i).getDesignationRecommended());
+//			userMap.put("goSalary", users.get(i).getgoSalary());
+//			userMap.put("growthPercentage", users.get(i).getGrowthPercentage());
+//
+//			Long userId = users.get(i).getId();
+//			List<UserTargetDetails> userTargetDetailsList = new ArrayList<UserTargetDetails>();
+//			userTargetDetailsList = userTargetDetailsRepository.findByUser(userId);
+//			List<Map<String, Object>> targetList = new ArrayList<Map<String, Object>>();
+//			for (int j = 0; j < userTargetDetailsList.size(); j++) {
+//				Map<String, Object> targetMap = new HashMap<String, Object>();
+//				targetMap.put("hq", userTargetDetailsList.get(j).getHq());
+//				targetMap.put("present", userTargetDetailsList.get(j).getPresent());
+//				targetMap.put("goal", userTargetDetailsList.get(j).getGoal());
+//				targetMap.put("id", userTargetDetailsList.get(j).getId());
+//				targetList.add(targetMap);
+//			}
+//			userMap.put("userTargetDetails", targetList);
+//
+//			// User Team
+//			List<UserTeam> userTeamList = new ArrayList<UserTeam>();
+//			userTeamList = userTeamRepository.findByUser(userId);
+//			List<Map<String, Object>> teamList = new ArrayList<Map<String, Object>>();
+//			for (int j = 0; j < userTeamList.size(); j++) {
+//				Map<String, Object> teamMap = new HashMap<String, Object>();
+//				teamMap.put("employeeName", userTeamList.get(j).getEmployee().getId());
+//				teamMap.put("id", userTeamList.get(j).getId());
+//				teamList.add(teamMap);
+//			}
+//			userMap.put("userTeam", teamList);
+//
+//			userMap.put("aadharFile", users.get(i).getAadharFile());
+//			userMap.put("panFile", users.get(i).getPanFile());
+//			userMap.put("resumeFile", users.get(i).getResumeFile());
+//			userMap.put("paySlipFile", users.get(i).getPaySlipFile());
+//			userMap.put("bankStatementFile", users.get(i).getBankStatementFile());
+//			userMap.put("beatPlanFile", users.get(i).getBeatPlanFile());
+//
+//			userList.add(userMap);
+//
+//		}
+
 //		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 //		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 //		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
@@ -689,8 +763,8 @@ public class UserController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM')")
-	ResponseEntity<?> editUser(@PathVariable Long id, @RequestPart(name = "body", required = false) User user, HttpServletRequest request,
-			@RequestPart(name = "aadharFile", required = false) MultipartFile aadharFile,
+	ResponseEntity<?> editUser(@PathVariable Long id, @RequestPart(name = "body", required = false) User user,
+			HttpServletRequest request, @RequestPart(name = "aadharFile", required = false) MultipartFile aadharFile,
 			@RequestPart(name = "panFile", required = false) MultipartFile panFile,
 			@RequestPart(name = "resumeFile", required = false) MultipartFile resumeFile,
 			@RequestPart(name = "paySlipFile", required = false) MultipartFile paySlipFile,
@@ -729,7 +803,7 @@ public class UserController {
 		if (user.getFullName() != null) {
 			existingUser.setFullName(user.getFullName());
 		}
-		if(user.getAadharNo() != null) {
+		if (user.getAadharNo() != null) {
 			existingUser.setAadharNo(user.getAadharNo());
 		}
 		if (user.getLogin() != null) {
@@ -1243,7 +1317,7 @@ public class UserController {
 
 	@PutMapping("/{id}/reapproval")
 	@PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_RSM')")
-	ResponseEntity<?> reApproveUser(@PathVariable Long id,HttpServletRequest request,
+	ResponseEntity<?> reApproveUser(@PathVariable Long id, HttpServletRequest request,
 			@RequestPart(name = "body", required = false) User user,
 			@RequestPart(name = "aadharFile", required = false) MultipartFile aadharFile,
 			@RequestPart(name = "panFile", required = false) MultipartFile panFile,
@@ -1282,7 +1356,7 @@ public class UserController {
 		if (user.getFullName() != null) {
 			existingUser.setFullName(user.getFullName());
 		}
-		if(user.getAadharNo() != null) {
+		if (user.getAadharNo() != null) {
 			existingUser.setAadharNo(user.getAadharNo());
 		}
 		if (user.getLogin() != null) {
@@ -1794,12 +1868,87 @@ public class UserController {
 
 	@GetMapping("/approve/{id}")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public ResponseEntity<?> approveUser(@PathVariable Long id,HttpServletRequest request)throws MessagingException {
+	public ResponseEntity<?> approveUser(@PathVariable Long id, HttpServletRequest request) throws MessagingException {
 		Long uID = id;
 		System.out.println(uID);
 		String approved = "Approved";
 		hqUserRepository.updateByStatus(approved, uID);
-		
+		String userName = "";
+
+		// return Object
+		List<User> users = hqUserRepository.findWithoutTransientColumns(uID);
+
+		// Mail
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try (Workbook workbook = new XSSFWorkbook();) {
+			Sheet sheet = workbook.createSheet(SHEET);
+
+			// Header
+			Row headerRow = sheet.createRow(0);
+
+			for (int col = 0; col < HEADERs.length; col++) {
+				Cell cell = headerRow.createCell(col);
+				cell.setCellValue(HEADERs[col]);
+			}
+
+			int rowIdx = 1;
+			for (User mailUser : users) {
+				Row row = sheet.createRow(rowIdx++);
+				userName = mailUser.getFullName();
+				row.createCell(0).setCellValue(mailUser.getTitle());
+				row.createCell(1).setCellValue(mailUser.getFirstName());
+				row.createCell(2).setCellValue(mailUser.getMiddleName());
+				row.createCell(3).setCellValue(mailUser.getLastName());
+				row.createCell(4).setCellValue(mailUser.getFullName());
+				row.createCell(5).setCellValue(mailUser.getEmpCode());
+				row.createCell(6).setCellValue(mailUser.getReportingTo());
+				row.createCell(7).setCellValue(mailUser.getRole());
+				row.createCell(8).setCellValue(mailUser.getRegion().getRegionName());
+				row.createCell(9).setCellValue(mailUser.getState().getStateName());
+				row.createCell(10).setCellValue(mailUser.getDistrict().getDistrictName());
+				row.createCell(11).setCellValue(mailUser.getCity().getCityName());
+				row.createCell(12).setCellValue(mailUser.getArea().getAreaName());
+				row.createCell(13).setCellValue(mailUser.getHqMaster().getHqName());
+				row.createCell(14).setCellValue(mailUser.getMaritalStatus());
+				row.createCell(15).setCellValue(mailUser.getGender());
+				row.createCell(16).setCellValue(mailUser.getAadharNo());
+				row.createCell(17).setCellValue(mailUser.getBirthDate().toString());
+				row.createCell(18).setCellValue(mailUser.getJoinDate().toString());
+				row.createCell(19).setCellValue(mailUser.getGrade());
+				row.createCell(20).setCellValue(mailUser.getBranch());
+				row.createCell(21).setCellValue(mailUser.getDepartment());
+				row.createCell(22).setCellValue(mailUser.getPaymentMode());
+				row.createCell(23).setCellValue(mailUser.getEmail());
+				row.createCell(24).setCellValue(mailUser.getProcessStartDate().toString());
+				row.createCell(25).setCellValue(mailUser.getCompanyCode());
+				row.createCell(26).setCellValue(mailUser.getlcOrgName());
+				row.createCell(27).setCellValue(mailUser.getlcJoiningDate().toString());
+				row.createCell(28).setCellValue(mailUser.getlcLastDate().toString());
+				row.createCell(29).setCellValue(mailUser.getlcOrgDesignation());
+				row.createCell(30).setCellValue(mailUser.getlcOrgSalary());
+				row.createCell(31).setCellValue(mailUser.getlcOrgManagerMobile());
+				row.createCell(32).setCellValue(mailUser.getlcOrgManagerEmailID());
+				row.createCell(33).setCellValue(mailUser.getlcOrgHREmailID());
+			}
+
+			workbook.write(out);
+		} catch (IOException e) {
+			throw new RuntimeException("fail to convert data to Excel file: " + e.getMessage());
+		}
+		byte[] excelFileAsBytes = out.toByteArray();
+		ByteArrayResource resource = new ByteArrayResource(excelFileAsBytes);
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+		mimeMessageHelper.setFrom("mis.gcllp@gmail.com");
+		mimeMessageHelper.setTo(new String[] { "hr@gardenia.ws","pratik.babar@gardenia.ws", "harish.singh@gardenia.ws" });
+		mimeMessageHelper.setCc(new String[] { "mis@gardenia.ws", "bhupendra.singh@gardenia.ws",
+				"vishal.thakur@gardenia.ws", "chandrakant@gardenia.ws" });
+		mimeMessageHelper.setSubject("User Approval Status");
+		mimeMessageHelper.setText("User: " + userName + " has been Approved. Please find the approved User details attachment.");
+		mimeMessageHelper.addAttachment("User.xlsx", resource);
+		javaMailSender.send(mimeMessage);
+
 //		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 //		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 //		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
@@ -1807,20 +1956,21 @@ public class UserController {
 //		mimeMessageHelper.setSubject("Employee");
 //		mimeMessageHelper.setText("User Approved");
 //		javaMailSender.send(mimeMessage);
-		
+
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "User Approved", "OK", request.getRequestURI()));
 	}
 
 	@PostMapping("/reject/{id}")
 	@PreAuthorize("hasAuthority('ROLE_USER')")
-	public ResponseEntity<?> rejectUser(@PathVariable Long id, @RequestBody Map<String, Object> body,HttpServletRequest request) throws MessagingException {
+	public ResponseEntity<?> rejectUser(@PathVariable Long id, @RequestBody Map<String, Object> body,
+			HttpServletRequest request) throws MessagingException {
 		Long uID = id;
 		System.out.println(uID);
 		String rejectReason = body.get("rejectReason").toString();
 		String approved = "Rejected";
 		hqUserRepository.updateByRejectStatus(approved, rejectReason, uID);
-		
+
 //		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 //		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 //		mimeMessageHelper.setFrom("bhavikdesai1717@gmail.com");
@@ -1828,7 +1978,7 @@ public class UserController {
 //		mimeMessageHelper.setSubject("Employee");
 //		mimeMessageHelper.setText("User Rejected");
 //		javaMailSender.send(mimeMessage);abcs
-		
+
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "User Rejected", "OK", request.getRequestURI()));
 	}

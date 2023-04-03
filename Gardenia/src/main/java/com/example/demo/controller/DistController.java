@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,9 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
@@ -23,6 +32,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,6 +68,7 @@ import com.example.demo.entity.District;
 import com.example.demo.entity.FileDB;
 import com.example.demo.entity.HqMaster;
 import com.example.demo.entity.Login;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.RSMAssociatedRegion;
 import com.example.demo.entity.Region;
 import com.example.demo.entity.State;
@@ -87,6 +99,12 @@ import com.example.demo.service.UserService;
 @RestController
 @RequestMapping("/distributor")
 public class DistController {
+
+	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	static String[] HEADERs = { "Distributor Code", "Distributor Name", "Distributor Type", "GSTIN", "PAN", "Contact",
+			"Mobile No.", "Email", "Billing Address", "Delivery Address", "Pin Code", "Supp. Name", "Supp Code" };
+	static String SHEET = "Sheet1";
+
 	private DistributorService distributorService;
 	@Autowired
 	private StateRepository stateRepository;
@@ -132,6 +150,9 @@ public class DistController {
 
 	@Autowired
 	private RSMAssociatedRegionRepository rsmAssociatedRegionRepository;
+
+	@Autowired
+	private JavaMailSender javaMailSender;
 
 	@Autowired
 	private CurrentBusinessAssociationRepository currentBusinessAssociationRepository;
@@ -332,7 +353,8 @@ public class DistController {
 			@RequestPart(name = "body", required = false) Distributor distributor,
 			@RequestPart(name = "gstFile", required = false) MultipartFile gstFile,
 			@RequestPart(name = "panFile", required = false) MultipartFile panFile,
-			@RequestPart(name = "scannedCopyFile", required = false) MultipartFile scannedCopyFile) {
+			@RequestPart(name = "scannedCopyFile", required = false) MultipartFile scannedCopyFile)
+			throws MessagingException {
 		// Distributor distributor = new Distributor();
 		LocalDateTime createDateTime = LocalDateTime.now();
 		LocalDateTime updatedDateTime = LocalDateTime.now();
@@ -451,59 +473,105 @@ public class DistController {
 			}
 		}
 
-		// return Object
-		List<Map<String, Object>> distributorList = new ArrayList<Map<String, Object>>();
+		// Mail
 
 		List<Distributor> returnObjectDistributor = distRepository.findWithoutTransientColumns(distributor.getId());
-		for (int i = 0; i < returnObjectDistributor.size(); i++) {
-			Map<String, Object> distributorMap = new HashMap<String, Object>();
-			distributorMap.put("id", returnObjectDistributor.get(i).getId());
-			distributorMap.put("distributorName", returnObjectDistributor.get(i).getDistributorName());
-			distributorMap.put("distributorCode", returnObjectDistributor.get(i).getDistributorCode());
-			distributorMap.put("distributorType", returnObjectDistributor.get(i).getDistributorType());
-			distributorMap.put("gstin", returnObjectDistributor.get(i).getGstin());
-			distributorMap.put("pan", returnObjectDistributor.get(i).getPan());
-			distributorMap.put("contact", returnObjectDistributor.get(i).getContact());
-			distributorMap.put("mobile", returnObjectDistributor.get(i).getMobile());
-			distributorMap.put("phone", returnObjectDistributor.get(i).getPhone());
-			distributorMap.put("email", returnObjectDistributor.get(i).getEmail());
-			distributorMap.put("billingAddress", returnObjectDistributor.get(i).getBillingAddress());
-			distributorMap.put("deliveryAddress", returnObjectDistributor.get(i).getDeliveryAddress());
-			distributorMap.put("suppName", returnObjectDistributor.get(i).getSuppName());
-			distributorMap.put("suppCode", returnObjectDistributor.get(i).getSuppCode());
-			distributorMap.put("status", returnObjectDistributor.get(i).getStatus());
-			distributorMap.put("create_date", returnObjectDistributor.get(i).getCreate_date());
-			distributorMap.put("inactive_date", returnObjectDistributor.get(i).getInactive_date());
-			distributorMap.put("updatedDateTime", returnObjectDistributor.get(i).getUpdatedDateTime());
-			distributorMap.put("serviceStatus", returnObjectDistributor.get(i).getServiceStatus());
-			distributorMap.put("approvalStatus", returnObjectDistributor.get(i).getApprovalStatus());
-			distributorMap.put("region", returnObjectDistributor.get(i).getRegion());
-			distributorMap.put("state", returnObjectDistributor.get(i).getState());
-			distributorMap.put("district", returnObjectDistributor.get(i).getDistrict());
-			distributorMap.put("city", returnObjectDistributor.get(i).getCity());
-			distributorMap.put("hq", returnObjectDistributor.get(i).getHqMaster());
-			distributorMap.put("pinCode", returnObjectDistributor.get(i).getPinCode());
 
-			Long distributorId = returnObjectDistributor.get(i).getId();
-			System.out.println(distributorId);
-			List<BrandAssociatedToDist> brandAssociatedToDists = new ArrayList<BrandAssociatedToDist>();
-			brandAssociatedToDists = brandAssociatedToDistRepository.findByDistributor(distributorId);
-			List<Map<String, Object>> brandList = new ArrayList<Map<String, Object>>();
-			for (int j = 0; j < brandAssociatedToDists.size(); j++) {
-				Map<String, Object> brandMap = new HashMap<String, Object>();
-				brandMap.put("label", brandAssociatedToDists.get(j).getBrand().getBrandName());
-				brandMap.put("value", brandAssociatedToDists.get(j).getBrand().getId());
-				brandList.add(brandMap);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try (Workbook workbook = new XSSFWorkbook();) {
+			Sheet sheet = workbook.createSheet(SHEET);
+
+			// Header
+			Row headerRow = sheet.createRow(0);
+
+			for (int col = 0; col < HEADERs.length; col++) {
+				Cell cell = headerRow.createCell(col);
+				cell.setCellValue(HEADERs[col]);
 			}
-			distributorMap.put("brandList", brandList);
 
-			distributorMap.put("gstFile", returnObjectDistributor.get(i).getGstFile());
-			distributorMap.put("panFile", returnObjectDistributor.get(i).getPanFile());
-			distributorMap.put("scannedCopyFile", returnObjectDistributor.get(i).getScannedCopyFile());
+			int rowIdx = 1;
+			for (Distributor mailDistributor : returnObjectDistributor) {
+				Row row = sheet.createRow(rowIdx++);
 
-			distributorList.add(distributorMap);
+				row.createCell(0).setCellValue(mailDistributor.getDistributorCode());
+				row.createCell(1).setCellValue(mailDistributor.getDistributorName());
+				row.createCell(2).setCellValue(mailDistributor.getDistributorType());
+				row.createCell(3).setCellValue(mailDistributor.getGstin());
+				row.createCell(4).setCellValue(mailDistributor.getPan());
+				row.createCell(5).setCellValue(mailDistributor.getContact());
+				row.createCell(6).setCellValue(mailDistributor.getMobile());
+				row.createCell(7).setCellValue(mailDistributor.getEmail());
+				row.createCell(8).setCellValue(mailDistributor.getBillingAddress());
+				row.createCell(9).setCellValue(mailDistributor.getDeliveryAddress());
+				row.createCell(10).setCellValue(mailDistributor.getPinCode());
+				row.createCell(11).setCellValue(mailDistributor.getSuppName());
+				row.createCell(12).setCellValue(mailDistributor.getSuppCode());
+			}
 
+			workbook.write(out);
+		} catch (IOException e) {
+			throw new RuntimeException("fail to convert data to Excel file: " + e.getMessage());
 		}
+		byte[] excelFileAsBytes = out.toByteArray();
+		ByteArrayResource resource = new ByteArrayResource(excelFileAsBytes);
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+		mimeMessageHelper.setFrom("mis.gcllp@gmail.com");
+		mimeMessageHelper.setTo(new String[] { "bhupendra.singh@gardenia.ws", "jasmeet@gardenia.ws" });
+		mimeMessageHelper.setSubject("New Distributor");
+		mimeMessageHelper.setText("New Distributor has been Added to Pending State to review.");
+		mimeMessageHelper.addAttachment("Distributor.xlsx", resource);
+		javaMailSender.send(mimeMessage);
+
+//		for (int i = 0; i < returnObjectDistributor.size(); i++) {
+//			Map<String, Object> distributorMap = new HashMap<String, Object>();
+//			distributorMap.put("id", returnObjectDistributor.get(i).getId());
+//			distributorMap.put("distributorName", returnObjectDistributor.get(i).getDistributorName());
+//			distributorMap.put("distributorCode", returnObjectDistributor.get(i).getDistributorCode());
+//			distributorMap.put("distributorType", returnObjectDistributor.get(i).getDistributorType());
+//			distributorMap.put("gstin", returnObjectDistributor.get(i).getGstin());
+//			distributorMap.put("pan", returnObjectDistributor.get(i).getPan());
+//			distributorMap.put("contact", returnObjectDistributor.get(i).getContact());
+//			distributorMap.put("mobile", returnObjectDistributor.get(i).getMobile());
+//			distributorMap.put("phone", returnObjectDistributor.get(i).getPhone());
+//			distributorMap.put("email", returnObjectDistributor.get(i).getEmail());
+//			distributorMap.put("billingAddress", returnObjectDistributor.get(i).getBillingAddress());
+//			distributorMap.put("deliveryAddress", returnObjectDistributor.get(i).getDeliveryAddress());
+//			distributorMap.put("suppName", returnObjectDistributor.get(i).getSuppName());
+//			distributorMap.put("suppCode", returnObjectDistributor.get(i).getSuppCode());
+//			distributorMap.put("status", returnObjectDistributor.get(i).getStatus());
+//			distributorMap.put("create_date", returnObjectDistributor.get(i).getCreate_date());
+//			distributorMap.put("inactive_date", returnObjectDistributor.get(i).getInactive_date());
+//			distributorMap.put("updatedDateTime", returnObjectDistributor.get(i).getUpdatedDateTime());
+//			distributorMap.put("serviceStatus", returnObjectDistributor.get(i).getServiceStatus());
+//			distributorMap.put("approvalStatus", returnObjectDistributor.get(i).getApprovalStatus());
+//			distributorMap.put("region", returnObjectDistributor.get(i).getRegion());
+//			distributorMap.put("state", returnObjectDistributor.get(i).getState());
+//			distributorMap.put("district", returnObjectDistributor.get(i).getDistrict());
+//			distributorMap.put("city", returnObjectDistributor.get(i).getCity());
+//			distributorMap.put("hq", returnObjectDistributor.get(i).getHqMaster());
+//			distributorMap.put("pinCode", returnObjectDistributor.get(i).getPinCode());
+//
+//			Long distributorId = returnObjectDistributor.get(i).getId();
+//			System.out.println(distributorId);
+//			List<BrandAssociatedToDist> brandAssociatedToDists = new ArrayList<BrandAssociatedToDist>();
+//			brandAssociatedToDists = brandAssociatedToDistRepository.findByDistributor(distributorId);
+//			List<Map<String, Object>> brandList = new ArrayList<Map<String, Object>>();
+//			for (int j = 0; j < brandAssociatedToDists.size(); j++) {
+//				Map<String, Object> brandMap = new HashMap<String, Object>();
+//				brandMap.put("label", brandAssociatedToDists.get(j).getBrand().getBrandName());
+//				brandMap.put("value", brandAssociatedToDists.get(j).getBrand().getId());
+//				brandList.add(brandMap);
+//			}
+//			distributorMap.put("brandList", brandList);
+//
+//			distributorMap.put("gstFile", returnObjectDistributor.get(i).getGstFile());
+//			distributorMap.put("panFile", returnObjectDistributor.get(i).getPanFile());
+//			distributorMap.put("scannedCopyFile", returnObjectDistributor.get(i).getScannedCopyFile());
+//
+//			distributorList.add(distributorMap);
+//
+//		}
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "Distributor Added Successfully", "OK", request.getRequestURI()));
@@ -739,7 +807,7 @@ public class DistController {
 			}
 
 			// Upsert Brand
-			for(int j =0;j<distributor.getBrandList().size();j++) {
+			for (int j = 0; j < distributor.getBrandList().size(); j++) {
 				Integer count = 0;
 				List<BrandAssociatedToDist> brandAssociatedToDistsUpsert = new ArrayList<BrandAssociatedToDist>();
 				brandAssociatedToDistsUpsert = brandAssociatedToDistRepository.findByDistributor(distributorId);
@@ -1125,7 +1193,7 @@ public class DistController {
 			}
 
 			// Upsert Brand
-			for(int j =0;j<distributor.getBrandList().size();j++) {
+			for (int j = 0; j < distributor.getBrandList().size(); j++) {
 				Integer count = 0;
 				List<BrandAssociatedToDist> brandAssociatedToDistsUpsert = new ArrayList<BrandAssociatedToDist>();
 				brandAssociatedToDistsUpsert = brandAssociatedToDistRepository.findByDistributor(distributorId);
@@ -1287,7 +1355,7 @@ public class DistController {
 
 	@GetMapping("/approve/{id}")
 	@PreAuthorize("hasAnyAuthority('ROLE_MIS','ROLE_DISTAPPROVER')")
-	public ResponseEntity<?> approveDistributor(@PathVariable Long id, HttpServletRequest request) {
+	public ResponseEntity<?> approveDistributor(@PathVariable Long id, HttpServletRequest request)throws MessagingException {
 		Long distID = id;
 
 		Distributor distributor = distributorService.getDistributor(distID);
@@ -1316,6 +1384,59 @@ public class DistController {
 		String distCode = distributorCode.getRegionCode().toString() + finalCodeNumber;
 		String approved = "Approved";
 		distRepository.updateStatusAndCode(approved, distCode, distID);
+
+		// Mail
+
+		List<Distributor> returnObjectDistributor = distRepository.findWithoutTransientColumns(distID);
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try (Workbook workbook = new XSSFWorkbook();) {
+			Sheet sheet = workbook.createSheet(SHEET);
+
+			// Header
+			Row headerRow = sheet.createRow(0);
+
+			for (int col = 0; col < HEADERs.length; col++) {
+				Cell cell = headerRow.createCell(col);
+				cell.setCellValue(HEADERs[col]);
+			}
+
+			int rowIdx = 1;
+			for (Distributor mailDistributor : returnObjectDistributor) {
+				Row row = sheet.createRow(rowIdx++);
+
+				row.createCell(0).setCellValue(mailDistributor.getDistributorCode());
+				row.createCell(1).setCellValue(mailDistributor.getDistributorName());
+				row.createCell(2).setCellValue(mailDistributor.getDistributorType());
+				row.createCell(3).setCellValue(mailDistributor.getGstin());
+				row.createCell(4).setCellValue(mailDistributor.getPan());
+				row.createCell(5).setCellValue(mailDistributor.getContact());
+				row.createCell(6).setCellValue(mailDistributor.getMobile());
+				row.createCell(7).setCellValue(mailDistributor.getEmail());
+				row.createCell(8).setCellValue(mailDistributor.getBillingAddress());
+				row.createCell(9).setCellValue(mailDistributor.getDeliveryAddress());
+				row.createCell(10).setCellValue(mailDistributor.getPinCode());
+				row.createCell(11).setCellValue(mailDistributor.getSuppName());
+				row.createCell(12).setCellValue(mailDistributor.getSuppCode());
+			}
+
+			workbook.write(out);
+		} catch (IOException e) {
+			throw new RuntimeException("fail to convert data to Excel file: " + e.getMessage());
+		}
+		byte[] excelFileAsBytes = out.toByteArray();
+		ByteArrayResource resource = new ByteArrayResource(excelFileAsBytes);
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+		mimeMessageHelper.setFrom("mis.gcllp@gmail.com");
+		mimeMessageHelper.setTo(new String[] { "jasmeet@gardenia.ws","bhupendra.singh@gardenia.ws", "harish.singh@gardenia.ws" });
+		mimeMessageHelper.setCc(new String[] { "mis@gardenia.ws", "anoop.motiani@gardenia.ws",
+				"vishal.thakur@gardenia.ws", "chandrakant@gardenia.ws" });
+		mimeMessageHelper.setSubject("Distributor Approval Status");
+		mimeMessageHelper.setText("Distributor: " + distributor.getDistributorName() + " has been Approved. Please find the approved Distributor details attachment.");
+		mimeMessageHelper.addAttachment("Distributor.xlsx", resource);
+		javaMailSender.send(mimeMessage);
+
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ErrorMessage(200, "Distributor Approved", "OK", request.getRequestURI()));
 	}
