@@ -27,9 +27,7 @@ public class ProductDetails {
 	@Column(name = "id", nullable = false, length = 20)
 	private Long Id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "distId")
-	Distributor distributor;
+	
 	
 	@ManyToOne(fetch =FetchType.LAZY)
 	@JoinColumn(name = "productId")
@@ -53,13 +51,8 @@ public class ProductDetails {
 		Id = id;
 	}
 
-	public Distributor getDistributor() {
-		return distributor;
-	}
-
-	public void setDistributor(Distributor distributor) {
-		this.distributor = distributor;
-	}
+	
+	
 
 	public Product getProduct() {
 		return product;
@@ -101,10 +94,10 @@ public class ProductDetails {
 	 * @param value
 	 * @param updateStock
 	 */
-	public ProductDetails(Long id, Distributor distributor, Product product, int quantity, BigDecimal value,
+	public ProductDetails(Long id, Product product, int quantity, BigDecimal value,
 			UpdateStock updateStock) {
 		Id = id;
-		this.distributor = distributor;
+		
 		this.product = product;
 		this.quantity = quantity;
 		this.value = value;

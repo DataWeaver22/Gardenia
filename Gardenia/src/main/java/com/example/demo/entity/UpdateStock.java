@@ -1,6 +1,9 @@
 package com.example.demo.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -35,14 +39,33 @@ public class UpdateStock {
 	private String year;
 	
 	@Column(name = "createdDate")
-	private Date createdDate;
+	private LocalDateTime createdDate;
 	
 	@Column(name = "updatedDate" )
-	private Date updatedDate;
+	private LocalDateTime updatedDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regionId")
 	Region region;
+
+	
+	@Transient
+	private List<String> regionid;
+	
+	
+	public List<String> getRegionid() {
+		return regionid;
+	}
+	
+	@Transient
+	private  List<Map<String, Object>> updateStockId;
+	
+	
+	public List<Map<String, Object>>getUpdateStockId() {
+		return updateStockId;
+	}
+
+	
 
 	public Long getId() {
 		return Id;
@@ -76,20 +99,20 @@ public class UpdateStock {
 		this.year = year;
 	}
 
-	public Date getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
+	public void setCreatedDate(LocalDateTime createDateTime) {
+		this.createdDate = createDateTime;
 	}
 
-	public Date getUpdatedDate() {
+	public LocalDateTime getUpdatedDate() {
 		return updatedDate;
 	}
 
-	public void setUpdatedDate(Date updatedDate) {
-		this.updatedDate = updatedDate;
+	public void setUpdatedDate(LocalDateTime updateDateTime) {
+		this.updatedDate = updateDateTime;
 	}
 
 	public Region getRegion() {
@@ -109,7 +132,7 @@ public class UpdateStock {
 	 * @param updatedDate
 	 * @param region
 	 */
-	public UpdateStock(Long id, Distributor distributor, String month, String year, Date createdDate, Date updatedDate,
+	public UpdateStock(Long id, Distributor distributor, String month, String year, LocalDateTime createdDate, LocalDateTime updatedDate,
 			Region region) {
 		Id = id;
 		this.distributor = distributor;
